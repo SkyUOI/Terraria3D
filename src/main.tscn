@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dt626b1warwpw"]
+
+[ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
+[ext_resource type="Script" uid="uid://cr8ixyb38kq5p" path="res://src/FollowPlayer.cs" id="2_gh0ne"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_eewff")]
+
+[node name="FollowPlayer" type="Camera3D" parent="."]
+script = ExtResource("2_gh0ne")

@@ -17,8 +17,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Hearts" type="Sprite2D" parent="."]
-position = Vector2(904, 32)
+[node name="Hearts" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 904.0
+offset_top = 32.0
+offset_right = 904.0
+offset_bottom = 32.0
 script = ExtResource("1_diech")
 heart_fill_red = ExtResource("2_c45df")
 heart_fill_yellow = ExtResource("3_m6116")
@@ -27,3 +31,26 @@ heart_middle = ExtResource("5_bg5jj")
 heart_right = ExtResource("6_m6h3f")
 heart_right_fancy = ExtResource("7_mdo0c")
 heart_single_fancy = ExtResource("8_lqmw5")
+
+[node name="Frame" type="Node2D" parent="Hearts"]
+
+[node name="HeartRed" type="Node2D" parent="Hearts"]
+z_index = 1
+
+[node name="HeartYellow" type="Node2D" parent="Hearts"]
+z_index = 2
+
+[node name="Timer" type="Timer" parent="Hearts"]
+autostart = true
+
+[node name="Label" type="Label" parent="Hearts"]
+visible = false
+z_index = 4
+layout_mode = 2
+offset_left = -1.0
+offset_top = 33.2
+offset_right = 1055.0
+offset_bottom = 88.2
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 40
+text = "text"

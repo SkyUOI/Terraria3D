@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene load_steps=8 format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://cr8ixyb38kq5p" path="res://src/FollowPlayer.cs" id="2_gh0ne"]
+[ext_resource type="PackedScene" uid="uid://d06xxij722ye7" path="res://src/sun.tscn" id="3_5q4o7"]
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gh0ne"]
 albedo_color = Color(0, 0, 0, 1)
@@ -10,13 +11,26 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("ORMMaterial3D_gh0ne")
 size = Vector3(100, 0.1, 100)
 
+[sub_resource type="Environment" id="Environment_5q4o7"]
+sdfgi_enabled = true
+sdfgi_energy = 10.0
+
+[sub_resource type="Compositor" id="Compositor_3cfgd"]
+
 [node name="Main" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_eewff")]
 
 [node name="FollowPlayer" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00974739, 0)
 script = ExtResource("2_gh0ne")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.77764, 0, -0.466219)
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_5q4o7")
+
+[node name="Sun" parent="." instance=ExtResource("3_5q4o7")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5q4o7")
+compositor = SubResource("Compositor_3cfgd")

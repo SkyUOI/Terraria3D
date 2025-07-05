@@ -1,0 +1,29 @@
+[gd_scene load_steps=9 format=3 uid="uid://cmm8rt65lceqp"]
+
+[ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
+[ext_resource type="Texture2D" uid="uid://b2v72bcx6coip" path="res://src/ui/main_game_ui/hearts/Heart_Fill.png" id="2_c45df"]
+[ext_resource type="Texture2D" uid="uid://yp6i008rsike" path="res://src/ui/main_game_ui/hearts/Heart_Fill_B.png" id="3_m6116"]
+[ext_resource type="Texture2D" uid="uid://knixnbg0w4le" path="res://src/ui/main_game_ui/hearts/Heart_Left.png" id="4_idygw"]
+[ext_resource type="Texture2D" uid="uid://bj1bifk73fs1y" path="res://src/ui/main_game_ui/hearts/Heart_Middle.png" id="5_bg5jj"]
+[ext_resource type="Texture2D" uid="uid://b6g6ievjw8gy7" path="res://src/ui/main_game_ui/hearts/Heart_Right.png" id="6_m6h3f"]
+[ext_resource type="Texture2D" uid="uid://b64i4gsco0i51" path="res://src/ui/main_game_ui/hearts/Heart_Right_Fancy.png" id="7_mdo0c"]
+[ext_resource type="Texture2D" uid="uid://cuviregbtt3v8" path="res://src/ui/main_game_ui/hearts/Heart_Single_Fancy.png" id="8_lqmw5"]
+
+[node name="MainGameUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Hearts" type="Sprite2D" parent="."]
+position = Vector2(904, 32)
+script = ExtResource("1_diech")
+heart_fill_red = ExtResource("2_c45df")
+heart_fill_yellow = ExtResource("3_m6116")
+heart_left = ExtResource("4_idygw")
+heart_middle = ExtResource("5_bg5jj")
+heart_right = ExtResource("6_m6h3f")
+heart_right_fancy = ExtResource("7_mdo0c")
+heart_single_fancy = ExtResource("8_lqmw5")

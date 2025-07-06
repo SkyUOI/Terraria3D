@@ -10,7 +10,7 @@ extends Node2D
 
 func _ready():
 	draw_hearts(260)
-	print("aaa")
+	# print("debug print")
 	
 func get_frame(heart_num: int) -> Array[Sprite2D]:
 	if (heart_num == 1):
@@ -54,7 +54,7 @@ func get_heart(heart_num: int, texture: Texture) -> Array[Sprite2D]:
 
 # 根据血量绘制血条
 func draw_hearts(hp: int):
-	var heart_num = hp / 20
+	var heart_num = hp / 20.0
 	assert(heart_num <= 40, "超过生命值上限")
 	assert(hp % 20 == 0, "血量必须是20的倍数")
 	var heart_red_num: int = min(20, heart_num)

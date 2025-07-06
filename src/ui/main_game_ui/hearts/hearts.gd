@@ -11,8 +11,12 @@ extends Control
 
 @onready var label = $Label
 
-var heart_num: float = 0
-var heart_num_max: int = 0
+var heart_num: float = 100
+var heart_num_max: int = 100
+var x_min = 1000
+var x_max = 0
+var y_min = 1000
+var y_max = 0
 
 func set_hp(hp: int):
 	heart_num = float(hp) / 20.0
@@ -23,13 +27,12 @@ func set_hp_max(hp_max: int):
 	draw_frame()
 
 func mouse_in_area():
-	var pos = get_viewport().get_mouse_position()
+	var pos = get_global_mouse_position()
 	var x = pos.x
 	var y = pos.y
-	return (0 <= y && y <= 80) && (880 <= x && x <= 1150)
+	return (y_min <= y && y <= y_max) && (x_min <= x && x <= x_max)
 
 func _process(_delta):
-	
 	clear_hearts()
 	draw_hearts()
 	
@@ -55,6 +58,10 @@ func clear_hearts():
 		c.queue_free()
 	for c in $HeartYellow.get_children():
 		c.queue_free()
+	x_min = 1000
+	x_max = 0
+	y_min = 1000
+	y_max = 0
 	
 func get_frame(frame_num: int) -> Array[Sprite2D]:
 	if (frame_num == 1):
@@ -135,5 +142,20 @@ func draw_hearts():
 	
 	for hy in heart_yellow:
 		$HeartYellow.add_child(hy)
+		update_focus_area(hy)
 	for hr in heart_red:
 		$HeartRed.add_child(hr)
+		update_focus_area(hr)
+	extend_focus_area()
+
+func update_focus_area(heart: Sprite2D):
+	x_min = min(x_min, heart.global_position.x)
+	x_max = max(x_max, heart.global_position.x)
+	y_min = min(y_min, heart.global_position.y)
+	y_max = max(y_max, heart.global_position.y)
+
+func extend_focus_area():
+	x_min -= 10
+	x_max += 10
+	y_min -= 10
+	y_max += 10

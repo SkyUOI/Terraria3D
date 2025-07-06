@@ -6,8 +6,8 @@ extends Control
 @export var star_down: Texture
 @export var star_fill: Texture
 
-var star_num: float = 0
-var star_num_max: int = 0
+var star_num: float = 20
+var star_num_max: int = 20
 
 func set_mp(mp: int):
 	star_num = float(mp) / 20.0

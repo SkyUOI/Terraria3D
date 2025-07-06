@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene load_steps=10 format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
 [ext_resource type="PackedScene" uid="uid://d06xxij722ye7" path="res://src/sun.tscn" id="3_5q4o7"]
+[ext_resource type="Script" uid="uid://bae1pxhihpfe" path="res://src/Floor.cs" id="3_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gh0ne"]
@@ -26,6 +27,7 @@ script = ExtResource("1_fyndt")
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_5q4o7")
+script = ExtResource("3_fyndt")
 
 [node name="Sun" parent="." instance=ExtResource("3_5q4o7")]
 

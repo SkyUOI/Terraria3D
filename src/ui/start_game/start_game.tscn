@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://555w0tkkfvvh"]
+[gd_scene load_steps=2 format=3 uid="uid://555w0tkkfvvh"]
+
+[ext_resource type="Script" uid="uid://dgpst8rten18u" path="res://src/ui/start_game/start.gd" id="1_35y3l"]
 
 [node name="StartGame" type="Control"]
 layout_mode = 3
@@ -22,3 +24,6 @@ offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "start game"
+script = ExtResource("1_35y3l")
+
+[connection signal="pressed" from="Start" to="Start" method="_on_pressed"]

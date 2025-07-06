@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cmm8rt65lceqp"]
+[gd_scene load_steps=15 format=3 uid="uid://cmm8rt65lceqp"]
 
 [ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
 [ext_resource type="Texture2D" uid="uid://b2v72bcx6coip" path="res://src/ui/main_game_ui/hearts/Heart_Fill.png" id="2_c45df"]
@@ -8,6 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://b6g6ievjw8gy7" path="res://src/ui/main_game_ui/hearts/Heart_Right.png" id="6_m6h3f"]
 [ext_resource type="Texture2D" uid="uid://b64i4gsco0i51" path="res://src/ui/main_game_ui/hearts/Heart_Right_Fancy.png" id="7_mdo0c"]
 [ext_resource type="Texture2D" uid="uid://cuviregbtt3v8" path="res://src/ui/main_game_ui/hearts/Heart_Single_Fancy.png" id="8_lqmw5"]
+[ext_resource type="Script" uid="uid://cwgdb2msbamch" path="res://src/ui/main_game_ui/stars/stars.gd" id="9_m6116"]
+[ext_resource type="Texture2D" uid="uid://ixfg0qx38480" path="res://src/ui/main_game_ui/stars/Star_Single.png" id="10_mdo0c"]
+[ext_resource type="Texture2D" uid="uid://bcug78weielsp" path="res://src/ui/main_game_ui/stars/Star_A.png" id="11_lqmw5"]
+[ext_resource type="Texture2D" uid="uid://cs6osvyxd75m4" path="res://src/ui/main_game_ui/stars/Star_B.png" id="12_b10dl"]
+[ext_resource type="Texture2D" uid="uid://c4ewqsc5c88kh" path="res://src/ui/main_game_ui/stars/Star_C.png" id="13_2c7pp"]
+[ext_resource type="Texture2D" uid="uid://bg2vx2ocpigdj" path="res://src/ui/main_game_ui/stars/Star_Fill.png" id="14_lqmw5"]
 
 [node name="MainGameUI" type="Control"]
 layout_mode = 3
@@ -54,3 +60,24 @@ offset_bottom = 88.2
 scale = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 40
 text = "text"
+
+[node name="Stars" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 1121.0
+offset_top = 103.0
+offset_right = 1121.0
+offset_bottom = 103.0
+script = ExtResource("9_m6116")
+star_single = ExtResource("10_mdo0c")
+star_up = ExtResource("11_lqmw5")
+star_middle = ExtResource("12_b10dl")
+star_down = ExtResource("13_2c7pp")
+star_fill = ExtResource("14_lqmw5")
+
+[node name="Frame" type="Node2D" parent="Stars"]
+
+[node name="Star" type="Node2D" parent="Stars"]
+z_index = 1
+
+[node name="Timer" type="Timer" parent="Stars"]
+autostart = true

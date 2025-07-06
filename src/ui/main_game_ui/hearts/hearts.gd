@@ -10,12 +10,16 @@ extends Control
 
 @onready var label = $Label
 
-var heart_num: float
-var heart_num_max: int
+var heart_num: float = 0
+var heart_num_max: int = 0
 
+func set_hp(hp: int):
+	heart_num = float(hp) / 20.0
+	draw_hearts()
 
-# 血不满时心的周期性大小变化
-var heart_scale_delta: float
+func set_hp_max(hp_max: int):
+	heart_num_max = hp_max / 20
+	draw_frame()
 
 func mouse_in_area():
 	var pos = get_viewport().get_mouse_position()
@@ -24,43 +28,24 @@ func mouse_in_area():
 	return (0 <= y && y <= 80) && (880 <= x && x <= 1150)
 
 func _process(_delta):
-	heart_scale_delta = (sin($Timer.time_left * TAU) + 1) * 0.05
+	
 	clear_hearts()
-	draw_hearts(470)
+	draw_hearts()
 	
 	if (mouse_in_area()):
-		print("aaa")
 		set_label_text()
 		label.global_position = get_viewport().get_mouse_position() + Vector2(-30, -30)
 		label.visible = true
 	else:
 		label.visible = false
-	print(get_viewport().get_mouse_position())
 	
 func set_label_text():
 	label.text = str(int(roundf(heart_num * 20))) + "/" + str(heart_num_max * 20)
 
 func _ready():
-	draw_frame(540)
-
-	# 设置鼠标悬停提示文本
-	tooltip_text = "这是按钮的提示信息"
-	
-	# 自定义提示样式（可选）
-	var tooltip_style = StyleBoxFlat.new()
-	tooltip_style.bg_color = Color(0.1, 0.1, 0.1, 0.9)
-	tooltip_style.border_width_bottom = 2
-	tooltip_style.border_color = Color.GOLD
-	tooltip_style.corner_radius_top_left = 5
-	tooltip_style.corner_radius_top_right = 5
-	tooltip_style.corner_radius_bottom_right = 5
-	tooltip_style.corner_radius_bottom_left = 5
-	
-	# 应用自定义样式
-	add_theme_stylebox_override("panel", tooltip_style)
-	add_theme_font_size_override("font_size", 14)
-	add_theme_color_override("font_color", Color.WHITE)
-	
+	set_hp(470)
+	set_hp_max(540)
+	draw_frame()
 	
 func clear_frame():
 	for c in $Frame.get_children():
@@ -101,7 +86,7 @@ func get_frame(frame_num: int) -> Array[Sprite2D]:
 	
 	return frames
 	
-func get_heart(num: float, texture: Texture, floating: bool) -> Array[Sprite2D]:
+func get_heart(num: float, texture: Texture, heart_scale_delta: float) -> Array[Sprite2D]:
 	var heart: Array[Sprite2D] = []
 	heart.resize(int(ceilf(num)))
 	for i in range(heart.size()):
@@ -110,20 +95,17 @@ func get_heart(num: float, texture: Texture, floating: bool) -> Array[Sprite2D]:
 		var row = 0 if i < 10 else 30
 		var col = (i % 10) * 24 - 1
 		heart[i].position = Vector2(col, row)
-	
-	var delta = heart_scale_delta if floating else 0.0
-	
+		
 	var t = num - floorf(num)
 	t = 1.0 if t == 0 else t
-	var s = clamp(t + delta, 0, 1)
+	var s = clamp(t + heart_scale_delta, 0, 1)
 	if (!heart.is_empty()):
 			heart.back().scale = Vector2(s, s)
 		
 	return heart
 	
 # 绘制血条边框
-func draw_frame(hp_max: int):
-	heart_num_max = floor(hp_max / 20.0)
+func draw_frame():
 	var frame_num = min(heart_num_max, 20)
 	var frame: Array[Sprite2D] = get_frame(frame_num)
 	
@@ -131,8 +113,8 @@ func draw_frame(hp_max: int):
 		$Frame.add_child(f)
 
 # 根据血量绘制心
-func draw_hearts(hp: float):
-	heart_num = hp / 20
+func draw_hearts():
+	var heart_scale_delta = (sin($Timer.time_left * TAU) + 1) * 0.05
 	
 	var heart_yellow_max: float = max(0, heart_num_max - 20)
 	var heart_red_max: float = min(20, heart_num_max)
@@ -142,10 +124,13 @@ func draw_hearts(hp: float):
 		else    heart_num / 2
 	var heart_red_num: float = heart_num - heart_yellow_num
 	
+	var delta_red: float= heart_scale_delta if heart_red_max != heart_red_num else 0
+	var delta_yellow: float = heart_scale_delta if heart_yellow_max != heart_yellow_num else 0
+	
 	var heart_red: Array[Sprite2D] = get_heart(heart_red_num, heart_fill_red\
-		, heart_red_max != heart_red_num)
+		, delta_red)
 	var heart_yellow: Array[Sprite2D] = get_heart(heart_yellow_num, heart_fill_yellow\
-		, heart_yellow_max != heart_yellow_num)
+		, delta_yellow)
 	
 	for hy in heart_yellow:
 		$HeartYellow.add_child(hy)

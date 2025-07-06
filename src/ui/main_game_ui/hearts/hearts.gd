@@ -29,13 +29,13 @@ func _process(_delta):
 	draw_hearts(470)
 	
 	if (mouse_in_area()):
-		print("aaa")
+		# print("aaa")
 		set_label_text()
 		label.global_position = get_viewport().get_mouse_position() + Vector2(-30, -30)
 		label.visible = true
 	else:
 		label.visible = false
-	print(get_viewport().get_mouse_position())
+	# print(get_viewport().get_mouse_position())
 	
 func set_label_text():
 	label.text = str(int(roundf(heart_num * 20))) + "/" + str(heart_num_max * 20)

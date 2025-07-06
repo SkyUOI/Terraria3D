@@ -22,12 +22,14 @@ sdfgi_energy = 10.0
 [node name="Main" type="Node3D"]
 script = ExtResource("1_fyndt")
 
-[node name="Player" parent="." instance=ExtResource("1_eewff")]
+[node name="Player" parent="." node_paths=PackedStringArray("main") groups=["Persist"] instance=ExtResource("1_eewff")]
+main = NodePath("..")
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="Floor" type="MeshInstance3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_5q4o7")
 script = ExtResource("3_fyndt")
+player = NodePath("../Player")
 
 [node name="Sun" parent="." instance=ExtResource("3_5q4o7")]
 

@@ -22,8 +22,6 @@ func _process(_delta):
 	draw_stars()
 
 func _ready():
-	set_mp(70)
-	set_mp_max(200)
 	draw_frame()
 
 func clear_frame():

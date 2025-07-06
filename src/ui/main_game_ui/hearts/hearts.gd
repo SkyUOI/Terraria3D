@@ -7,6 +7,7 @@ extends Control
 @export var heart_right: Texture
 @export var heart_right_fancy: Texture
 @export var heart_single_fancy: Texture
+@export var player: Node
 
 @onready var label = $Label
 
@@ -43,8 +44,6 @@ func set_label_text():
 	label.text = str(int(roundf(heart_num * 20))) + "/" + str(heart_num_max * 20)
 
 func _ready():
-	set_hp(470)
-	set_hp_max(540)
 	draw_frame()
 	
 func clear_frame():
@@ -106,6 +105,7 @@ func get_heart(num: float, texture: Texture, heart_scale_delta: float) -> Array[
 	
 # 绘制血条边框
 func draw_frame():
+	clear_frame()
 	var frame_num = min(heart_num_max, 20)
 	var frame: Array[Sprite2D] = get_frame(frame_num)
 	
@@ -114,6 +114,7 @@ func draw_frame():
 
 # 根据血量绘制心
 func draw_hearts():
+	clear_hearts()
 	var heart_scale_delta = (sin($Timer.time_left * TAU) + 1) * 0.05
 	
 	var heart_yellow_max: float = max(0, heart_num_max - 20)

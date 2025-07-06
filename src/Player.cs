@@ -14,6 +14,26 @@ public partial class Player : CharacterBody3D
 
     [Export]
     Main main;
+    [Export]
+    Control main_game_ui;
+
+    [Export]
+    public int Health = 100;
+    [Export]
+    public int HealthMax = 100;
+    [Export]
+    public int Mana = 20;
+    [Export]
+    public int ManaMax = 20;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        main_game_ui.GetNode("Hearts").Call("set_hp", Health);
+        main_game_ui.GetNode("Hearts").Call("set_hp_max", HealthMax);
+        main_game_ui.GetNode("Stars").Call("set_mp", Mana);
+        main_game_ui.GetNode("Stars").Call("set_mp_max", ManaMax);
+    }
 
     public override void _Process(double delta)
     {
@@ -59,6 +79,10 @@ public class PlrData
 {
     public string Name { get; set; }
     public Vector3 Position = Vector3.Zero;
+    public int Health = 100;
+    public int HealthMax = 100;
+    public int Mana = 20;
+    public int ManaMax = 20;
 
     public PlrData(string name) => Name = name;
 }

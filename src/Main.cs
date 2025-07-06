@@ -21,7 +21,8 @@ public partial class Main : Node3D
     Dictionary<Vector2, Chunk> dir;
     static string WorldPath = "Test";
     public string WorldName { get; set; }
-
+    [Export]
+    public Control main_game_ui { get; set; }
 
     public override void _Ready()
     {

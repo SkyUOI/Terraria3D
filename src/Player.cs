@@ -29,17 +29,12 @@ public partial class Player : CharacterBody3D
     public override void _Ready()
     {
         base._Ready();
-        main_game_ui.GetNode("Hearts").Call("set_hp", Health);
-        main_game_ui.GetNode("Hearts").Call("set_hp_max", HealthMax);
-        main_game_ui.GetNode("Stars").Call("set_mp", Mana);
-        main_game_ui.GetNode("Stars").Call("set_mp_max", ManaMax);
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
         Move();
-
     }
 
     private void Move()

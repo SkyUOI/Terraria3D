@@ -37,4 +37,5 @@ player = NodePath("../Player")
 environment = SubResource("Environment_5q4o7")
 compositor = SubResource("Compositor_3cfgd")
 
-[node name="MainGameUI" parent="." instance=ExtResource("4_3cfgd")]
+[node name="MainGameUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_3cfgd")]
+player = NodePath("../Player")

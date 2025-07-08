@@ -19,12 +19,16 @@ var y_min = 1000
 var y_max = 0
 
 func set_hp(hp: int):
-	heart_num = float(hp) / 20.0
-	draw_hearts()
+	var heart_num_new = float(hp) / 20.0
+	if heart_num_new != heart_num:
+		heart_num = heart_num_new
+		draw_hearts()
 
 func set_hp_max(hp_max: int):
-	heart_num_max = hp_max / 20
-	draw_frame()
+	var heart_num_max_new = hp_max / 20
+	if heart_num_max_new != heart_num_max:
+		heart_num_max = heart_num_max_new
+		draw_frame()
 
 func mouse_in_area():
 	var pos = get_global_mouse_position()

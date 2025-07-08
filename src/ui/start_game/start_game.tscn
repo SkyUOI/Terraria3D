@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://555w0tkkfvvh"]
+[gd_scene load_steps=3 format=3 uid="uid://555w0tkkfvvh"]
 
+[ext_resource type="Script" uid="uid://cb2cqk1bbugia" path="res://src/ui/start_game/StartGame.cs" id="1_0v006"]
 [ext_resource type="Script" uid="uid://dgpst8rten18u" path="res://src/ui/start_game/start.gd" id="1_35y3l"]
 
 [node name="StartGame" type="Control"]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_0v006")
 
 [node name="Start" type="Button" parent="."]
 layout_mode = 1

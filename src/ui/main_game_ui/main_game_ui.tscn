@@ -28,11 +28,12 @@ mouse_filter = 2
 script = ExtResource("1_2c7pp")
 
 [node name="Hearts" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 904.0
-offset_top = 32.0
-offset_right = 904.0
-offset_bottom = 32.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 20.0
+offset_right = -285.0
+grow_horizontal = 0
 script = ExtResource("1_diech")
 heart_fill_red = ExtResource("2_c45df")
 heart_fill_yellow = ExtResource("3_m6116")
@@ -67,11 +68,12 @@ theme_override_font_sizes/font_size = 40
 text = "text"
 
 [node name="Stars" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 1121.0
-offset_top = 103.0
-offset_right = 1121.0
-offset_bottom = 103.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 40.0
+offset_right = -30.0
+grow_horizontal = 0
 script = ExtResource("9_m6116")
 star_single = ExtResource("10_mdo0c")
 star_up = ExtResource("11_lqmw5")

@@ -27,12 +27,17 @@ public partial class Main : Node3D
     public override void _Ready()
     {
         base._Ready();
+        Input.MouseMode = Input.MouseModeEnum.Hidden;
         WorldFile.LoadOrCreate(WorldPath, this);
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if (Input.IsActionPressed("exit"))
+        {
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+        }
     }
 
     public void CheckAndLoadChunk(Vector3 pos)
@@ -49,5 +54,11 @@ public partial class Main : Node3D
     {
         var chunk = new Chunk();
         dir.Add(chunk_pos, chunk);
+    }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 }

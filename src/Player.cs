@@ -8,6 +8,8 @@ public partial class Player : CharacterBody3D
     [Export]
     public int Speed = 10;
     [Export]
+    public int rotate_sen = 3;
+    [Export]
     public string PlayerName = "guest";
 
     Vector3 direction;
@@ -26,16 +28,25 @@ public partial class Player : CharacterBody3D
     [Export]
     public int ManaMax = 20;
 
-    public override void _Ready()
-    {
-        base._Ready();
-    }
-
     public override void _Process(double delta)
     {
         base._Process(delta);
         Move();
     }
+
+    public override void _Input(InputEvent @event)
+    {
+        base._Input(@event);
+        if (@event is InputEventMouseMotion mouseMotion)
+        {
+            RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * rotate_sen));
+            RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * rotate_sen));
+            var tmpx = Mathf.Clamp(Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
+            var tmpy = Mathf.Clamp(Rotation.Y, Mathf.DegToRad(-89), Mathf.DegToRad(89));
+            Rotation = new Vector3(tmpx, tmpy, 0);
+        }
+    }
+
 
     private void Move()
     {

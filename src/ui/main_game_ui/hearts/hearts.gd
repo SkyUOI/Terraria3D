@@ -37,7 +37,6 @@ func mouse_in_area():
     return (y_min <= y && y <= y_max) && (x_min <= x && x <= x_max)
 
 func _process(_delta):
-    clear_hearts()
     draw_hearts()
     
     if (mouse_in_area()):
@@ -56,16 +55,17 @@ func _ready():
 func clear_frame():
     for c in $Frame.get_children():
         c.queue_free()
+    x_min = 1000
+    x_max = 0
+    y_min = 1000
+    y_max = 0
 
 func clear_hearts():
     for c in $HeartRed.get_children():
         c.queue_free()
     for c in $HeartYellow.get_children():
         c.queue_free()
-    x_min = 1000
-    x_max = 0
-    y_min = 1000
-    y_max = 0
+    
     
 func get_frame(frame_num: int) -> Array[Sprite2D]:
     if (frame_num == 1):
@@ -122,6 +122,8 @@ func draw_frame():
     
     for f in frame:
         $Frame.add_child(f)
+        update_focus_area(f)
+    extend_focus_area()
 
 # 根据血量绘制心
 func draw_hearts():
@@ -136,8 +138,8 @@ func draw_hearts():
         else    heart_num / 2
     var heart_red_num: float = heart_num - heart_yellow_num
     
-    var delta_red: float= heart_scale_delta if heart_red_max != heart_red_num else 0
-    var delta_yellow: float = heart_scale_delta if heart_yellow_max != heart_yellow_num else 0
+    var delta_red: float = heart_scale_delta if heart_red_max != heart_red_num else 0.0
+    var delta_yellow: float = heart_scale_delta if heart_yellow_max != heart_yellow_num else 0.0
     
     var heart_red: Array[Sprite2D] = get_heart(heart_red_num, heart_fill_red\
         , delta_red)
@@ -146,11 +148,8 @@ func draw_hearts():
     
     for hy in heart_yellow:
         $HeartYellow.add_child(hy)
-        update_focus_area(hy)
     for hr in heart_red:
         $HeartRed.add_child(hr)
-        update_focus_area(hr)
-    extend_focus_area()
 
 func update_focus_area(heart: Sprite2D):
     x_min = min(x_min, heart.global_position.x)

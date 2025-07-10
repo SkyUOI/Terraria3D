@@ -27,7 +27,7 @@ public partial class Main : Node3D
     public override void _Ready()
     {
         base._Ready();
-        Input.MouseMode = Input.MouseModeEnum.Hidden;
+        Input.MouseMode = Input.MouseModeEnum.Captured;
         WorldFile.LoadOrCreate(WorldPath, this);
     }
 

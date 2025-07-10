@@ -22,9 +22,9 @@ func set_mp(mp: int):
         draw_stars()
     
 func set_mp_max(mp_max: int):
-    var star_num_max_new = mp_max / 20
+    var star_num_max_new = mp_max / 20.0
     if star_num_max_new != star_num_max:
-        star_num_max = star_num_max_new
+        star_num_max = int(star_num_max_new)
         draw_frame()
     
 func mouse_in_area():
@@ -94,6 +94,7 @@ func get_frame(frame_num: int) -> Array[Sprite2D]:
     return frames
 
 func draw_frame():
+    clear_frame()
     var frame_num = star_num_max
     var frame: Array[Sprite2D] = get_frame(frame_num)
     
@@ -125,6 +126,7 @@ func get_star(num: float, star_scale_delta: float) -> Array[Sprite2D]:
 
 
 func draw_stars():
+    clear_star()
     var star_scale_delta = (sin($Timer.time_left * TAU) + 1) * 0.05
         
     var star: Array[Sprite2D] = get_star(star_num, star_scale_delta)

@@ -25,9 +25,9 @@ func set_hp(hp: int):
         draw_hearts()
 
 func set_hp_max(hp_max: int):
-    var heart_num_max_new = hp_max / 20
+    var heart_num_max_new = hp_max / 20.0
     if heart_num_max_new != heart_num_max:
-        heart_num_max = heart_num_max_new
+        heart_num_max = int(heart_num_max_new)
         draw_frame()
 
 func mouse_in_area():

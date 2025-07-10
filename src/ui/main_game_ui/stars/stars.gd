@@ -6,27 +6,69 @@ extends Control
 @export var star_down: Texture
 @export var star_fill: Texture
 
+@onready var label = $Label
+
 var star_num: float = 20
 var star_num_max: int = 20
+var x_min = 10000
+var x_max = 0
+var y_min = 10000
+var y_max = 0
 
 func set_mp(mp: int):
-    star_num = float(mp) / 20.0
-    draw_stars()
+    var star_num_new = float(mp) / 20.0
+    if star_num_new != star_num:
+        star_num = star_num_new
+        draw_stars()
     
 func set_mp_max(mp_max: int):
-    star_num_max = mp_max / 20
-    draw_frame()
+    var star_num_max_new = mp_max / 20
+    if star_num_max_new != star_num_max:
+        star_num_max = star_num_max_new
+        draw_frame()
+    
+func mouse_in_area():
+    var pos = get_global_mouse_position()
+    var x = pos.x
+    var y = pos.y
+    return (y_min <= y && y <= y_max) && (x_min <= x && x <= x_max)
+    
+func set_label_text():
+    label.text = str(int(roundf(star_num * 20))) + "/" + str(star_num_max * 20)
 
 
 func _process(_delta):
     draw_stars()
+    
+    if (mouse_in_area()):
+        set_label_text()
+        label.global_position = get_viewport().get_mouse_position() + Vector2(-30, -30)
+        label.visible = true
+    else:
+        label.visible = false
 
 func _ready():
     draw_frame()
+    
+func extend_focus_area():
+    x_min -= 10
+    x_max += 10
+    y_min -= 10
+    y_max += 10
+    
+func update_focus_area(star: Sprite2D):
+    x_min = min(x_min, star.global_position.x)
+    x_max = max(x_max, star.global_position.x)
+    y_min = min(y_min, star.global_position.y)
+    y_max = max(y_max, star.global_position.y)
 
 func clear_frame():
     for c in $Frame.get_children():
         c.queue_free()
+    x_min = 10000
+    x_max = 0
+    y_min = 10000
+    y_max = 0
 
 func get_frame(frame_num: int) -> Array[Sprite2D]:
     if (frame_num == 1):
@@ -57,6 +99,8 @@ func draw_frame():
     
     for f in frame:
         $Frame.add_child(f)
+        update_focus_area(f)
+    extend_focus_area()
         
 func clear_star():
     for c in $Star.get_children():

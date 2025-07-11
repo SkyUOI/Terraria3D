@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene load_steps=11 format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
+[ext_resource type="PackedScene" uid="uid://bdtvlbapycppo" path="res://src/item/Dirt/dirt.tscn" id="2_kmhfv"]
 [ext_resource type="PackedScene" uid="uid://d06xxij722ye7" path="res://src/sun.tscn" id="3_5q4o7"]
 [ext_resource type="Script" uid="uid://bae1pxhihpfe" path="res://src/Floor.cs" id="3_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
@@ -22,8 +23,11 @@ sdfgi_energy = 10.0
 [node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui")]
 script = ExtResource("1_fyndt")
 main_game_ui = NodePath("MainGameUI")
+dirt_scene = ExtResource("2_kmhfv")
 
-[node name="Player" parent="." groups=["Persist"] instance=ExtResource("1_eewff")]
+[node name="Player" parent="." node_paths=PackedStringArray("main", "main_game_ui") groups=["Persist"] instance=ExtResource("1_eewff")]
+main = NodePath("..")
+main_game_ui = NodePath("../MainGameUI")
 
 [node name="Floor" type="MeshInstance3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)

@@ -8,7 +8,7 @@ public partial class Item : Node
 
 }
 
-enum ItemId
+public enum ItemId
 {
     IronPickaxe = 1,
 }

@@ -17,7 +17,7 @@ public partial class Player : CharacterBody3D
     [Export]
     Main main;
     [Export]
-    Control main_game_ui;
+    MainGameUi main_game_ui;
 
     [Export]
     public int Health = 100;
@@ -32,18 +32,27 @@ public partial class Player : CharacterBody3D
     {
         base._Process(delta);
         Move();
+        main.CheckAndLoadChunk(Position);
+        // GD.Print($"player position: {Position}");
     }
 
     public override void _Input(InputEvent @event)
     {
         base._Input(@event);
-        if (@event is InputEventMouseMotion mouseMotion)
+        if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
             RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * rotate_sen));
             RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * rotate_sen));
             var tmpx = Mathf.Clamp(Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
             var tmpy = Mathf.Clamp(Rotation.Y, Mathf.DegToRad(-89), Mathf.DegToRad(89));
             Rotation = new Vector3(tmpx, tmpy, 0);
+        }
+        else if (@event is InputEventMouseButton mouseButton)
+        {
+            if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed && !main_game_ui.PointInUI(mouseButton.GlobalPosition))
+            {
+                main.MouseInGame();
+            }
         }
     }
 
@@ -53,23 +62,23 @@ public partial class Player : CharacterBody3D
         var direct = Vector3.Zero;
         if (Input.IsActionPressed("move_left"))
         {
-            direct.X -= 1;
+            direct -= Transform.Basis.X;
         }
         if (Input.IsActionPressed("move_right"))
         {
-            direct.X += 1;
+            direct += Transform.Basis.X;
         }
         if (Input.IsActionPressed("move_forward"))
         {
-            direct.Z -= 1;
+            direct -= Transform.Basis.Z;
         }
         if (Input.IsActionPressed("move_back"))
         {
-            direct.Z += 1;
+            direct += Transform.Basis.Z;
         }
         if (Input.IsActionPressed("move_up"))
         {
-            direct.Y += 1;
+            direct += Transform.Basis.Y;
         }
         if (direct.Length() > 0)
         {

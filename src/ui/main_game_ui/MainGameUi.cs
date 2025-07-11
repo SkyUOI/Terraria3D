@@ -29,4 +29,9 @@ public partial class MainGameUi : Control
             GetNode("Stars").Call("set_mp_max", 200);
         }
     }
+
+    public bool PointInUI(Vector2 point)
+    {
+        return GetNode<Control>("Hearts").GetGlobalRect().HasPoint(point) || GetNode<Control>("Stars").GetGlobalRect().HasPoint(point);
+    }
 }

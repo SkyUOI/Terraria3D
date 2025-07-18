@@ -2,44 +2,60 @@
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
-[ext_resource type="PackedScene" uid="uid://bdtvlbapycppo" path="res://src/item/Dirt/dirt.tscn" id="2_kmhfv"]
-[ext_resource type="PackedScene" uid="uid://d06xxij722ye7" path="res://src/sun.tscn" id="3_5q4o7"]
 [ext_resource type="Script" uid="uid://bae1pxhihpfe" path="res://src/Floor.cs" id="3_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fyndt"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_kmhfv"]
+sky_material = SubResource("ProceduralSkyMaterial_fyndt")
+
+[sub_resource type="Environment" id="Environment_rlaii"]
+background_mode = 2
+sky = SubResource("Sky_kmhfv")
+tonemap_mode = 2
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gh0ne"]
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_5q4o7"]
 material = SubResource("ORMMaterial3D_gh0ne")
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fyndt"]
 size = Vector3(100, 0.1, 100)
 
-[sub_resource type="Environment" id="Environment_5q4o7"]
-sdfgi_enabled = true
-sdfgi_energy = 10.0
-
-[sub_resource type="Compositor" id="Compositor_3cfgd"]
-
-[node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui", "grid")]
 script = ExtResource("1_fyndt")
 main_game_ui = NodePath("MainGameUI")
-dirt_scene = ExtResource("2_kmhfv")
+grid = NodePath("GridMap")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_rlaii")
 
 [node name="Player" parent="." node_paths=PackedStringArray("main", "main_game_ui") groups=["Persist"] instance=ExtResource("1_eewff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60453, 0)
 main = NodePath("..")
 main_game_ui = NodePath("../MainGameUI")
 
-[node name="Floor" type="MeshInstance3D" parent="." node_paths=PackedStringArray("player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="StaticBody3D" node_paths=PackedStringArray("player")]
 mesh = SubResource("BoxMesh_5q4o7")
+skeleton = NodePath("../../root/@EditorNode@21301/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/Main")
 script = ExtResource("3_fyndt")
-player = NodePath("../Player")
+player = NodePath("../../Player")
 
-[node name="Sun" parent="." instance=ExtResource("3_5q4o7")]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_5q4o7")
-compositor = SubResource("Compositor_3cfgd")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_fyndt")
 
 [node name="MainGameUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_3cfgd")]
 player = NodePath("../Player")
+
+[node name="GridMap" type="GridMap" parent="."]

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Godot;
+using Microsoft.VisualBasic;
 
 public class WorldFile
 {
@@ -10,9 +11,9 @@ public class WorldFile
 
     static public void LoadOrCreate(string wld_name, Main main)
     {
-        var path = ProjectSettings.GlobalizePath(WldDir.PathJoin(wld_name));
+        var path = GetWorldDataPath(wld_name);
         Directory.CreateDirectory(path);
-        path = ProjectSettings.GlobalizePath(WldDir.PathJoin(wld_name + ".wld"));
+        path = GetWldFilePath(wld_name);
         FileStream f;
         try
         {
@@ -26,28 +27,39 @@ public class WorldFile
         }
         var data = JsonSerializer.Deserialize<WldData>(f);
         main.WorldName = data.WorldName;
-        main.world_random = new StatefulRandom(data.RandomState);
+        var rand = new RandomNumberGenerator();
+        rand.State = data.RandomState;
+        main.world_random = rand;
     }
 
     static public void CreateWorld(string wld_name)
     {
-        var wld_dir = ProjectSettings.GlobalizePath(WldDir);
-        Directory.CreateDirectory(wld_dir);
-        using var f = File.Create(wld_dir.PathJoin(wld_name + ".wld"));
+        using var f = File.Create(GetWldFilePath(wld_name));
         var rand = new Random();
         var data = new WldData((ulong)rand.NextInt64());
         data.WorldName = wld_name;
         f.Write(JsonSerializer.SerializeToUtf8Bytes(data));
     }
 
-    static public string GetWorldPath(string world_name)
+    static public void DeleteWorld(string wld_name)
+    {
+        Directory.Delete(GetWorldDataPath(wld_name), true);
+        File.Delete(GetWldFilePath(wld_name));
+    }
+
+    static public string GetWorldDataPath(string world_name)
     {
         return ProjectSettings.GlobalizePath(WldDir.PathJoin(world_name));
     }
 
+    static public string GetWldFilePath(string world_name)
+    {
+        return ProjectSettings.GlobalizePath(WldDir.PathJoin(world_name + ".wld"));
+    }
+
     static public string GetChunksPath(string world_name)
     {
-        return GetWorldPath(world_name).PathJoin(ChunksDir);
+        return GetWorldDataPath(world_name).PathJoin(ChunksDir);
     }
 }
 

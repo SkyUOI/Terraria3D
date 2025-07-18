@@ -8,7 +8,9 @@ public partial class Player : CharacterBody3D
     [Export]
     public int Speed = 10;
     [Export]
-    public int rotate_sen = 3;
+    public int rotate_sen_y = 3;
+    [Export]
+    public float rotate_sen_x = 0.8f;
     [Export]
     public string PlayerName = "guest";
 
@@ -27,13 +29,24 @@ public partial class Player : CharacterBody3D
     public int Mana = 20;
     [Export]
     public int ManaMax = 20;
+    [Export]
+    public float JumpVelocity = 4.5f;
+
+    [Export]
+    Camera3D camera3D;
+
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        Move();
         main.CheckAndLoadChunk(Position);
         // GD.Print($"player position: {Position}");
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        Move(delta);
     }
 
     public override void _Input(InputEvent @event)
@@ -41,11 +54,10 @@ public partial class Player : CharacterBody3D
         base._Input(@event);
         if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * rotate_sen));
-            RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * rotate_sen));
-            var tmpx = Mathf.Clamp(Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
-            var tmpy = Mathf.Clamp(Rotation.Y, Mathf.DegToRad(-89), Mathf.DegToRad(89));
-            Rotation = new Vector3(tmpx, tmpy, 0);
+            RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * rotate_sen_x));
+            camera3D.RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * rotate_sen_y));
+            var tmpx = Mathf.Clamp(camera3D.Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
+            camera3D.Rotation = new Vector3(tmpx, camera3D.Rotation.Y, 0);
         }
         else if (@event is InputEventMouseButton mouseButton)
         {
@@ -57,34 +69,36 @@ public partial class Player : CharacterBody3D
     }
 
 
-    private void Move()
+    private void Move(double delta)
     {
-        var direct = Vector3.Zero;
-        if (Input.IsActionPressed("move_left"))
+        Vector3 velocity = Velocity;
+
+        // Add the gravity.
+        if (!IsOnFloor())
         {
-            direct -= Transform.Basis.X;
+            velocity += GetGravity() * (float)delta;
         }
-        if (Input.IsActionPressed("move_right"))
+
+        // Handle Jump.
+        if (Input.IsActionJustPressed("jump") && IsOnFloor())
         {
-            direct += Transform.Basis.X;
+            velocity.Y = JumpVelocity;
         }
-        if (Input.IsActionPressed("move_forward"))
+
+        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        if (direction != Vector3.Zero)
         {
-            direct -= Transform.Basis.Z;
+            velocity.X = direction.X * Speed;
+            velocity.Z = direction.Z * Speed;
         }
-        if (Input.IsActionPressed("move_back"))
+        else
         {
-            direct += Transform.Basis.Z;
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
         }
-        if (Input.IsActionPressed("move_up"))
-        {
-            direct += Transform.Basis.Y;
-        }
-        if (direct.Length() > 0)
-        {
-            direct = direct.Normalized();
-        }
-        Velocity = direct * Speed;
+
+        Velocity = velocity;
         MoveAndSlide();
     }
 }

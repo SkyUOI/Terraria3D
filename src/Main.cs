@@ -25,22 +25,35 @@ public class Chunk
 
 public partial class Main : Node3D
 {
-    Dictionary<Vector2, Chunk> dir;
+    Dictionary<Vector2I, Chunk> dir;
     static string WorldPath = "Test";
     public string WorldName { get; set; }
     [Export]
     public Control main_game_ui { get; set; }
-    public StatefulRandom world_random;
+    public RandomNumberGenerator world_random;
     [Export]
-    public PackedScene dirt_scene { get; set; }
+    public GridMap grid { get; set; }
 
     public override void _Ready()
     {
         base._Ready();
-        dir = new Dictionary<Vector2, Chunk>();
+        InitMeshLibrary();
+        dir = new Dictionary<Vector2I, Chunk>();
         MouseInGame();
         WorldFile.LoadOrCreate(WorldPath, this);
         RenderBlocks();
+    }
+
+    public void InitMeshLibrary()
+    {
+        var lib = new MeshLibrary();
+        BlockRegistry.RegisterBlock<Dirt>();
+        foreach (var block_kv in BlockRegistry.BlockTypes)
+        {
+            lib.CreateItem((int)block_kv.Key);
+            lib.SetItemMesh((int)block_kv.Key, BlockRegistry.GetMesh(block_kv.Key));
+        }
+        grid.MeshLibrary = lib;
     }
 
     public override void _Process(double delta)
@@ -60,7 +73,7 @@ public partial class Main : Node3D
         }
     }
 
-    public void RenderBlock(Vector2 chunk_pos)
+    public void RenderBlock(Vector2I chunk_pos)
     {
         GD.Print(chunk_pos);
         // return;
@@ -76,13 +89,10 @@ public partial class Main : Node3D
                     {
                         continue;
                     }
-                    var block_pos = new Vector3(j, l, k);
+                    var block_pos = new Vector3I(j, l, k);
                     block_pos.X += chunk_pos.X * Chunk.X;
                     block_pos.Z += chunk_pos.Y * Chunk.Z;
-                    var block_node = dirt_scene.Instantiate<Dirt>();
-                    AddChild(block_node);
-                    block_node.Position = block_pos;
-                    block_node.Show();
+                    grid.SetCellItem(block_pos, (int)block.blockId);
                 }
             }
         }
@@ -100,7 +110,7 @@ public partial class Main : Node3D
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public void LoadChunk(Vector2 chunk_pos)
+    public void LoadChunk(Vector2I chunk_pos)
     {
         var chunk_path = WorldFile.GetChunksPath(WorldPath).PathJoin(chunk_pos.X + "_" + chunk_pos.Y + ".chunk");
         if (File.Exists(chunk_path))

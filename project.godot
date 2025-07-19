@@ -58,4 +58,5 @@ locale/translations=PackedStringArray("res://localization/csv_convert/zh-Hans.zh
 
 [physics]
 
+3d/physics_engine="Jolt Physics"
 2d/default_gravity=1500.0

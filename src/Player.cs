@@ -17,7 +17,7 @@ public partial class Player : CharacterBody3D
     Vector3 direction;
 
     [Export]
-    Main main;
+    Terraria3D.Main main;
     [Export]
     MainGameUi main_game_ui;
 

@@ -9,7 +9,7 @@ public class WorldFile
     public const string WldDir = "user://Worlds";
     public const string ChunksDir = "Chunks";
 
-    static public void LoadOrCreate(string wld_name, Main main)
+    static public void LoadOrCreate(string wld_name, Terraria3D.Main main)
     {
         var path = GetWorldDataPath(wld_name);
         Directory.CreateDirectory(path);
@@ -29,7 +29,7 @@ public class WorldFile
         main.WorldName = data.WorldName;
         var rand = new RandomNumberGenerator();
         rand.State = data.RandomState;
-        main.world_random = rand;
+        main.WorldRandom = rand;
         WorldGeneration.noise = new FastNoiseLite();
         WorldGeneration.noise.Seed = (int)data.Seed;
     }

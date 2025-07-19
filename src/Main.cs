@@ -1,61 +1,50 @@
-using Godot;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Runtime.InteropServices;
 using System.Text.Json;
+using Godot;
 
-public class Block
+namespace Terraria3D;
+
+public class Block(BlockId blockId)
 {
-    public BlockId blockId = BlockId.Nop;
-
-    public Block(BlockId blockId)
-    {
-        this.blockId = blockId;
-    }
+    public BlockId BlockId = blockId;
 }
 
-public class Chunk
+public class Chunk(Vector3I pos)
 {
     public const int X = 16;
     public const int Z = 16;
     public const int Y = 16;
-    public Vector3I pos;
-    public Block[,,] blocks = new Block[X, Y, Z];
+    public Vector3I Pos = pos;
+    public Block[,,] Blocks = new Block[X, Y, Z];
 
-    public Chunk(Vector3I pos)
+    public Vector3 GetGlobalPos(Vector3I inChunkPos)
     {
-        this.pos = pos;
-    }
-
-    public Vector3 GetGlobalPos(Vector3I inchunk_pos)
-    {
-        return new Vector3(pos.X * X + inchunk_pos.X, pos.Y * Y + inchunk_pos.Y, pos.Z * Z + inchunk_pos.Z);
+        return new Vector3(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
     }
 
     public (int, int) HeightRange()
     {
-        return (pos.Y, pos.Y + Y - 1);
+        return (Pos.Y, Pos.Y + Y - 1);
     }
 }
 
 public partial class Main : Node3D
 {
-    Dictionary<Vector3I, Chunk> dir;
-    static string WorldPath = "Test";
+    Dictionary<Vector3I, Chunk> _dir;
+    static string _worldPath = "Test";
     public string WorldName { get; set; }
     [Export]
-    public Control main_game_ui { get; set; }
-    public RandomNumberGenerator world_random;
+    public Control MainGameUi { get; set; }
+    public RandomNumberGenerator WorldRandom;
     [Export]
-    public GridMap grid { get; set; }
+    public GridMap Grid { get; set; }
     [Export]
-    Player player { get; set; }
+    Player Player { get; set; }
     [Export]
-    bool recreate_world { get; set; }
+    bool RecreateWorld { get; set; }
 
-    public int RenderChunkDistance = 12;
+    private int _renderChunkDistance = 12;
 
     public override void _Ready()
     {
@@ -66,29 +55,29 @@ public partial class Main : Node3D
         InitMeshLibrary();
         WorldGeneration.Init();
 
-        dir = new Dictionary<Vector3I, Chunk>();
+        _dir = new Dictionary<Vector3I, Chunk>();
         MouseInGame();
-        WorldFile.LoadOrCreate(WorldPath, this);
+        WorldFile.LoadOrCreate(_worldPath, this);
         RenderBlocks();
     }
 
-    public void InitMeshLibrary()
+    private void InitMeshLibrary()
     {
         var lib = new MeshLibrary();
         BlockRegistry.RegisterBlock<Dirt>();
-        foreach (var block_kv in BlockRegistry.BlockTypes)
+        foreach (var blockKv in BlockRegistry.BlockTypes)
         {
-            lib.CreateItem((int)block_kv.Key);
-            lib.SetItemMesh((int)block_kv.Key, BlockRegistry.GetMesh(block_kv.Key));
-            var shape = BlockRegistry.GetShape(block_kv.Key);
+            lib.CreateItem((int)blockKv.Key);
+            lib.SetItemMesh((int)blockKv.Key, BlockRegistry.GetMesh(blockKv.Key));
+            var shape = BlockRegistry.GetShape(blockKv.Key);
             if (shape != null)
             {
                 // GD.Print($"set shape for {block_kv.Key}");
                 // GD.Print(shape);
-                lib.SetItemShapes((int)block_kv.Key, shape);
+                lib.SetItemShapes((int)blockKv.Key, shape);
             }
         }
-        grid.MeshLibrary = lib;
+        Grid.MeshLibrary = lib;
     }
 
     public override void _Process(double delta)
@@ -100,34 +89,34 @@ public partial class Main : Node3D
         }
     }
 
-    public void RenderBlocks()
+    private void RenderBlocks()
     {
-        foreach (var chunk_kv in dir)
+        foreach (var chunkKv in _dir)
         {
-            RenderBlock(chunk_kv.Key);
+            RenderBlock(chunkKv.Key);
         }
     }
 
-    public void RenderBlock(Vector3I chunk_pos)
+    private void RenderBlock(Vector3I chunkPos)
     {
-        GD.Print(chunk_pos);
+        GD.Print(chunkPos);
         // return;
-        var chunk = dir[chunk_pos];
+        var chunk = _dir[chunkPos];
         for (int j = 0; j < Chunk.X; ++j)
         {
             for (int k = 0; k < Chunk.Z; ++k)
             {
                 for (int l = 0; l < Chunk.Y; ++l)
                 {
-                    var block = chunk.blocks[j, l, k];
+                    var block = chunk.Blocks[j, l, k];
                     if (block == null)
                     {
                         continue;
                     }
-                    var block_pos = new Vector3I(j, l, k);
-                    block_pos.X += chunk_pos.X * Chunk.X;
-                    block_pos.Z += chunk_pos.Y * Chunk.Z;
-                    grid.SetCellItem(block_pos, (int)block.blockId);
+                    var blockPos = new Vector3I(j, l, k);
+                    blockPos.X += chunkPos.X * Chunk.X;
+                    blockPos.Z += chunkPos.Y * Chunk.Z;
+                    Grid.SetCellItem(blockPos, (int)block.BlockId);
                 }
             }
         }
@@ -135,29 +124,29 @@ public partial class Main : Node3D
 
     public void CheckAndLoadChunk(Vector3 pos)
     {
-        var chunk_pos = Utils.GetChunk(pos);
-        if (dir.ContainsKey(chunk_pos))
+        var chunkPos = Utils.GetChunk(pos);
+        if (_dir.ContainsKey(chunkPos))
         {
             return;
         }
-        LoadChunk(chunk_pos);
-        RenderBlock(chunk_pos);
+        LoadChunk(chunkPos);
+        RenderBlock(chunkPos);
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public void LoadChunk(Vector3I chunk_pos)
+    private void LoadChunk(Vector3I chunkPos)
     {
-        var chunk_path = WorldFile.GetChunksPath(WorldPath).PathJoin(WorldFile.GetChunkFIleName(chunk_pos));
-        if (File.Exists(chunk_path))
+        var chunkPath = WorldFile.GetChunksPath(_worldPath).PathJoin(WorldFile.GetChunkFIleName(chunkPos));
+        if (File.Exists(chunkPath))
         {
-            using var f = File.OpenRead(chunk_path);
-            var chunk_data = JsonSerializer.Deserialize<Chunk>(f);
-            dir.Add(chunk_pos, chunk_data);
+            using var f = File.OpenRead(chunkPath);
+            var chunkData = JsonSerializer.Deserialize<Chunk>(f);
+            _dir.Add(chunkPos, chunkData);
             return;
         }
-        var chunk = new Chunk(chunk_pos);
+        var chunk = new Chunk(chunkPos);
         WorldGeneration.GenerateChunk(chunk);
-        dir.Add(chunk_pos, chunk);
+        _dir.Add(chunkPos, chunk);
     }
 
     public override void _ExitTree()
@@ -171,19 +160,19 @@ public partial class Main : Node3D
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
-    public void MouseOutGame()
+    private void MouseOutGame()
     {
         Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 
-    public void _on_unload_chunks_timer_timeout()
+    private void _on_unload_chunks_timer_timeout()
     {
-        foreach (var chunk in dir)
+        foreach (var chunk in _dir)
         {
-            var chunk_pos = chunk.Key;
-            if (chunk_pos.DistanceTo(Utils.GetChunk(player.Position)) > RenderChunkDistance)
+            var chunkPos = chunk.Key;
+            if (chunkPos.DistanceTo(Utils.GetChunk(Player.Position)) > _renderChunkDistance)
             {
-                dir.Remove(chunk_pos);
+                _dir.Remove(chunkPos);
             }
         }
     }

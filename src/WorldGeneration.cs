@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Terraria3D;
 
 public partial class WorldGeneration : Node
 {
@@ -23,7 +24,7 @@ public partial class WorldGeneration : Node
                 var height_range = chunk.HeightRange();
                 for (int k = height_range.Item1; k <= Math.Min(height, height_range.Item2); ++k)
                 {
-                    chunk.blocks[i, k - height_range.Item1, j] = new Block(BlockId.Dirt);
+                    chunk.Blocks[i, k - height_range.Item1, j] = new Block(BlockId.Dirt);
                 }
             }
         }

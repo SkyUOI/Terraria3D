@@ -27,11 +27,11 @@ size = Vector3(100, 1, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_fyndt"]
 size = Vector3(100, 0.1, 100)
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui", "grid", "player")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Grid", "Player")]
 script = ExtResource("1_fyndt")
-main_game_ui = NodePath("MainGameUI")
-grid = NodePath("GridMap")
-player = NodePath("Player")
+MainGameUi = NodePath("MainGameUI")
+Grid = NodePath("GridMap")
+Player = NodePath("Player")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)

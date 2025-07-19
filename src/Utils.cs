@@ -2,8 +2,8 @@ using Godot;
 
 public class Utils
 {
-    public static Vector2I GetChunk(Vector3 pos)
+    public static Vector3I GetChunk(Vector3 pos)
     {
-        return new Vector2I((int)pos.X / 16, (int)pos.Z / 16);
+        return new Vector3I((int)pos.X / Chunk.X, (int)pos.Y / Chunk.Y, (int)pos.Z / Chunk.Z);
     }
 }

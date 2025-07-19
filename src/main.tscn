@@ -27,10 +27,11 @@ size = Vector3(100, 1, 100)
 [sub_resource type="BoxShape3D" id="BoxShape3D_fyndt"]
 size = Vector3(100, 0.1, 100)
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui", "grid")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("main_game_ui", "grid", "player")]
 script = ExtResource("1_fyndt")
 main_game_ui = NodePath("MainGameUI")
 grid = NodePath("GridMap")
+player = NodePath("Player")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
@@ -44,13 +45,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60453, 0)
 main = NodePath("..")
 main_game_ui = NodePath("../MainGameUI")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("3_fyndt")
+player = NodePath("../Player")
 
-[node name="Floor" type="MeshInstance3D" parent="StaticBody3D" node_paths=PackedStringArray("player")]
+[node name="Floor" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_5q4o7")
 skeleton = NodePath("../../root/@EditorNode@21301/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/Main")
-script = ExtResource("3_fyndt")
-player = NodePath("../../Player")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_fyndt")
@@ -59,3 +60,9 @@ shape = SubResource("BoxShape3D_fyndt")
 player = NodePath("../Player")
 
 [node name="GridMap" type="GridMap" parent="."]
+
+[node name="UnloadChunks" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[connection signal="timeout" from="UnloadChunks" to="." method="_on_unload_chunks_timer_timeout"]

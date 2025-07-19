@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Floor : MeshInstance3D
+public partial class Floor : StaticBody3D
 {
     [Export]
     Player player;

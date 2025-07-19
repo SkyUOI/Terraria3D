@@ -80,6 +80,13 @@ public partial class Main : Node3D
         {
             lib.CreateItem((int)block_kv.Key);
             lib.SetItemMesh((int)block_kv.Key, BlockRegistry.GetMesh(block_kv.Key));
+            var shape = BlockRegistry.GetShape(block_kv.Key);
+            if (shape != null)
+            {
+                // GD.Print($"set shape for {block_kv.Key}");
+                // GD.Print(shape);
+                lib.SetItemShapes((int)block_kv.Key, shape);
+            }
         }
         grid.MeshLibrary = lib;
     }

@@ -13,6 +13,8 @@ public interface IBlock
     static abstract BlockId Id { get; }
 
     static abstract Mesh GetMesh();
+
+    static Godot.Collections.Array GetShape() => null;
 }
 
 public class BlockRegistry
@@ -33,6 +35,17 @@ public class BlockRegistry
         {
             var getMeshMethod = blockType.GetMethod("GetMesh");
             return (Mesh)getMeshMethod.Invoke(null, null);
+        }
+        return null;
+    }
+
+    // 获取方块 Shape
+    public static Godot.Collections.Array GetShape(BlockId id)
+    {
+        if (BlockTypes.TryGetValue(id, out var blockType))
+        {
+            var getMeshMethod = blockType.GetMethod("GetShape");
+            return (Godot.Collections.Array)getMeshMethod.Invoke(null, null);
         }
         return null;
     }

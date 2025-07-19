@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 public class BlockUtil
@@ -50,7 +51,7 @@ public class BlockUtil
         var mesh = st.Commit();
         var mat = new StandardMaterial3D();
         mat.AlbedoTexture = texture.Atlas;
-        // mat.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
+        mat.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
         mesh.SurfaceSetMaterial(0, mat);
         return mesh;
     }
@@ -66,5 +67,15 @@ public class Dirt : IBlock
     public static Mesh GetMesh()
     {
         return BlockUtil.GetMesh(texture);
+    }
+
+    public static Godot.Collections.Array GetShape()
+    {
+        var shape = new BoxShape3D();
+        shape.Size = GetMesh().GetAabb().Size;
+        Variant[] ls = { shape, Transform3D.Identity };
+        var ret = new Godot.Collections.Array(ls);
+        // GD.Print(ret);
+        return ret;
     }
 }

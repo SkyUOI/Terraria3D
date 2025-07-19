@@ -8,7 +8,7 @@ public partial class WorldGeneration : Node
 
     public static void Init()
     {
-        noise.Frequency = 0.05f;
+        noise.Frequency = 0.5f;
     }
 
     public static void GenerateChunk(Chunk chunk)
@@ -20,9 +20,10 @@ public partial class WorldGeneration : Node
                 var pos = chunk.GetGlobalPos(new Vector3I(i, j, 0));
                 var pos2d = new Vector2(pos.X, pos.Z);
                 var height = ConvertNoiseToHeight(noise.GetNoise2Dv(pos2d));
-                for (int k = chunk.HeightRange().Item1; k <= Math.Min(height, chunk.HeightRange().Item2); ++k)
+                var height_range = chunk.HeightRange();
+                for (int k = height_range.Item1; k <= Math.Min(height, height_range.Item2); ++k)
                 {
-                    chunk.blocks[i, k, j] = new Block(BlockId.Dirt);
+                    chunk.blocks[i, k - height_range.Item1, j] = new Block(BlockId.Dirt);
                 }
             }
         }

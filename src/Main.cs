@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
 public class Block
@@ -20,7 +21,23 @@ public class Chunk
     public const int X = 16;
     public const int Z = 16;
     public const int Y = 16;
+    public Vector3I pos;
     public Block[,,] blocks = new Block[X, Y, Z];
+
+    public Chunk(Vector3I pos)
+    {
+        this.pos = pos;
+    }
+
+    public Vector3 GetGlobalPos(Vector3I inchunk_pos)
+    {
+        return new Vector3(pos.X * X + inchunk_pos.X, pos.Y * Y + inchunk_pos.Y, pos.Z * Z + inchunk_pos.Z);
+    }
+
+    public (int, int) HeightRange()
+    {
+        return (pos.Y, pos.Y + Y - 1);
+    }
 }
 
 public partial class Main : Node3D
@@ -131,7 +148,7 @@ public partial class Main : Node3D
             dir.Add(chunk_pos, chunk_data);
             return;
         }
-        var chunk = new Chunk();
+        var chunk = new Chunk(chunk_pos);
         WorldGeneration.GenerateChunk(chunk);
         dir.Add(chunk_pos, chunk);
     }

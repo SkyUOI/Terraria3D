@@ -1,12 +1,13 @@
 using Godot;
-using System;
+
+namespace Terraria3D.ui.start_game;
 
 public partial class StartGame : Control
 {
     public override void _Ready()
     {
         base._Ready();
-        var preferred_language = OS.GetLocaleLanguage();
-        TranslationServer.SetLocale(preferred_language);
+        var preferredLanguage = OS.GetLocaleLanguage();
+        TranslationServer.SetLocale(preferredLanguage);
     }
 }

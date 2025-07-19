@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Godot;
+using Terraria3D.block.NormalBlock;
 
 namespace Terraria3D;
 

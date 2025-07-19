@@ -1,10 +1,11 @@
 using Godot;
-using System;
+
+namespace Terraria3D.item;
 
 public partial class Item : Node
 {
     [Export]
-    public TextureRect icon;
+    public TextureRect Icon;
 
 }
 

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+namespace Terraria3D;
+
 public enum BlockId
 {
     Nop = 0,
@@ -34,7 +36,7 @@ public class BlockRegistry
         if (BlockTypes.TryGetValue(id, out var blockType))
         {
             var getMeshMethod = blockType.GetMethod("GetMesh");
-            return (Mesh)getMeshMethod.Invoke(null, null);
+            if (getMeshMethod != null) return (Mesh)getMeshMethod.Invoke(null, null);
         }
         return null;
     }
@@ -45,7 +47,7 @@ public class BlockRegistry
         if (BlockTypes.TryGetValue(id, out var blockType))
         {
             var getMeshMethod = blockType.GetMethod("GetShape");
-            return (Godot.Collections.Array)getMeshMethod.Invoke(null, null);
+            if (getMeshMethod != null) return (Godot.Collections.Array)getMeshMethod.Invoke(null, null);
         }
         return null;
     }

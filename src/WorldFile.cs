@@ -2,18 +2,19 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Godot;
-using Microsoft.VisualBasic;
+
+namespace Terraria3D;
 
 public class WorldFile
 {
     public const string WldDir = "user://Worlds";
     public const string ChunksDir = "Chunks";
 
-    static public void LoadOrCreate(string wld_name, Terraria3D.Main main)
+    public static void LoadOrCreate(string wldName, Main main)
     {
-        var path = GetWorldDataPath(wld_name);
+        var path = GetWorldDataPath(wldName);
         Directory.CreateDirectory(path);
-        path = GetWldFilePath(wld_name);
+        path = GetWldFilePath(wldName);
         FileStream f;
         try
         {
@@ -22,7 +23,7 @@ public class WorldFile
         }
         catch (FileNotFoundException)
         {
-            CreateWorld(wld_name);
+            CreateWorld(wldName);
             f = File.OpenRead(path);
         }
         var data = JsonSerializer.Deserialize<WldData>(f);
@@ -30,43 +31,45 @@ public class WorldFile
         var rand = new RandomNumberGenerator();
         rand.State = data.RandomState;
         main.WorldRandom = rand;
-        WorldGeneration.noise = new FastNoiseLite();
-        WorldGeneration.noise.Seed = (int)data.Seed;
+        WorldGeneration.Noise = new FastNoiseLite();
+        WorldGeneration.Noise.Seed = (int)data.Seed;
     }
 
-    static public void CreateWorld(string wld_name)
+    static public void CreateWorld(string wldName)
     {
-        using var f = File.Create(GetWldFilePath(wld_name));
+        using var f = File.Create(GetWldFilePath(wldName));
         var seed = GD.Randi();
-        var data = new WldData(seed);
-        data.WorldName = wld_name;
+        var data = new WldData(seed)
+        {
+            WorldName = wldName
+        };
         f.Write(JsonSerializer.SerializeToUtf8Bytes(data));
     }
 
-    static public void DeleteWorld(string wld_name)
+    public static void DeleteWorld(string wldName)
     {
-        Directory.Delete(GetWorldDataPath(wld_name), true);
-        File.Delete(GetWldFilePath(wld_name));
+        Directory.Delete(GetWorldDataPath(wldName), true);
+        File.Delete(GetWldFilePath(wldName));
     }
 
-    static public string GetWorldDataPath(string world_name)
+    public static string GetWorldDataPath(string worldName)
     {
-        return ProjectSettings.GlobalizePath(WldDir.PathJoin(world_name));
+        return ProjectSettings.GlobalizePath(WldDir.PathJoin(worldName));
     }
 
-    static public string GetWldFilePath(string world_name)
+    public static string GetWldFilePath(string worldName)
     {
-        return ProjectSettings.GlobalizePath(WldDir.PathJoin(world_name + ".wld"));
+        return ProjectSettings.GlobalizePath(WldDir.PathJoin(worldName + ".wld"));
     }
 
-    static public string GetChunksPath(string world_name)
+    public static string GetChunksPath(string worldName)
     {
-        return GetWorldDataPath(world_name).PathJoin(ChunksDir);
+        return GetWorldDataPath(worldName).PathJoin(ChunksDir);
     }
 
-    static public string GetChunkFIleName(Vector3I chunk_pos)
+    public static string GetChunkFIleName(Vector3I chunkPos)
     {
-        return chunk_pos.X + "_" + chunk_pos.Y + "_" + chunk_pos.Z + ".chunk";
+        return chunkPos.X + "_" + chunkPos.Y + "_" + chunkPos.Z + ".chunk";
     }
 }
 

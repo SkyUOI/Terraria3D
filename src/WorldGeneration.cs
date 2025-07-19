@@ -1,15 +1,15 @@
-using Godot;
 using System;
-using System.Security.Cryptography.X509Certificates;
-using Terraria3D;
+using Godot;
+
+namespace Terraria3D;
 
 public partial class WorldGeneration : Node
 {
-    public static FastNoiseLite noise = new FastNoiseLite();
+    public static FastNoiseLite Noise = new FastNoiseLite();
 
     public static void Init()
     {
-        noise.Frequency = 0.5f;
+        Noise.Frequency = 0.5f;
     }
 
     public static void GenerateChunk(Chunk chunk)
@@ -20,11 +20,11 @@ public partial class WorldGeneration : Node
             {
                 var pos = chunk.GetGlobalPos(new Vector3I(i, j, 0));
                 var pos2d = new Vector2(pos.X, pos.Z);
-                var height = ConvertNoiseToHeight(noise.GetNoise2Dv(pos2d));
-                var height_range = chunk.HeightRange();
-                for (int k = height_range.Item1; k <= Math.Min(height, height_range.Item2); ++k)
+                var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
+                var heightRange = chunk.HeightRange();
+                for (int k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
                 {
-                    chunk.Blocks[i, k - height_range.Item1, j] = new Block(BlockId.Dirt);
+                    chunk.Blocks[i, k - heightRange.Item1, j] = new Block(BlockId.Dirt);
                 }
             }
         }
@@ -32,6 +32,6 @@ public partial class WorldGeneration : Node
 
     public static int ConvertNoiseToHeight(float noise)
     {
-        return (int)(noise * (Consts.Y_LIMIT / 2));
+        return (int)(noise * (Consts.YLimit / 2));
     }
 }

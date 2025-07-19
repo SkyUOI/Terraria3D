@@ -1,5 +1,6 @@
 using Godot;
-using Terraria3D;
+
+namespace Terraria3D;
 
 public class Utils
 {

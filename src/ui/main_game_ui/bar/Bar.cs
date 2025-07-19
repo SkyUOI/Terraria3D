@@ -1,12 +1,13 @@
 using Godot;
-using System;
+
+namespace Terraria3D.ui.main_game_ui.bar;
 
 public partial class Bar : Control
 {
-    public Item[] hotbarItem;
-    public Item[,] inventoryItem;
+    public item.Item[] hotbarItem;
+    public item.Item[,] inventoryItem;
 
-    public void SetHotbarItem(Item[] item)
+    public void SetHotbarItem(Terraria3D.item.Item[] item)
     {
         hotbarItem = item;
         HBoxContainer hotbar = this.GetNode<HBoxContainer>("HotBar");
@@ -16,12 +17,12 @@ public partial class Bar : Control
             {
                 continue;
             }
-            TextureRect texture = hotbarItem[i].icon.Duplicate() as TextureRect;
+            TextureRect texture = hotbarItem[i].Icon.Duplicate() as TextureRect;
             hotbar.GetChild<Panel>(i).AddChild(texture);
         }
     }
 
-    public void SetInventoryItem(Item[,] item)
+    public void SetInventoryItem(Terraria3D.item.Item[,] item)
     {
         inventoryItem = item;
         GridContainer inventory = this.GetNode<GridContainer>("Inventory");
@@ -33,7 +34,7 @@ public partial class Bar : Control
                 {
                     continue;
                 }
-                TextureRect texture = inventoryItem[i, j].icon.Duplicate() as TextureRect;
+                TextureRect texture = inventoryItem[i, j].Icon.Duplicate() as TextureRect;
                 inventory.GetChild<Panel>(i * 9 + j).AddChild(texture);
             }
         }

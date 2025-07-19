@@ -1,25 +1,21 @@
 using Godot;
-using System;
+
+namespace Terraria3D.ui.main_game_ui;
 
 public partial class MainGameUi : Control
 {
     [Export]
-    public Player player;
-
-    override public void _Ready()
-    {
-        base._Ready();
-    }
+    public Player Player;
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        if (player != null)
+        if (Player != null)
         {
-            GetNode("Hearts").Call("set_hp", player.Health);
-            GetNode("Hearts").Call("set_hp_max", player.HealthMax);
-            GetNode("Stars").Call("set_mp", player.Mana);
-            GetNode("Stars").Call("set_mp_max", player.ManaMax);
+            GetNode("Hearts").Call("set_hp", Player.Health);
+            GetNode("Hearts").Call("set_hp_max", Player.HealthMax);
+            GetNode("Stars").Call("set_mp", Player.Mana);
+            GetNode("Stars").Call("set_mp_max", Player.ManaMax);
         }
         else
         {
@@ -27,10 +23,10 @@ public partial class MainGameUi : Control
             GetNode("Hearts").Call("set_hp_max", 460);
             GetNode("Stars").Call("set_mp", 50);
             GetNode("Stars").Call("set_mp_max", 200);
-            Item ironPickaxe = GD.Load<PackedScene>("res://src/item/IronPickaxe/iron_pickaxe.tscn").Instantiate<Item>();
-            Bar bar = GetNode("Bar") as Bar;
+            var ironPickaxe = GD.Load<PackedScene>("res://src/item/IronPickaxe/iron_pickaxe.tscn").Instantiate<item.Item>();
+            var bar = GetNode<bar.Bar>("Bar");
             bar.SetHotbarItem([ironPickaxe, null, null, null, null, null, null, null, null]);
-            bar.SetInventoryItem(new Item[,] {
+            bar.SetInventoryItem(new[,] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, ironPickaxe, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -39,7 +35,7 @@ public partial class MainGameUi : Control
         }
     }
 
-    public bool PointInUI(Vector2 point)
+    public bool PointInUi(Vector2 point)
     {
         return GetNode<Control>("Hearts").GetGlobalRect().HasPoint(point) || GetNode<Control>("Stars").GetGlobalRect().HasPoint(point);
     }

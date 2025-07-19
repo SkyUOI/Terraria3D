@@ -40,14 +40,14 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_rlaii")
 
-[node name="Player" parent="." node_paths=PackedStringArray("main", "main_game_ui") groups=["Persist"] instance=ExtResource("1_eewff")]
+[node name="Player" parent="." node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist"] instance=ExtResource("1_eewff")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60453, 0)
-main = NodePath("..")
-main_game_ui = NodePath("../MainGameUI")
+_main = NodePath("..")
+_mainGameUi = NodePath("../MainGameUI")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("player")]
+[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("_player")]
 script = ExtResource("3_fyndt")
-player = NodePath("../Player")
+_player = NodePath("../Player")
 
 [node name="Floor" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_5q4o7")
@@ -56,8 +56,8 @@ skeleton = NodePath("../../root/@EditorNode@21301/@Panel@14/@VBoxContainer@15/Do
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_fyndt")
 
-[node name="MainGameUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_3cfgd")]
-player = NodePath("../Player")
+[node name="MainGameUI" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_3cfgd")]
+Player = NodePath("../Player")
 
 [node name="GridMap" type="GridMap" parent="."]
 

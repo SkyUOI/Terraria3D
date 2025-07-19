@@ -1,6 +1,6 @@
-using System;
-using System.Linq;
 using Godot;
+
+namespace Terraria3D.block.NormalBlock;
 
 public class BlockUtil
 {
@@ -9,33 +9,33 @@ public class BlockUtil
         var st = new SurfaceTool();
         st.Begin(Mesh.PrimitiveType.Triangles);
 
-        var atlas_size = texture.Atlas.GetSize();
+        var atlasSize = texture.Atlas.GetSize();
         // GD.Print(atlas_size);
-        var region_pos = texture.Region.Position;
+        var regionPos = texture.Region.Position;
         // GD.Print(region_pos);
-        var region_size = texture.Region.Size;
+        var regionSize = texture.Region.Size;
         // GD.Print(region_size);
-        var uv_offset = new Vector2(region_pos.X / atlas_size.X, region_pos.Y / atlas_size.Y);
-        var uv_scale = new Vector2(region_size.X / atlas_size.X, region_size.Y / atlas_size.Y);
+        var uvOffset = new Vector2(regionPos.X / atlasSize.X, regionPos.Y / atlasSize.Y);
+        var uvScale = new Vector2(regionSize.X / atlasSize.X, regionSize.Y / atlasSize.Y);
         Vector3[,] vertices = {
-        // 前面
-        {new Vector3(-1,1,-1), new Vector3(1,1,-1), new Vector3(1,-1,-1), new Vector3(-1,-1,-1) },
-        // 后面
-        {new Vector3(-1,1,1), new Vector3(-1,-1,1), new Vector3(1,-1,1), new Vector3(1,1,1) },
-        // 左面
-        {new Vector3(-1,1,1), new Vector3(-1,1,-1), new Vector3(-1,-1,-1), new Vector3(-1,-1,1) },
-        // 右面
-        {new Vector3(1,1,1), new Vector3(1,-1,1), new Vector3(1,-1,-1), new Vector3(1,1,-1) },
-        // 上面
-        {new Vector3(-1,1,1), new Vector3(1,1,1), new Vector3(1,1,-1), new Vector3(-1,1,-1) },
-        // 下面
-        {new Vector3(-1,-1,1), new Vector3(-1,-1,-1), new Vector3(1,-1,-1), new Vector3(1,-1,1) },
+            // 前面
+            {new(-1,1,-1), new(1,1,-1), new(1,-1,-1), new(-1,-1,-1) },
+            // 后面
+            {new(-1,1,1), new(-1,-1,1), new(1,-1,1), new(1,1,1) },
+            // 左面
+            {new(-1,1,1), new(-1,1,-1), new(-1,-1,-1), new(-1,-1,1) },
+            // 右面
+            {new(1,1,1), new(1,-1,1), new(1,-1,-1), new(1,1,-1) },
+            // 上面
+            {new(-1,1,1), new(1,1,1), new(1,1,-1), new(-1,1,-1) },
+            // 下面
+            {new(-1,-1,1), new(-1,-1,-1), new(1,-1,-1), new(1,-1,1) },
         };
-        Vector2[] uvs = { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+        Vector2[] uvs = [new(0, 0), new(1, 0), new(1, 1), new(0, 1)];
         for (int i = 0; i < uvs.Length; i++)
         {
-            uvs[i] *= uv_scale;
-            uvs[i] += uv_offset;
+            uvs[i] *= uvScale;
+            uvs[i] += uvOffset;
         }
         for (int i = 0; i < 6; ++i)
         {
@@ -62,18 +62,18 @@ public class Dirt : IBlock
     public static BlockId Id => BlockId.Dirt;
 
     [Export]
-    public static AtlasTexture texture = GD.Load<AtlasTexture>("res://resources/tiles/Tile_0.tres");
+    public static AtlasTexture Texture = GD.Load<AtlasTexture>("res://resources/tiles/Tile_0.tres");
 
     public static Mesh GetMesh()
     {
-        return BlockUtil.GetMesh(texture);
+        return BlockUtil.GetMesh(Texture);
     }
 
     public static Godot.Collections.Array GetShape()
     {
         var shape = new BoxShape3D();
         shape.Size = GetMesh().GetAabb().Size;
-        Variant[] ls = { shape, Transform3D.Identity };
+        Variant[] ls = [shape, Transform3D.Identity];
         var ret = new Godot.Collections.Array(ls);
         // GD.Print(ret);
         return ret;

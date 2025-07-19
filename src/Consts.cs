@@ -1,4 +1,6 @@
-public class Consts
+namespace Terraria3D;
+
+public static class Consts
 {
-    public const int Y_LIMIT = 8400;
+    public const int YLimit = 8400;
 }

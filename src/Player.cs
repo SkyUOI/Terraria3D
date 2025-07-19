@@ -1,25 +1,27 @@
-using Godot;
 using System;
 using System.IO;
 using System.Text.Json;
+using Godot;
+
+namespace Terraria3D;
 
 public partial class Player : CharacterBody3D
 {
     [Export]
     public int Speed = 10;
     [Export]
-    public int rotate_sen_y = 3;
+    public int RotateSenY = 3;
     [Export]
-    public float rotate_sen_x = 0.8f;
+    public float RotateSenX = 0.8f;
     [Export]
     public string PlayerName = "guest";
 
-    Vector3 direction;
+    Vector3 _direction;
 
     [Export]
-    Terraria3D.Main main;
+    Main _main;
     [Export]
-    MainGameUi main_game_ui;
+    ui.main_game_ui.MainGameUi _mainGameUi;
 
     [Export]
     public int Health = 100;
@@ -33,13 +35,13 @@ public partial class Player : CharacterBody3D
     public float JumpVelocity = 4.5f;
 
     [Export]
-    Camera3D camera3D;
+    Camera3D _camera3D;
 
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        main.CheckAndLoadChunk(Position);
+        _main.CheckAndLoadChunk(Position);
         // GD.Print($"player position: {Position}");
     }
 
@@ -54,16 +56,16 @@ public partial class Player : CharacterBody3D
         base._Input(@event);
         if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * rotate_sen_x));
-            camera3D.RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * rotate_sen_y));
-            var tmpx = Mathf.Clamp(camera3D.Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
-            camera3D.Rotation = new Vector3(tmpx, camera3D.Rotation.Y, 0);
+            RotateY(Mathf.DegToRad(-mouseMotion.Relative.X * RotateSenX));
+            _camera3D.RotateX(Mathf.DegToRad(-mouseMotion.Relative.Y * RotateSenY));
+            var tmpX = Mathf.Clamp(_camera3D.Rotation.X, Mathf.DegToRad(-89), Mathf.DegToRad(89));
+            _camera3D.Rotation = new Vector3(tmpX, _camera3D.Rotation.Y, 0);
         }
         else if (@event is InputEventMouseButton mouseButton)
         {
-            if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed && !main_game_ui.PointInUI(mouseButton.GlobalPosition))
+            if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed && !_mainGameUi.PointInUi(mouseButton.GlobalPosition))
             {
-                main.MouseInGame();
+                _main.MouseInGame();
             }
         }
     }
@@ -104,16 +106,14 @@ public partial class Player : CharacterBody3D
 }
 
 [Serializable]
-public class PlrData
+public class PlrData(string name)
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = name;
     public Vector3 Position = Vector3.Zero;
     public int Health = 100;
     public int HealthMax = 100;
     public int Mana = 20;
     public int ManaMax = 20;
-
-    public PlrData(string name) => Name = name;
 }
 
 public class PlrFile
@@ -122,19 +122,19 @@ public class PlrFile
 
     public void CreatePlayer(string name)
     {
-        var plr_dir = ProjectSettings.GlobalizePath(PlrDir);
-        Directory.CreateDirectory(plr_dir);
-        using var f = File.Create(plr_dir.PathJoin(name + ".plr"));
+        var plrDir = ProjectSettings.GlobalizePath(PlrDir);
+        Directory.CreateDirectory(plrDir);
+        using var f = File.Create(plrDir.PathJoin(name + ".plr"));
         var data = new PlrData(name);
         f.Write(JsonSerializer.SerializeToUtf8Bytes(data));
     }
 
     public void OpenPlayer(string name, Player player)
     {
-        load(name, player);
+        Load(name, player);
     }
 
-    public void load(string name, Player player)
+    public void Load(string name, Player player)
     {
         using var f = File.OpenRead(PlrDir.PathJoin(name + ".plr"));
         var data = JsonSerializer.Deserialize<PlrData>(f);

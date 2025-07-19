@@ -27,6 +27,15 @@ public partial class MainGameUi : Control
             GetNode("Hearts").Call("set_hp_max", 460);
             GetNode("Stars").Call("set_mp", 50);
             GetNode("Stars").Call("set_mp_max", 200);
+            Item ironPickaxe = GD.Load<PackedScene>("res://src/item/IronPickaxe/iron_pickaxe.tscn").Instantiate<Item>();
+            Bar bar = GetNode("Bar") as Bar;
+            bar.SetHotbarItem([ironPickaxe, null, null, null, null, null, null, null, null]);
+            bar.SetInventoryItem(new Item[,] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, ironPickaxe, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+            });
         }
     }
 

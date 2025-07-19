@@ -4,7 +4,7 @@ using System;
 public partial class Item : Node
 {
     [Export]
-    public Sprite2D sprite;
+    public TextureRect icon;
 
 }
 

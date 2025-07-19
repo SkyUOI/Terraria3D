@@ -1,8 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://3imatdstn2ev"]
+[gd_scene load_steps=3 format=3 uid="uid://3imatdstn2ev"]
 
 [ext_resource type="Texture2D" uid="uid://bj3fie2bne1su" path="res://src/item/IronPickaxe/Item_1.png" id="1_56ebc"]
+[ext_resource type="Script" uid="uid://7lgq0gloyrf7" path="res://src/item/IronPickaxe/IronPickaxe.cs" id="1_tgkt2"]
 
-[node name="IronPickaxe" type="Node2D"]
+[node name="IronPickaxe" type="Node2D" node_paths=PackedStringArray("icon")]
+script = ExtResource("1_tgkt2")
+icon = NodePath("Icon")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Icon" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_56ebc")

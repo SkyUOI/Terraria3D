@@ -19,13 +19,13 @@ public class Chunk
 {
     public const int X = 16;
     public const int Z = 16;
-    public const int Y = 6400;
+    public const int Y = 16;
     public Block[,,] blocks = new Block[X, Y, Z];
 }
 
 public partial class Main : Node3D
 {
-    Dictionary<Vector2I, Chunk> dir;
+    Dictionary<Vector3I, Chunk> dir;
     static string WorldPath = "Test";
     public string WorldName { get; set; }
     [Export]
@@ -33,12 +33,23 @@ public partial class Main : Node3D
     public RandomNumberGenerator world_random;
     [Export]
     public GridMap grid { get; set; }
+    [Export]
+    Player player { get; set; }
+    [Export]
+    bool recreate_world { get; set; }
+
+    public int RenderChunkDistance = 12;
 
     public override void _Ready()
     {
+        // if (OS.HasFeature("editor"))
+        // {
+        // }
         base._Ready();
         InitMeshLibrary();
-        dir = new Dictionary<Vector2I, Chunk>();
+        WorldGeneration.Init();
+
+        dir = new Dictionary<Vector3I, Chunk>();
         MouseInGame();
         WorldFile.LoadOrCreate(WorldPath, this);
         RenderBlocks();
@@ -73,7 +84,7 @@ public partial class Main : Node3D
         }
     }
 
-    public void RenderBlock(Vector2I chunk_pos)
+    public void RenderBlock(Vector3I chunk_pos)
     {
         GD.Print(chunk_pos);
         // return;
@@ -110,9 +121,9 @@ public partial class Main : Node3D
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public void LoadChunk(Vector2I chunk_pos)
+    public void LoadChunk(Vector3I chunk_pos)
     {
-        var chunk_path = WorldFile.GetChunksPath(WorldPath).PathJoin(chunk_pos.X + "_" + chunk_pos.Y + ".chunk");
+        var chunk_path = WorldFile.GetChunksPath(WorldPath).PathJoin(WorldFile.GetChunkFIleName(chunk_pos));
         if (File.Exists(chunk_path))
         {
             using var f = File.OpenRead(chunk_path);
@@ -139,5 +150,17 @@ public partial class Main : Node3D
     public void MouseOutGame()
     {
         Input.MouseMode = Input.MouseModeEnum.Visible;
+    }
+
+    public void _on_unload_chunks_timer_timeout()
+    {
+        foreach (var chunk in dir)
+        {
+            var chunk_pos = chunk.Key;
+            if (chunk_pos.DistanceTo(Utils.GetChunk(player.Position)) > RenderChunkDistance)
+            {
+                dir.Remove(chunk_pos);
+            }
+        }
     }
 }

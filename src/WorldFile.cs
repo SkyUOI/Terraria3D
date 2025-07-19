@@ -30,13 +30,15 @@ public class WorldFile
         var rand = new RandomNumberGenerator();
         rand.State = data.RandomState;
         main.world_random = rand;
+        WorldGeneration.noise = new FastNoiseLite();
+        WorldGeneration.noise.Seed = (int)data.Seed;
     }
 
     static public void CreateWorld(string wld_name)
     {
         using var f = File.Create(GetWldFilePath(wld_name));
-        var rand = new Random();
-        var data = new WldData((ulong)rand.NextInt64());
+        var seed = GD.Randi();
+        var data = new WldData(seed);
         data.WorldName = wld_name;
         f.Write(JsonSerializer.SerializeToUtf8Bytes(data));
     }
@@ -61,18 +63,25 @@ public class WorldFile
     {
         return GetWorldDataPath(world_name).PathJoin(ChunksDir);
     }
+
+    static public string GetChunkFIleName(Vector3I chunk_pos)
+    {
+        return chunk_pos.X + "_" + chunk_pos.Y + "_" + chunk_pos.Z + ".chunk";
+    }
 }
 
 [Serializable]
 public class WldData
 {
     public string WorldName { get; set; }
-    public ulong Seed { get; set; }
+    public uint Seed { get; set; }
     public ulong RandomState;
 
-    public WldData(ulong seed)
+    public WldData(uint seed)
     {
         Seed = seed;
-        RandomState = seed;
+        var rand = new RandomNumberGenerator();
+        rand.Seed = seed;
+        RandomState = rand.State;
     }
 }

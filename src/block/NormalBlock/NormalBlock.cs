@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 
 namespace Terraria3D.block.NormalBlock;
@@ -51,7 +52,7 @@ public class BlockUtil
         var mesh = st.Commit();
         var mat = new StandardMaterial3D();
         mat.AlbedoTexture = texture.Atlas;
-        mat.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
+        // mat.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
         mesh.SurfaceSetMaterial(0, mat);
         return mesh;
     }
@@ -64,15 +65,15 @@ public class Dirt : IBlock
     [Export]
     public static AtlasTexture Texture = GD.Load<AtlasTexture>("res://resources/tiles/Tile_0.tres");
 
-    public static Mesh GetMesh()
+    public static Color GetShaderData()
     {
-        return BlockUtil.GetMesh(Texture);
+        return (Color)SharedData.AtlasData.Atlas["Tiles_0"].First();
     }
 
     public static Godot.Collections.Array GetShape()
     {
         var shape = new BoxShape3D();
-        shape.Size = GetMesh().GetAabb().Size;
+        shape.Size = new Vector3(2, 2, 2);
         Variant[] ls = [shape, Transform3D.Identity];
         var ret = new Godot.Collections.Array(ls);
         // GD.Print(ret);

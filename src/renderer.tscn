@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ba4q36dtk385"]
+
+[ext_resource type="Script" uid="uid://djrvdo6pt4qry" path="res://src/Renderer.cs" id="1_2tvn0"]
+
+[node name="Renderer" type="Node3D"]
+script = ExtResource("1_2tvn0")

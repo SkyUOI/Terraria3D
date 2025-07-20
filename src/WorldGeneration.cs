@@ -9,7 +9,7 @@ public partial class WorldGeneration : Node
 
     public static void Init()
     {
-        Noise.Frequency = 0.5f;
+        Noise.Frequency = 0.05f;
     }
 
     public static void GenerateChunk(Chunk chunk)

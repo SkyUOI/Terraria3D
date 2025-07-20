@@ -1,9 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene load_steps=8 format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
-[ext_resource type="Script" uid="uid://bae1pxhihpfe" path="res://src/Floor.cs" id="3_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
+[ext_resource type="PackedScene" uid="uid://ba4q36dtk385" path="res://src/renderer.tscn" id="4_fyndt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fyndt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -17,21 +17,12 @@ background_mode = 2
 sky = SubResource("Sky_kmhfv")
 tonemap_mode = 2
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gh0ne"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_5q4o7"]
-material = SubResource("ORMMaterial3D_gh0ne")
-size = Vector3(100, 1, 100)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_fyndt"]
-size = Vector3(100, 0.1, 100)
-
-[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Grid", "Player")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "renderer")]
 script = ExtResource("1_fyndt")
 MainGameUi = NodePath("MainGameUI")
-Grid = NodePath("GridMap")
 Player = NodePath("Player")
+ChunkTimer = NodePath("ChunksLoadAndUnload")
+renderer = NodePath("Renderer")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
@@ -41,28 +32,23 @@ shadow_enabled = true
 environment = SubResource("Environment_rlaii")
 
 [node name="Player" parent="." node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist"] instance=ExtResource("1_eewff")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60453, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 23.8811, 0)
 _main = NodePath("..")
 _mainGameUi = NodePath("../MainGameUI")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="." node_paths=PackedStringArray("_player")]
-script = ExtResource("3_fyndt")
-_player = NodePath("../Player")
-
-[node name="Floor" type="MeshInstance3D" parent="StaticBody3D"]
-mesh = SubResource("BoxMesh_5q4o7")
-skeleton = NodePath("../../root/@EditorNode@21301/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/Main")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_fyndt")
 
 [node name="MainGameUI" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_3cfgd")]
 Player = NodePath("../Player")
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="ChunksLoadAndUnload" type="Timer" parent="."]
+wait_time = 1.2
 
-[node name="UnloadChunks" type="Timer" parent="."]
-wait_time = 1.5
+[node name="LoadPLayer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
 autostart = true
 
-[connection signal="timeout" from="UnloadChunks" to="." method="_on_unload_chunks_timer_timeout"]
+[node name="Renderer" parent="." node_paths=PackedStringArray("_main") instance=ExtResource("4_fyndt")]
+_main = NodePath("..")
+
+[connection signal="timeout" from="ChunksLoadAndUnload" to="." method="_on_chunks_timer_timeout"]
+[connection signal="timeout" from="LoadPLayer" to="Player" method="StartRunning"]

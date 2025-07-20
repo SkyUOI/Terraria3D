@@ -1,0 +1,7 @@
+[project]
+name = "Terraria3D"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["pillow>=11.3.0", "rectpack>=0.2.2"]

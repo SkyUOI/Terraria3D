@@ -37,17 +37,48 @@ public partial class Player : CharacterBody3D
     [Export]
     Camera3D _camera3D;
 
+    [Export]
+    public bool Enable = false;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        _camera3D.Current = false;
+    }
+
+    public void StartRunning()
+    {
+        Enable = true;
+        _camera3D.Current = true;
+    }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        _main.CheckAndLoadChunk(Position);
+        MoveOutOfBlock();
+        // _main.CheckAndLoadChunk(Position);
         // GD.Print($"player position: {Position}");
+    }
+
+    private void MoveOutOfBlock()
+    {
+        if (!_main.chunksManager.BlockExists(Position))
+        {
+            return;
+        }
+        while (_main.chunksManager.BlockExists(Position))
+        {
+            Position += Vector3.Up;
+        }
     }
 
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
+        if (!Enable)
+        {
+            return;
+        }
         Move(delta);
     }
 

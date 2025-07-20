@@ -1,8 +1,14 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Godot;
 using Terraria3D.block.NormalBlock;
+using System;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
+using Terraria3D.item;
 
 namespace Terraria3D;
 
@@ -11,41 +17,71 @@ public class Block(BlockId blockId)
     public BlockId BlockId = blockId;
 }
 
-public class Chunk(Vector3I pos)
+[Serializable]
+public class Region
 {
-    public const int X = 16;
-    public const int Z = 16;
-    public const int Y = 16;
-    public Vector3I Pos = pos;
-    public Block[,,] Blocks = new Block[X, Y, Z];
+    public float X { get; set; }
+    public float Y { get; set; }
+    public float Width { get; set; }
+    public float Height { get; set; }
+    public string Source { get; set; }
 
-    public Vector3 GetGlobalPos(Vector3I inChunkPos)
+    public static explicit operator Godot.Color(Region region)
     {
-        return new Vector3(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
+        return new Godot.Color(region.X, region.Y, region.Width, region.Height);
+    }
+}
+
+public class Source
+{
+    public class Size
+    {
+        public int W { get; set; }
+        public int H { get; set; }
     }
 
-    public (int, int) HeightRange()
+    public class InternalData
     {
-        return (Pos.Y, Pos.Y + Y - 1);
+        public Dictionary<string, Size> SourceData { get; set; }
     }
+
+    public Dictionary<string, InternalData> Item;
+}
+
+[Serializable]
+public class AtlasData
+{
+    public Dictionary<string, Source> sources;
+    [JsonExtensionData]
+    public Dictionary<string, List<Region>> Atlas;
+}
+
+public class SharedData
+{
+    public static AtlasData AtlasData = JsonSerializer.Deserialize<AtlasData>(File.ReadAllText("res://resources/tiles/atlas_tiles.json"));
 }
 
 public partial class Main : Node3D
 {
-    Dictionary<Vector3I, Chunk> _dir;
     static string _worldPath = "Test";
     public string WorldName { get; set; }
     [Export]
     public Control MainGameUi { get; set; }
     public RandomNumberGenerator WorldRandom;
     [Export]
-    public GridMap Grid { get; set; }
-    [Export]
     Player Player { get; set; }
     [Export]
+    Godot.Timer ChunkTimer { get; set; }
+    [Export]
     bool RecreateWorld { get; set; }
+    [Export]
+    Renderer renderer;
 
-    private int _renderChunkDistance = 12;
+    public ChunksManager chunksManager = new();
+
+
+    private int _renderChunkDistance = 3;
+    private const int MAX_UPDATES_PER_FRAME = 500;
 
     public override void _Ready()
     {
@@ -56,29 +92,30 @@ public partial class Main : Node3D
         InitMeshLibrary();
         WorldGeneration.Init();
 
-        _dir = new Dictionary<Vector3I, Chunk>();
         MouseInGame();
         WorldFile.LoadOrCreate(_worldPath, this);
-        RenderBlocks();
+        // RenderBlocks();
+        _on_chunks_timer_timeout();
+        // Player.StartRunning();
+        ChunkTimer.Start();
     }
 
     private void InitMeshLibrary()
     {
-        var lib = new MeshLibrary();
-        BlockRegistry.RegisterBlock<Dirt>();
-        foreach (var blockKv in BlockRegistry.BlockTypes)
-        {
-            lib.CreateItem((int)blockKv.Key);
-            lib.SetItemMesh((int)blockKv.Key, BlockRegistry.GetMesh(blockKv.Key));
-            var shape = BlockRegistry.GetShape(blockKv.Key);
-            if (shape != null)
-            {
-                // GD.Print($"set shape for {block_kv.Key}");
-                // GD.Print(shape);
-                lib.SetItemShapes((int)blockKv.Key, shape);
-            }
-        }
-        Grid.MeshLibrary = lib;
+        // var lib = new MeshLibrary();
+        // BlockRegistry.RegisterBlock<Dirt>();
+        // foreach (var blockKv in BlockRegistry.BlockTypes)
+        // {
+        //     lib.CreateItem((int)blockKv.Key);
+        //     lib.SetItemMesh((int)blockKv.Key, BlockRegistry.GetShaderData(blockKv.Key));
+        //     var shape = BlockRegistry.GetShape(blockKv.Key);
+        //     if (shape != null)
+        //     {
+        //         // GD.Print($"set shape for {block_kv.Key}");
+        //         // GD.Print(shape);
+        //         lib.SetItemShapes((int)blockKv.Key, shape);
+        //     }
+        // }
     }
 
     public override void _Process(double delta)
@@ -88,66 +125,6 @@ public partial class Main : Node3D
         {
             MouseOutGame();
         }
-    }
-
-    private void RenderBlocks()
-    {
-        foreach (var chunkKv in _dir)
-        {
-            RenderBlock(chunkKv.Key);
-        }
-    }
-
-    private void RenderBlock(Vector3I chunkPos)
-    {
-        GD.Print(chunkPos);
-        // return;
-        var chunk = _dir[chunkPos];
-        for (int j = 0; j < Chunk.X; ++j)
-        {
-            for (int k = 0; k < Chunk.Z; ++k)
-            {
-                for (int l = 0; l < Chunk.Y; ++l)
-                {
-                    var block = chunk.Blocks[j, l, k];
-                    if (block == null)
-                    {
-                        continue;
-                    }
-                    var blockPos = new Vector3I(j, l, k);
-                    blockPos.X += chunkPos.X * Chunk.X;
-                    blockPos.Z += chunkPos.Y * Chunk.Z;
-                    Grid.SetCellItem(blockPos, (int)block.BlockId);
-                }
-            }
-        }
-    }
-
-    public void CheckAndLoadChunk(Vector3 pos)
-    {
-        var chunkPos = Utils.GetChunk(pos);
-        if (_dir.ContainsKey(chunkPos))
-        {
-            return;
-        }
-        LoadChunk(chunkPos);
-        RenderBlock(chunkPos);
-        // GD.Print($"Loaded Chunk: {dir}");
-    }
-
-    private void LoadChunk(Vector3I chunkPos)
-    {
-        var chunkPath = WorldFile.GetChunksPath(_worldPath).PathJoin(WorldFile.GetChunkFIleName(chunkPos));
-        if (File.Exists(chunkPath))
-        {
-            using var f = File.OpenRead(chunkPath);
-            var chunkData = JsonSerializer.Deserialize<Chunk>(f);
-            _dir.Add(chunkPos, chunkData);
-            return;
-        }
-        var chunk = new Chunk(chunkPos);
-        WorldGeneration.GenerateChunk(chunk);
-        _dir.Add(chunkPos, chunk);
     }
 
     public override void _ExitTree()
@@ -166,15 +143,50 @@ public partial class Main : Node3D
         Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 
-    private void _on_unload_chunks_timer_timeout()
+    private async void _on_chunks_timer_timeout()
     {
-        foreach (var chunk in _dir)
+        var playerPos = Player.Position;
+        ChunkTimer.Stop();
+        await Task.Run(() =>
+    {
+        var playerChunkPos = Utils.GetChunk(playerPos);
+        // remove old chunks
+        foreach (var chunk in chunksManager.Chunks)
         {
             var chunkPos = chunk.Key;
-            if (chunkPos.DistanceTo(Utils.GetChunk(Player.Position)) > _renderChunkDistance)
+            if (OutOfRenderingDistance(playerChunkPos, chunkPos))
             {
-                _dir.Remove(chunkPos);
+                chunksManager.UnloadChunk(chunkPos);
+                renderer.UnrenderChunk(chunkPos);
+                GD.Print("Removed chunk: " + chunkPos);
             }
         }
+        // load new chunks
+        for (int i = -_renderChunkDistance; i <= _renderChunkDistance; ++i)
+        {
+            for (int j = -_renderChunkDistance; j <= _renderChunkDistance; ++j)
+            {
+                for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
+                {
+                    var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
+                    if (!chunksManager.Chunks.TryGetValue(chunkPos, out var chunk))
+                    {
+                        continue;
+                    }
+                    chunksManager.LoadChunk(_worldPath, chunkPos);
+                    renderer.RenderChunk(chunk);
+                    GD.Print($"Loaded Chunk: {chunkPos}");
+                }
+            }
+        }
+        // RenderBlocks();
+        ChunkTimer.CallDeferred(Godot.Timer.MethodName.Start);
+    }).ConfigureAwait(false);
+    }
+
+    bool OutOfRenderingDistance(Vector3I playerChunkPos, Vector3I chunkPos)
+    {
+        var tmp = (chunkPos - playerChunkPos).Abs();
+        return tmp.X > _renderChunkDistance || tmp.Y > _renderChunkDistance || tmp.Z > _renderChunkDistance;
     }
 }

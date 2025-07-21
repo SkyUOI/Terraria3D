@@ -62,6 +62,7 @@ public partial class Player : CharacterBody3D
 
     private void MoveOutOfBlock()
     {
+        // GD.Print("fk");
         if (!_main.chunksManager.BlockExists(Position))
         {
             return;
@@ -109,7 +110,7 @@ public partial class Player : CharacterBody3D
         // Add the gravity.
         if (!IsOnFloor())
         {
-            velocity += GetGravity() * (float)delta;
+            // velocity += GetGravity() * (float)delta;
         }
 
         // Handle Jump.
@@ -132,6 +133,7 @@ public partial class Player : CharacterBody3D
         }
 
         Velocity = velocity;
+        // GD.Print(Position);
         MoveAndSlide();
     }
 }

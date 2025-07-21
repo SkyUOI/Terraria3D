@@ -45,7 +45,7 @@ Player = NodePath("../Player")
 wait_time = 1.2
 
 [node name="LoadPLayer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 2.0
 one_shot = true
 autostart = true
 

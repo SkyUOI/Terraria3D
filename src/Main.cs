@@ -173,7 +173,7 @@ public partial class Main : Node3D
     {
         var generatedchunk = chunksManager.LoadChunk(_worldPath, chunkPos);
         renderer.RenderChunk(generatedchunk);
-        collisionManager.AddCollision(generatedchunk);
+        // collisionManager.AddCollision(generatedchunk);
     }
 
     void RemoveChunk(Vector3I chunkPos)

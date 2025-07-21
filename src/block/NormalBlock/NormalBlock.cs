@@ -75,13 +75,11 @@ public class Dirt : IBlock
         return (Color)SharedData.AtlasData.Atlas["Tiles_0"].First();
     }
 
-    public static Godot.Collections.Array GetShape()
+    public static BoxShape3D GetShape()
     {
         var shape = new BoxShape3D();
         shape.Size = new Vector3(2, 2, 2);
-        Variant[] ls = [shape, Transform3D.Identity];
-        var ret = new Godot.Collections.Array(ls);
         // GD.Print(ret);
-        return ret;
+        return shape;
     }
 }

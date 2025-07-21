@@ -30,6 +30,7 @@ public partial class Renderer : Node3D
             var meshInstance3D = chunk.GenerateMultiMeshInstance3D();
             AddChild(meshInstance3D);
             meshInstance3D.Position = chunk.GetStartPoint();
+            // GD.Print($"Rendered Chunk: {meshInstance3D.GlobalPosition}");
             RenderedChunks.Add(chunk.Pos, meshInstance3D);
         }
     }

@@ -41,7 +41,7 @@ public class Chunk(Vector3I pos)
 
     public (int, int) HeightRange()
     {
-        return (Pos.Y, Pos.Y + Y - 1);
+        return (Pos.Y * Y, Pos.Y * (Y + 1) - 1);
     }
 
     public MultiMesh GenerateMultiMesh()

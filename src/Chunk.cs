@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using Godot;
 
+
 namespace Terraria3D;
 
 public class Chunk(Vector3I pos)
@@ -41,7 +42,7 @@ public class Chunk(Vector3I pos)
 
     public (int, int) HeightRange()
     {
-        return (Pos.Y * Y, Pos.Y * (Y + 1) - 1);
+        return (Pos.Y * Y, (Pos.Y + 1) * Y - 1);
     }
 
     public MultiMesh GenerateMultiMesh()

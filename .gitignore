@@ -22,3 +22,5 @@ mono_crash.*.json
 
 # C# generated files
 Terraria3D.sln.DotSettings.user
+
+.runsettings

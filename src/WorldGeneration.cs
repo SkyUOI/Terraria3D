@@ -24,7 +24,7 @@ public partial class WorldGeneration : Node
                 var heightRange = chunk.HeightRange();
                 for (int k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
                 {
-                    chunk.Blocks[i, k - heightRange.Item1, j] = new Block(BlockId.Dirt);
+                    chunk.Blocks[i, k - heightRange.Item1, j] = BlockRegistry.NewBlock(BlockId.Dirt);
                 }
             }
         }

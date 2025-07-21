@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene load_steps=9 format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
 [ext_resource type="PackedScene" uid="uid://ba4q36dtk385" path="res://src/renderer.tscn" id="4_fyndt"]
+[ext_resource type="Script" uid="uid://c3hwhl7pel5kf" path="res://src/CollisionManager.cs" id="5_fyndt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fyndt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -17,12 +18,13 @@ background_mode = 2
 sky = SubResource("Sky_kmhfv")
 tonemap_mode = 2
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "renderer")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "renderer", "collisionManager")]
 script = ExtResource("1_fyndt")
 MainGameUi = NodePath("MainGameUI")
 Player = NodePath("Player")
 ChunkTimer = NodePath("ChunksLoadAndUnload")
 renderer = NodePath("Renderer")
+collisionManager = NodePath("CollisionManager")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
@@ -49,6 +51,9 @@ autostart = true
 
 [node name="Renderer" parent="." node_paths=PackedStringArray("_main") instance=ExtResource("4_fyndt")]
 _main = NodePath("..")
+
+[node name="CollisionManager" type="Node3D" parent="."]
+script = ExtResource("5_fyndt")
 
 [connection signal="timeout" from="ChunksLoadAndUnload" to="." method="_on_chunks_timer_timeout"]
 [connection signal="timeout" from="LoadPLayer" to="Player" method="StartRunning"]

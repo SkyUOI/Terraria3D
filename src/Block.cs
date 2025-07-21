@@ -16,19 +16,20 @@ public interface IBlock
 
     static abstract Color GetShaderData();
 
-    static Godot.Collections.Array GetShape() => null;
+    static BoxShape3D GetShape() => null;
 }
 
 public class BlockRegistry
 {
     // 存储所有方块类型
-    public static Dictionary<BlockId, (Type, Func<Color>)> BlockTypes { get; } = new();
+    public static Dictionary<BlockId, (Type, Func<Color>, Func<BoxShape3D>)> BlockTypes { get; } = new();
 
     // 注册方块类型
     public static void RegisterBlock<T>() where T : IBlock
     {
-        var getMeshMethod = typeof(T).GetMethod("GetShaderData");
-        BlockTypes.Add(T.Id, (typeof(T), (Func<Color>)Delegate.CreateDelegate(typeof(Action), getMeshMethod)));
+        var getShaderDataMethod = typeof(T).GetMethod("GetShaderData");
+        var getShapeMethod = typeof(T).GetMethod("GetShape");
+        BlockTypes.Add(T.Id, (typeof(T), (Func<Color>)Delegate.CreateDelegate(typeof(Func<Color>), getShaderDataMethod), (Func<BoxShape3D>)Delegate.CreateDelegate(typeof(Func<BoxShape3D>), getShapeMethod)));
     }
 
     public static Color GetShaderData(BlockId id)
@@ -41,13 +42,29 @@ public class BlockRegistry
     }
 
     // 获取方块 Shape
-    public static Godot.Collections.Array GetShape(BlockId id)
+    public static BoxShape3D GetShape(BlockId id)
     {
         if (BlockTypes.TryGetValue(id, out var blockType))
         {
-            var getMeshMethod = blockType.Item1.GetMethod("GetShape");
-            if (getMeshMethod != null) return (Godot.Collections.Array)getMeshMethod.Invoke(null, null);
+            return blockType.Item3();
         }
         return null;
     }
+
+    public static Block NewBlock(BlockId id)
+    {
+        if (BlockTypes.TryGetValue(id, out var blockType))
+        {
+            return new Block(id, blockType.Item2, blockType.Item3);
+        }
+        throw new Exception($"Unknown block type: {id}");
+    }
+}
+
+public class Block(BlockId blockId, Func<Color> getShaderDataDelegate, Func<BoxShape3D> getShapeDelegate)
+{
+    public BlockId BlockId = blockId;
+
+    public Func<Color> GetShaderData = getShaderDataDelegate;
+    public Func<BoxShape3D> GetShape = getShapeDelegate;
 }

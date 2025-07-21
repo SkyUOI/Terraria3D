@@ -1,34 +1,28 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Godot;
 using Terraria3D.block.NormalBlock;
 using System;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using Terraria3D.item;
+using System.Linq;
 
 namespace Terraria3D;
 
-public class Block(BlockId blockId)
-{
-    public BlockId BlockId = blockId;
-}
+
 
 [Serializable]
 public class Region
 {
-    public float X { get; set; }
-    public float Y { get; set; }
-    public float Width { get; set; }
-    public float Height { get; set; }
-    public string Source { get; set; }
+    public float x { get; set; }
+    public float y { get; set; }
+    public float w { get; set; }
+    public float h { get; set; }
+    public string source { get; set; }
 
-    public static explicit operator Godot.Color(Region region)
+    public static explicit operator Color(Region region)
     {
-        return new Godot.Color(region.X, region.Y, region.Width, region.Height);
+        return new Color(region.x, region.y, region.w, region.h);
     }
 }
 
@@ -36,29 +30,31 @@ public class Source
 {
     public class Size
     {
-        public int W { get; set; }
-        public int H { get; set; }
+        public int w { get; set; }
+        public int h { get; set; }
     }
-
-    public class InternalData
-    {
-        public Dictionary<string, Size> SourceData { get; set; }
-    }
-
-    public Dictionary<string, InternalData> Item;
+    public Size size { get; set; }
 }
 
 [Serializable]
 public class AtlasData
 {
-    public Dictionary<string, Source> sources;
+    public Dictionary<string, Source> sources { get; set; }
     [JsonExtensionData]
-    public Dictionary<string, List<Region>> Atlas;
+    public Dictionary<string, JsonElement> AtlasReceive { get; set; }
+    private Dictionary<string, List<Region>> _atlas;
+    [JsonIgnore]
+    public Dictionary<string, List<Region>> Atlas =>
+          _atlas ??= AtlasReceive
+                .ToDictionary(
+                    kv => kv.Key,
+                    kv => JsonSerializer.Deserialize<List<Region>>(kv.Value.ToString())
+                );
 }
 
 public class SharedData
 {
-    public static AtlasData AtlasData = JsonSerializer.Deserialize<AtlasData>(File.ReadAllText("res://resources/tiles/atlas_tiles.json"));
+    public static AtlasData AtlasData = JsonSerializer.Deserialize<AtlasData>(File.ReadAllText(ProjectSettings.GlobalizePath("res://resources/tiles/atlas_tiles.json")));
 }
 
 public partial class Main : Node3D
@@ -76,6 +72,8 @@ public partial class Main : Node3D
     bool RecreateWorld { get; set; }
     [Export]
     Renderer renderer;
+    [Export]
+    CollisionManager collisionManager;
 
     public ChunksManager chunksManager = new();
 
@@ -102,20 +100,7 @@ public partial class Main : Node3D
 
     private void InitMeshLibrary()
     {
-        // var lib = new MeshLibrary();
-        // BlockRegistry.RegisterBlock<Dirt>();
-        // foreach (var blockKv in BlockRegistry.BlockTypes)
-        // {
-        //     lib.CreateItem((int)blockKv.Key);
-        //     lib.SetItemMesh((int)blockKv.Key, BlockRegistry.GetShaderData(blockKv.Key));
-        //     var shape = BlockRegistry.GetShape(blockKv.Key);
-        //     if (shape != null)
-        //     {
-        //         // GD.Print($"set shape for {block_kv.Key}");
-        //         // GD.Print(shape);
-        //         lib.SetItemShapes((int)blockKv.Key, shape);
-        //     }
-        // }
+        BlockRegistry.RegisterBlock<Dirt>();
     }
 
     public override void _Process(double delta)
@@ -143,12 +128,10 @@ public partial class Main : Node3D
         Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 
-    private async void _on_chunks_timer_timeout()
+    private void _on_chunks_timer_timeout()
     {
         var playerPos = Player.Position;
         ChunkTimer.Stop();
-        await Task.Run(() =>
-    {
         var playerChunkPos = Utils.GetChunk(playerPos);
         // remove old chunks
         foreach (var chunk in chunksManager.Chunks)
@@ -156,8 +139,7 @@ public partial class Main : Node3D
             var chunkPos = chunk.Key;
             if (OutOfRenderingDistance(playerChunkPos, chunkPos))
             {
-                chunksManager.UnloadChunk(chunkPos);
-                renderer.UnrenderChunk(chunkPos);
+                RemoveChunk(chunkPos);
                 GD.Print("Removed chunk: " + chunkPos);
             }
         }
@@ -169,24 +151,35 @@ public partial class Main : Node3D
                 for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
                 {
                     var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
-                    if (!chunksManager.Chunks.TryGetValue(chunkPos, out var chunk))
+                    if (chunksManager.Chunks.ContainsKey(chunkPos))
                     {
                         continue;
                     }
-                    chunksManager.LoadChunk(_worldPath, chunkPos);
-                    renderer.RenderChunk(chunk);
+                    AddChunk(chunkPos);
                     GD.Print($"Loaded Chunk: {chunkPos}");
                 }
             }
         }
-        // RenderBlocks();
-        ChunkTimer.CallDeferred(Godot.Timer.MethodName.Start);
-    }).ConfigureAwait(false);
+        ChunkTimer.Start();
     }
 
     bool OutOfRenderingDistance(Vector3I playerChunkPos, Vector3I chunkPos)
     {
         var tmp = (chunkPos - playerChunkPos).Abs();
         return tmp.X > _renderChunkDistance || tmp.Y > _renderChunkDistance || tmp.Z > _renderChunkDistance;
+    }
+
+    void AddChunk(Vector3I chunkPos)
+    {
+        var generatedchunk = chunksManager.LoadChunk(_worldPath, chunkPos);
+        renderer.RenderChunk(generatedchunk);
+        collisionManager.AddCollision(generatedchunk);
+    }
+
+    void RemoveChunk(Vector3I chunkPos)
+    {
+        chunksManager.UnloadChunk(chunkPos);
+        renderer.UnrenderChunk(chunkPos);
+        collisionManager.RemoveCollision(chunkPos);
     }
 }

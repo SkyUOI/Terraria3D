@@ -82,11 +82,12 @@ public class Chunk(Vector3I pos)
                     }
                     if (renderFlag)
                     {
-                        transforms.Add((GetGlobalPos(blockPos), block));
+                        transforms.Add((blockPos, block));
                     }
                 }
             }
         }
+        multiMesh.UseCustomData = true;
         multiMesh.InstanceCount = transforms.Count;
         for (int i = 0; i < transforms.Count; ++i)
         {
@@ -102,7 +103,7 @@ public class Chunk(Vector3I pos)
         multiMeshInstance3D.Multimesh = GenerateMultiMesh();
         var mat = new ShaderMaterial();
         mat.Shader = GD.Load<Shader>("res://src/ChunkMesh.gdshader");
-        mat.SetShaderParameter("atlas", GD.Load<Texture2D>("res://atlas_blocks.png"));
+        mat.SetShaderParameter("atlas", GD.Load<Texture2D>("res://resources/tiles/Atlas.png"));
         // TODO: read dynamically
         mat.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
         multiMeshInstance3D.MaterialOverride = mat;
@@ -130,7 +131,7 @@ public class ChunksManager
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public void LoadChunk(string worldPath, Vector3I chunkPos)
+    public Chunk LoadChunk(string worldPath, Vector3I chunkPos)
     {
         var chunkPath = WorldFile.GetChunksPath(worldPath).PathJoin(WorldFile.GetChunkFIleName(chunkPos));
         if (File.Exists(chunkPath))
@@ -138,11 +139,12 @@ public class ChunksManager
             using var f = File.OpenRead(chunkPath);
             var chunkData = JsonSerializer.Deserialize<Chunk>(f);
             Chunks.TryAdd(chunkPos, chunkData);
-            return;
+            return chunkData;
         }
         var chunk = new Chunk(chunkPos);
         WorldGeneration.GenerateChunk(chunk);
         Chunks.TryAdd(chunkPos, chunk);
+        return chunk;
     }
 
     public void UnloadChunk(Vector3I chunkPos)
@@ -158,7 +160,7 @@ public class ChunksManager
             return false;
         }
         var blockPos = chunk.GetLocalPos(pos);
-        if(!Chunk.LocalPosInChunk(blockPos))
+        if (!Chunk.LocalPosInChunk(blockPos))
         {
             return false;
         }

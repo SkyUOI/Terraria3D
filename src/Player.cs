@@ -44,6 +44,8 @@ public partial class Player : CharacterBody3D
     {
         base._Ready();
         _camera3D.Current = false;
+
+        StartRunning();
     }
 
     public void StartRunning()

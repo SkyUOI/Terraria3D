@@ -100,6 +100,7 @@ public partial class Main : Node3D
 
         MouseInGame();
         WorldFile.LoadOrCreate(_worldPath, this);
+        _on_chunks_timer_timeout();
         // RenderBlocks();
     }
 
@@ -173,7 +174,7 @@ public partial class Main : Node3D
     {
         var generatedChunk = await ChunksManager.LoadChunk(_worldPath, chunkPos);
         await _renderer.RenderChunk(generatedChunk);
-        // await collisionManager.AddCollision(generatedChunk);
+        await _collisionManager.AddCollision(generatedChunk);
     }
 
     void RemoveChunk(Vector3I chunkPos)

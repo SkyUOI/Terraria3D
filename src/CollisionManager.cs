@@ -1,12 +1,15 @@
 using Godot;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Terraria3D;
 
 public partial class CollisionManager : Node
 {
-    ConcurrentDictionary<Vector3I, Node3D> LoadedChunks { get; set; } = new();
+    ConcurrentDictionary<Vector3I, StaticBody3D> LoadedChunks { get; set; } = new();
+
+    static Vector3[] ShapeFaces = Chunk.UnitMesh.GetFaces();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -24,15 +27,36 @@ public partial class CollisionManager : Node
         {
             return;
         }
-        var chunkNode = new Node3D();
+        var visibleChunks = await chunk.FindVisibleBlocks();
+        var allFaces = new List<Vector3>()
+        {
+            Capacity = visibleChunks.Count * ShapeFaces.Length
+        };
+        for (var i = 0; i < visibleChunks.Count; i++)
+        {
+            foreach (var j in ShapeFaces)
+            {
+                allFaces.Add(j + visibleChunks[i].Item1);
+            }
+        }
+        if (allFaces.Count == 0)
+        {
+            return;
+        }
+        var chunkNode = new StaticBody3D();
         // AddChild(chunkNode);
         CallDeferred(Node.MethodName.AddChild, chunkNode);
-        CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
+        chunkNode.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
+
+        var shape = new ConcavePolygonShape3D();
+        // GD.Print($"Mesh Faces: {allFaces.Count}");
+        shape.SetFaces(allFaces.ToArray());
+        var collision = new CollisionShape3D();
+        collision.Shape = shape;
+        // chunkNode.AddChild(collision);
+        chunkNode.CallDeferred(Node.MethodName.AddChild, collision);
+
         LoadedChunks.TryAdd(chunk.Pos, chunkNode);
-        foreach (var i in await chunk.FindVisibleBlocks())
-        {
-            AddBlockCollision(i.Item2.GetShape(), chunkNode, i.Item1);
-        }
     }
 
     public void RemoveCollision(Vector3I chunkPos)
@@ -41,18 +65,6 @@ public partial class CollisionManager : Node
         {
             RemoveChild(chunk);
         }
-    }
-
-    public void AddBlockCollision(Shape3D shape, Node3D chunkNode, Vector3 localPos)
-    {
-        var staticbody = new StaticBody3D();
-        var collision = new CollisionShape3D();
-        collision.Shape = shape;
-        staticbody.AddChild(collision);
-        // chunkNode.AddChild(staticbody);
-        chunkNode.CallDeferred(Node.MethodName.AddChild, staticbody);
-        // staticbody.Position = localPos;
-        staticbody.CallDeferred(Node3D.MethodName.SetPosition, localPos);
     }
 
     public void AddBlockCollision(Shape3D shape, Vector3 pos)

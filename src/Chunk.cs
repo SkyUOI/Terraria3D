@@ -25,6 +25,16 @@ public class Chunk(Vector3I pos)
         new (0, 1, 0),
         new (0, -1, 0)
     ];
+    
+    public static Mesh UnitMesh = new BoxMesh
+    {
+        Size = new Vector3(2, 2, 2)
+    };
+    
+    public static Transform3D FromBlockPos(Vector3I pos)
+    {
+        return new Transform3D(Basis.Identity, pos);
+    }
 
     public static bool LocalPosInChunk(Vector3 pos)
     {
@@ -53,10 +63,7 @@ public class Chunk(Vector3I pos)
             TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
             UseCustomData = true
         };
-        multiMesh.Mesh = new BoxMesh
-        {
-            Size = new(2, 2, 2)
-        };
+        multiMesh.Mesh = UnitMesh;
 
         var transforms = await FindVisibleBlocks();
         multiMesh.InstanceCount = transforms.Count;
@@ -68,11 +75,11 @@ public class Chunk(Vector3I pos)
         return multiMesh;
     }
 
-    public async Task<List<(Vector3, Block)>> FindVisibleBlocks()
+    public async Task<List<(Vector3I, Block)>> FindVisibleBlocks()
     {
         var transforms = await Task.Run(() =>
                 {
-                    var transforms = new List<(Vector3, Block)>()
+                    var transforms = new List<(Vector3I, Block)>()
                     {
                         Capacity = X * Y * Z
                     };

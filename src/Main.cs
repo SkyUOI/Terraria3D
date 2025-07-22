@@ -6,6 +6,7 @@ using Terraria3D.block.NormalBlock;
 using System;
 using System.Text.Json.Serialization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Terraria3D;
 
@@ -91,9 +92,6 @@ public partial class Main : Node3D
         MouseInGame();
         WorldFile.LoadOrCreate(_worldPath, this);
         // RenderBlocks();
-        _on_chunks_timer_timeout();
-        // Player.StartRunning();
-        ChunkTimer.Start();
     }
 
     public override void _Process(double delta)
@@ -148,7 +146,7 @@ public partial class Main : Node3D
                     {
                         continue;
                     }
-                    AddChunk(chunkPos);
+                    _ = Task.Run(async () => { await AddChunk(chunkPos); });
                     // GD.Print($"Loaded Chunk: {chunkPos}");
                 }
             }
@@ -162,10 +160,10 @@ public partial class Main : Node3D
         return tmp.X > _renderChunkDistance || tmp.Y > _renderChunkDistance || tmp.Z > _renderChunkDistance;
     }
 
-    void AddChunk(Vector3I chunkPos)
+    async Task AddChunk(Vector3I chunkPos)
     {
-        var generatedchunk = chunksManager.LoadChunk(_worldPath, chunkPos);
-        renderer.RenderChunk(generatedchunk);
+        var generatedchunk = await chunksManager.LoadChunk(_worldPath, chunkPos);
+        await renderer.RenderChunk(generatedchunk);
         // collisionManager.AddCollision(generatedchunk);
     }
 

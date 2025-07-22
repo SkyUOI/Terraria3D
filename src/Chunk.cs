@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Godot;
 
 
@@ -45,65 +46,75 @@ public class Chunk(Vector3I pos)
         return (Pos.Y * Y, (Pos.Y + 1) * Y - 1);
     }
 
-    public MultiMesh GenerateMultiMesh()
+    public async Task<MultiMesh> GenerateMultiMesh()
     {
-        var multiMesh = new MultiMesh();
-        multiMesh.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
+        var multiMesh = new MultiMesh()
+        {
+            TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
+            UseCustomData = true
+        };
         multiMesh.Mesh = new BoxMesh
         {
             Size = new(2, 2, 2)
         };
-        var transforms = new List<(Vector3, Block)>();
-        for (int i = 0; i < X; ++i)
+
+        var transforms = await Task.Run(() =>
         {
-            for (int j = 0; j < Y; ++j)
+            var transforms = new List<(Vector3, Block)>()
             {
-                for (int k = 0; k < Z; ++k)
+                Capacity = X * Y * Z
+            };
+            for (int i = 0; i < X; ++i)
+            {
+                for (int j = 0; j < Y; ++j)
                 {
-                    var block = Blocks[i, j, k];
-                    if (block == null)
+                    for (int k = 0; k < Z; ++k)
                     {
-                        continue;
-                    }
-                    var blockPos = new Vector3I(i, j, k);
-                    bool renderFlag = false;
-                    for (int l = 0; l < 6; ++l)
-                    {
-                        var direct = directs[l];
-                        var blockPos2 = blockPos + direct;
-                        if (blockPos2.X < 0 || blockPos2.X >= X || blockPos2.Y < 0 || blockPos2.Y >= Y || blockPos2.Z < 0 || blockPos2.Z >= Z)
+                        var block = Blocks[i, j, k];
+                        if (block == null)
                         {
                             continue;
                         }
-                        if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
+                        var blockPos = new Vector3I(i, j, k);
+                        bool renderFlag = false;
+                        for (int l = 0; l < 6; ++l)
                         {
-                            renderFlag = true;
-                            break;
+                            var direct = directs[l];
+                            var blockPos2 = blockPos + direct;
+                            if (blockPos2.X < 0 || blockPos2.X >= X || blockPos2.Y < 0 || blockPos2.Y >= Y || blockPos2.Z < 0 || blockPos2.Z >= Z)
+                            {
+                                continue;
+                            }
+                            if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
+                            {
+                                renderFlag = true;
+                                break;
+                            }
                         }
-                    }
-                    if (renderFlag)
-                    {
-                        transforms.Add((blockPos, block));
+                        if (renderFlag)
+                        {
+                            transforms.Add((blockPos, block));
+                        }
                     }
                 }
             }
-        }
-        multiMesh.UseCustomData = true;
+            return transforms;
+        });
         multiMesh.InstanceCount = transforms.Count;
         for (int i = 0; i < transforms.Count; ++i)
         {
             multiMesh.SetInstanceTransform(i, new Transform3D(Basis.Identity, transforms[i].Item1));
-            multiMesh.SetInstanceCustomData(i, BlockRegistry.GetShaderData(transforms[i].Item2.BlockId));
+            multiMesh.SetInstanceCustomData(i, transforms[i].Item2.GetShaderData());
         }
         return multiMesh;
     }
 
-    public MultiMeshInstance3D GenerateMultiMeshInstance3D()
+    public async Task<MultiMeshInstance3D> GenerateMultiMeshInstance3D()
     {
         var multiMeshInstance3D = new MultiMeshInstance3D();
-        multiMeshInstance3D.Multimesh = GenerateMultiMesh();
+        multiMeshInstance3D.Multimesh = await GenerateMultiMesh();
         var mat = new ShaderMaterial();
-        mat.Shader = GD.Load<Shader>("res://src/ChunkMesh.gdshader");
+        mat.Shader = RenderShaderResources.LoadTexture;
         mat.SetShaderParameter("atlas", GD.Load<Texture2D>("res://resources/tiles/Atlas.png"));
         // TODO: read dynamically
         mat.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
@@ -121,18 +132,18 @@ public class ChunksManager
 {
     public ConcurrentDictionary<Vector3I, Chunk> Chunks { get; set; } = new();
 
-    public void CheckAndLoadChunk(string worldPath, Vector3 pos)
+    public async Task CheckAndLoadChunk(string worldPath, Vector3 pos)
     {
         var chunkPos = Utils.GetChunk(pos);
         if (Chunks.ContainsKey(chunkPos))
         {
             return;
         }
-        LoadChunk(worldPath, chunkPos);
+        await LoadChunk(worldPath, chunkPos);
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public Chunk LoadChunk(string worldPath, Vector3I chunkPos)
+    public async Task<Chunk> LoadChunk(string worldPath, Vector3I chunkPos)
     {
         var chunkPath = WorldFile.GetChunksPath(worldPath).PathJoin(WorldFile.GetChunkFIleName(chunkPos));
         if (File.Exists(chunkPath))
@@ -143,7 +154,7 @@ public class ChunksManager
             return chunkData;
         }
         var chunk = new Chunk(chunkPos);
-        WorldGeneration.GenerateChunk(chunk);
+        await WorldGeneration.GenerateChunk(chunk);
         Chunks.TryAdd(chunkPos, chunk);
         return chunk;
     }

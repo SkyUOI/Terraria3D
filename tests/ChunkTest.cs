@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GdUnit4;
 using Godot;
 using Terraria3D;
@@ -102,12 +103,12 @@ public class ChunkTest
 
     [TestCase]
     [RequireGodotRuntime]
-    public void TestMultiMeshGeneration()
+    public async Task TestMultiMeshGeneration()
     {
         var chunk = new Chunk(new Vector3I(0, 0, 0));
 
         // Test with empty chunk
-        var multiMesh = chunk.GenerateMultiMesh();
+        var multiMesh = await chunk.GenerateMultiMesh();
         AssertThat(multiMesh.InstanceCount).IsEqual(0);
 
         // Add blocks in a cross pattern to ensure proper exposure
@@ -122,7 +123,7 @@ public class ChunkTest
         // Add an isolated block that should be fully exposed
         chunk.Blocks[0, 0, 0] = BlockRegistry.NewBlock(BlockId.Dirt);
 
-        multiMesh = chunk.GenerateMultiMesh();
+        multiMesh = await chunk.GenerateMultiMesh();
         // Center block should be surrounded and not rendered
         // Isolated block should be rendered
         // All directional blocks should be rendered (7 total)
@@ -160,7 +161,7 @@ public class ChunkTest
         AssertThat(expectedPositions).IsEmpty();
 
         // Test MultiMeshInstance3D creation
-        var instance = chunk.GenerateMultiMeshInstance3D();
+        var instance = await chunk.GenerateMultiMeshInstance3D();
         AddNode(instance);
         AssertThat(instance).IsNotNull();
         AssertThat(instance.Multimesh).IsEqual(multiMesh);

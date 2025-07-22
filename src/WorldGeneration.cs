@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
 
 namespace Terraria3D;
@@ -12,23 +13,26 @@ public partial class WorldGeneration : Node
         Noise.Frequency = 0.1f;
     }
 
-    public static void GenerateChunk(Chunk chunk)
+    public static async Task GenerateChunk(Chunk chunk)
     {
-        var heightRange = chunk.HeightRange();
-        // GD.Print($"heightRange: {heightRange}");
-        for (int i = 0; i < Chunk.X; ++i)
+        await Task.Run(() =>
         {
-            for (int j = 0; j < Chunk.Z; ++j)
+            var heightRange = chunk.HeightRange();
+            // GD.Print($"heightRange: {heightRange}");
+            for (int i = 0; i < Chunk.X; ++i)
             {
-                var pos = chunk.GetGlobalPos(new Vector3I(i, 0, j));
-                var pos2d = new Vector2(pos.X, pos.Z);
-                var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
-                for (int k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
+                for (int j = 0; j < Chunk.Z; ++j)
                 {
-                    chunk.Blocks[i, k - heightRange.Item1, j] = BlockRegistry.NewBlock(BlockId.Dirt);
+                    var pos = chunk.GetGlobalPos(new Vector3I(i, 0, j));
+                    var pos2d = new Vector2(pos.X, pos.Z);
+                    var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
+                    for (int k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
+                    {
+                        chunk.Blocks[i, k - heightRange.Item1, j] = BlockRegistry.NewBlock(BlockId.Dirt);
+                    }
                 }
             }
-        }
+        });
     }
 
     public static int ConvertNoiseToHeight(float noise)

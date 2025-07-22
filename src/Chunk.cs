@@ -25,12 +25,12 @@ public class Chunk(Vector3I pos)
         new (0, 1, 0),
         new (0, -1, 0)
     ];
-    
+
     public static Mesh UnitMesh = new BoxMesh
     {
         Size = new Vector3(2, 2, 2)
     };
-    
+
     public static Transform3D FromBlockPos(Vector3I pos)
     {
         return new Transform3D(Basis.Identity, pos);

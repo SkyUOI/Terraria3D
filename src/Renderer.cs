@@ -55,7 +55,7 @@ public class RenderShaderResources
 
     public static ShaderMaterial Material { get; set; } = new();
 
-    public static void Preload()
+    static RenderShaderResources()
     {
         LoadTexture ??= GD.Load<Shader>("res://src/ChunkMesh.gdshader");
         Atlas ??= GD.Load<Texture2D>("res://resources/tiles/Atlas.png");
@@ -64,4 +64,7 @@ public class RenderShaderResources
         // TODO: read dynamically
         Material.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
     }
+
+    public static void Preload()
+    { }
 }

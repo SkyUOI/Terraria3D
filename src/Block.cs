@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Terraria3D.block.NormalBlock;
 
 namespace Terraria3D;
 
@@ -23,6 +24,11 @@ public class BlockRegistry
 {
     // 存储所有方块类型
     public static Dictionary<BlockId, (Type, Func<Color>, Func<BoxShape3D>)> BlockTypes { get; } = new();
+
+    static BlockRegistry()
+    {
+        RegisterBlock<Dirt>();
+    }
 
     // 注册方块类型
     public static void RegisterBlock<T>() where T : IBlock

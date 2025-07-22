@@ -78,8 +78,7 @@ public partial class Main : Node3D
     public ChunksManager chunksManager = new();
 
 
-    private int _renderChunkDistance = 3;
-    private const int MAX_UPDATES_PER_FRAME = 500;
+    private int _renderChunkDistance = 9;
 
     public override void _Ready()
     {
@@ -87,7 +86,6 @@ public partial class Main : Node3D
         // {
         // }
         base._Ready();
-        InitMeshLibrary();
         WorldGeneration.Init();
 
         MouseInGame();
@@ -96,11 +94,6 @@ public partial class Main : Node3D
         _on_chunks_timer_timeout();
         // Player.StartRunning();
         ChunkTimer.Start();
-    }
-
-    private void InitMeshLibrary()
-    {
-        BlockRegistry.RegisterBlock<Dirt>();
     }
 
     public override void _Process(double delta)
@@ -140,7 +133,7 @@ public partial class Main : Node3D
             if (OutOfRenderingDistance(playerChunkPos, chunkPos))
             {
                 RemoveChunk(chunkPos);
-                GD.Print("Removed chunk: " + chunkPos);
+                // GD.Print("Removed chunk: " + chunkPos);
             }
         }
         // load new chunks
@@ -156,7 +149,7 @@ public partial class Main : Node3D
                         continue;
                     }
                     AddChunk(chunkPos);
-                    GD.Print($"Loaded Chunk: {chunkPos}");
+                    // GD.Print($"Loaded Chunk: {chunkPos}");
                 }
             }
         }

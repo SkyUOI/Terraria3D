@@ -10,7 +10,7 @@ public partial class WorldGeneration : Node
 
     public static void Init()
     {
-        Noise.Frequency = 0.1f;
+        Noise.Frequency = 0.001f;
     }
 
     public static async Task GenerateChunk(Chunk chunk)
@@ -37,7 +37,7 @@ public partial class WorldGeneration : Node
 
     public static int ConvertNoiseToHeight(float noise)
     {
-        var height = (int)((noise + 1) * 100);
+        var height = (int)((noise + 1) * 30);
         // GD.Print($"height: {height} noise: {noise}");
         return height;
     }

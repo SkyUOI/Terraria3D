@@ -145,23 +145,26 @@ public partial class Main : Node3D
             }
         }
         // load new chunks
-        for (int i = -_renderChunkDistance; i <= _renderChunkDistance; ++i)
+        _ = Task.Run(async () =>
         {
-            for (int j = -_renderChunkDistance; j <= _renderChunkDistance; ++j)
+            for (int i = -_renderChunkDistance; i <= _renderChunkDistance; ++i)
             {
-                for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
+                for (int j = -_renderChunkDistance; j <= _renderChunkDistance; ++j)
                 {
-                    var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
-                    if (ChunksManager.Chunks.ContainsKey(chunkPos))
+                    for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
                     {
-                        continue;
+                        var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
+                        if (ChunksManager.Chunks.ContainsKey(chunkPos))
+                        {
+                            continue;
+                        }
+                        await AddChunk(chunkPos);
+                        // GD.Print($"Loaded Chunk: {chunkPos}");
                     }
-                    _ = Task.Run(async () => { await AddChunk(chunkPos); });
-                    // GD.Print($"Loaded Chunk: {chunkPos}");
                 }
             }
-        }
-        ChunkTimer.Start();
+            ChunkTimer.CallDeferred(Timer.MethodName.Start);
+        });
     }
 
     bool OutOfRenderingDistance(Vector3I playerChunkPos, Vector3I chunkPos)

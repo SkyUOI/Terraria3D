@@ -8,7 +8,7 @@ namespace Terraria3D;
 public partial class Player : CharacterBody3D
 {
     [Export]
-    public int Speed = 10;
+    public int Speed = 5;
     [Export]
     public int RotateSenY = 3;
     [Export]
@@ -32,7 +32,9 @@ public partial class Player : CharacterBody3D
     [Export]
     public int ManaMax = 20;
     [Export]
-    public float JumpVelocity = 4.5f;
+    public float JumpVelocity = 8f;
+    [Export]
+    Timer _chunksTimer;
 
     [Export]
     Camera3D _camera3D;
@@ -44,8 +46,6 @@ public partial class Player : CharacterBody3D
     {
         base._Ready();
         _camera3D.Current = false;
-
-        StartRunning();
     }
 
     public void StartRunning()
@@ -80,6 +80,10 @@ public partial class Player : CharacterBody3D
         base._PhysicsProcess(delta);
         if (!Enable)
         {
+            if (!_chunksTimer.IsStopped())
+            {
+                StartRunning();
+            }
             return;
         }
         Move(delta);
@@ -112,7 +116,7 @@ public partial class Player : CharacterBody3D
         // Add the gravity.
         if (!IsOnFloor())
         {
-            // velocity += GetGravity() * (float)delta;
+            velocity += GetGravity() * (float)delta;
         }
 
         // Handle Jump.

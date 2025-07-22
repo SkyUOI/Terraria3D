@@ -33,17 +33,17 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_rlaii")
 
-[node name="Player" parent="." node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist"] instance=ExtResource("1_eewff")]
+[node name="Player" parent="." node_paths=PackedStringArray("_main", "_mainGameUi", "_chunksTimer") groups=["Persist"] instance=ExtResource("1_eewff")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 23.8811, 0)
 _main = NodePath("..")
 _mainGameUi = NodePath("../MainGameUI")
+_chunksTimer = NodePath("../ChunksLoadAndUnload")
 
 [node name="MainGameUI" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_3cfgd")]
 Player = NodePath("../Player")
 
 [node name="ChunksLoadAndUnload" type="Timer" parent="."]
 wait_time = 5.0
-autostart = true
 
 [node name="LoadPLayer" type="Timer" parent="."]
 wait_time = 2.0

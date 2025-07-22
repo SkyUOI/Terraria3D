@@ -6,7 +6,7 @@ namespace Terraria3D;
 
 public partial class WorldGeneration : Node
 {
-    public static FastNoiseLite Noise = new FastNoiseLite();
+    public static FastNoiseLite Noise = new();
 
     public static void Init()
     {
@@ -19,14 +19,14 @@ public partial class WorldGeneration : Node
         {
             var heightRange = chunk.HeightRange();
             // GD.Print($"heightRange: {heightRange}");
-            for (int i = 0; i < Chunk.X; ++i)
+            for (var i = 0; i < Chunk.X; ++i)
             {
-                for (int j = 0; j < Chunk.Z; ++j)
+                for (var j = 0; j < Chunk.Z; ++j)
                 {
                     var pos = chunk.GetGlobalPos(new Vector3I(i, 0, j));
                     var pos2d = new Vector2(pos.X, pos.Z);
                     var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
-                    for (int k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
+                    for (var k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
                     {
                         chunk.Blocks[i, k - heightRange.Item1, j] = BlockRegistry.NewBlock(BlockId.Dirt);
                     }

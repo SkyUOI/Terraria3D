@@ -46,7 +46,7 @@ public class WorldFile
 
     static public void CreateWorld(string wldName)
     {
-        // create file itself
+        // create the file itself
         using var f = File.Create(GetWldFilePath(wldName));
         var seed = GD.Randi();
         var data = new WldData(seed)
@@ -79,7 +79,7 @@ public class WorldFile
         return GetWorldDataPath(worldName).PathJoin(ChunksDir);
     }
 
-    public static string GetChunkFIleName(Vector3I chunkPos)
+    public static string GetChunkFileName(Vector3I chunkPos)
     {
         return chunkPos.X + "_" + chunkPos.Y + "_" + chunkPos.Z + ".chunk";
     }

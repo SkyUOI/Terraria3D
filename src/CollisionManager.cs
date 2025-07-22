@@ -1,10 +1,12 @@
 using Godot;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Terraria3D;
 
 public partial class CollisionManager : Node
 {
-    Dictionary<Vector3I, Node3D> LoadedChunks { get; set; } = new();
+    ConcurrentDictionary<Vector3I, Node3D> LoadedChunks { get; set; } = new();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -16,38 +18,28 @@ public partial class CollisionManager : Node
     {
     }
 
-    public void AddCollision(Chunk chunk)
+    public async Task AddCollision(Chunk chunk)
     {
         if (LoadedChunks.ContainsKey(chunk.Pos))
         {
             return;
         }
         var chunkNode = new Node3D();
-        AddChild(chunkNode);
-        chunkNode.Position = chunk.GetStartPoint();
-        LoadedChunks.Add(chunk.Pos, chunkNode);
-        for (int i = 0; i < Chunk.X; ++i)
+        // AddChild(chunkNode);
+        CallDeferred(Node.MethodName.AddChild, chunkNode);
+        CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
+        LoadedChunks.TryAdd(chunk.Pos, chunkNode);
+        foreach (var i in await chunk.FindVisibleBlocks())
         {
-            for (int j = 0; j < Chunk.Y; ++j)
-            {
-                for (int k = 0; k < Chunk.Z; ++k)
-                {
-                    if (chunk.Blocks[i, j, k] != null)
-                    {
-                        var id = chunk.Blocks[i, j, k].BlockId;
-                        AddBlockCollision(chunk.Blocks[i, j, k].GetShape(), chunkNode, new Vector3I(i, j, k));
-                    }
-                }
-            }
+            AddBlockCollision(i.Item2.GetShape(), chunkNode, i.Item1);
         }
     }
 
     public void RemoveCollision(Vector3I chunkPos)
     {
-        if (LoadedChunks.ContainsKey(chunkPos))
+        if (LoadedChunks.TryRemove(chunkPos, out var chunk))
         {
-            RemoveChild(LoadedChunks[chunkPos]);
-            LoadedChunks.Remove(chunkPos);
+            RemoveChild(chunk);
         }
     }
 
@@ -57,8 +49,10 @@ public partial class CollisionManager : Node
         var collision = new CollisionShape3D();
         collision.Shape = shape;
         staticbody.AddChild(collision);
-        chunkNode.AddChild(staticbody);
-        staticbody.Position = localPos;
+        // chunkNode.AddChild(staticbody);
+        chunkNode.CallDeferred(Node.MethodName.AddChild, staticbody);
+        // staticbody.Position = localPos;
+        staticbody.CallDeferred(Node3D.MethodName.SetPosition, localPos);
     }
 
     public void AddBlockCollision(Shape3D shape, Vector3 pos)

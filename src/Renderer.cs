@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Resolvers;
 using Godot;
 
 namespace Terraria3D;
@@ -32,7 +33,7 @@ public partial class Renderer : Node3D
         {
             var meshInstance3D = await chunk.GenerateMultiMeshInstance3D();
             CallDeferred(Node.MethodName.AddChild, meshInstance3D);
-            meshInstance3D.CallDeferred(MultiMeshInstance3D.MethodName.SetPosition, chunk.GetStartPoint());
+            meshInstance3D.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
             // GD.Print($"Rendered Chunk: {meshInstance3D.GlobalPosition}");
             RenderedChunks.TryAdd(chunk.Pos, meshInstance3D);
         }
@@ -49,5 +50,18 @@ public partial class Renderer : Node3D
 
 public class RenderShaderResources
 {
-    public static Shader LoadTexture { get; set; } = GD.Load<Shader>("res://src/ChunkMesh.gdshader");
+    public static Shader LoadTexture { get; set; }
+    public static Texture2D Atlas { get; set; }
+
+    public static ShaderMaterial Material { get; set; } = new();
+
+    public static void Preload()
+    {
+        LoadTexture ??= GD.Load<Shader>("res://src/ChunkMesh.gdshader");
+        Atlas ??= GD.Load<Texture2D>("res://resources/tiles/Atlas.png");
+        Material.Shader = LoadTexture;
+        Material.SetShaderParameter("atlas", Atlas);
+        // TODO: read dynamically
+        Material.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
+    }
 }

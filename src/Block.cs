@@ -35,7 +35,17 @@ public class BlockRegistry
     {
         var getShaderDataMethod = typeof(T).GetMethod("GetShaderData");
         var getShapeMethod = typeof(T).GetMethod("GetShape");
-        BlockTypes.Add(T.Id, (typeof(T), (Func<Color>)Delegate.CreateDelegate(typeof(Func<Color>), getShaderDataMethod), (Func<BoxShape3D>)Delegate.CreateDelegate(typeof(Func<BoxShape3D>), getShapeMethod)));
+        if (getShaderDataMethod != null && getShapeMethod != null)
+        {
+            BlockTypes.Add(T.Id,
+                (typeof(T), (Func<Color>)Delegate.CreateDelegate(typeof(Func<Color>), getShaderDataMethod),
+                    (Func<BoxShape3D>)Delegate.CreateDelegate(typeof(Func<BoxShape3D>), getShapeMethod)));
+        }
+        else
+        {
+            throw new Exception(
+                $"Block {typeof(T).Name} must implement IBlock interface");
+        }
     }
 
     public static Color GetShaderData(BlockId id)

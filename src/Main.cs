@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Godot;
-using Terraria3D.block.NormalBlock;
 using System;
 using System.Text.Json.Serialization;
 using System.Linq;
@@ -15,32 +14,41 @@ namespace Terraria3D;
 [Serializable]
 public class Region
 {
-    public float x { get; set; }
-    public float y { get; set; }
-    public float w { get; set; }
-    public float h { get; set; }
-    public string source { get; set; }
+    [JsonPropertyName("x")]
+    public float X { get; set; }
+    [JsonPropertyName("y")]
+    public float Y { get; set; }
+    [JsonPropertyName("w")]
+    public float W { get; set; }
+    [JsonPropertyName("h")]
+    public float H { get; set; }
+    [JsonPropertyName("source")]
+    public string Source { get; set; }
 
     public static explicit operator Color(Region region)
     {
-        return new Color(region.x, region.y, region.w, region.h);
+        return new Color(region.X, region.Y, region.W, region.H);
     }
 }
 
 public class Source
 {
-    public class Size
+    public class SizeProperty
     {
-        public int w { get; set; }
-        public int h { get; set; }
+        [JsonPropertyName("w")]
+        public int W { get; set; }
+        [JsonPropertyName("h")]
+        public int H { get; set; }
     }
-    public Size size { get; set; }
+    [JsonPropertyName("size")]
+    public SizeProperty Size { get; set; }
 }
 
 [Serializable]
 public class AtlasData
 {
-    public Dictionary<string, Source> sources { get; set; }
+    [JsonPropertyName("sources")]
+    public Dictionary<string, Source> Sources { get; set; }
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AtlasReceive { get; set; }
     private Dictionary<string, List<Region>> _atlas;
@@ -68,15 +76,15 @@ public partial class Main : Node3D
     [Export]
     Player Player { get; set; }
     [Export]
-    Godot.Timer ChunkTimer { get; set; }
+    Timer ChunkTimer { get; set; }
     [Export]
     bool RecreateWorld { get; set; }
     [Export]
-    Renderer renderer;
+    Renderer _renderer;
     [Export]
-    CollisionManager collisionManager;
+    CollisionManager _collisionManager;
 
-    public ChunksManager chunksManager = new();
+    public ChunksManager ChunksManager = new();
 
 
     private int _renderChunkDistance = 9;
@@ -87,6 +95,7 @@ public partial class Main : Node3D
         // {
         // }
         base._Ready();
+        RenderShaderResources.Preload();
         WorldGeneration.Init();
 
         MouseInGame();
@@ -125,7 +134,7 @@ public partial class Main : Node3D
         ChunkTimer.Stop();
         var playerChunkPos = Utils.GetChunk(playerPos);
         // remove old chunks
-        foreach (var chunk in chunksManager.Chunks)
+        foreach (var chunk in ChunksManager.Chunks)
         {
             var chunkPos = chunk.Key;
             if (OutOfRenderingDistance(playerChunkPos, chunkPos))
@@ -142,7 +151,7 @@ public partial class Main : Node3D
                 for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
                 {
                     var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
-                    if (chunksManager.Chunks.ContainsKey(chunkPos))
+                    if (ChunksManager.Chunks.ContainsKey(chunkPos))
                     {
                         continue;
                     }
@@ -162,15 +171,15 @@ public partial class Main : Node3D
 
     async Task AddChunk(Vector3I chunkPos)
     {
-        var generatedchunk = await chunksManager.LoadChunk(_worldPath, chunkPos);
-        await renderer.RenderChunk(generatedchunk);
-        // collisionManager.AddCollision(generatedchunk);
+        var generatedChunk = await ChunksManager.LoadChunk(_worldPath, chunkPos);
+        await _renderer.RenderChunk(generatedChunk);
+        // await collisionManager.AddCollision(generatedChunk);
     }
 
     void RemoveChunk(Vector3I chunkPos)
     {
-        chunksManager.UnloadChunk(chunkPos);
-        renderer.UnrenderChunk(chunkPos);
-        collisionManager.RemoveCollision(chunkPos);
+        ChunksManager.UnloadChunk(chunkPos);
+        _renderer.UnrenderChunk(chunkPos);
+        _collisionManager.RemoveCollision(chunkPos);
     }
 }

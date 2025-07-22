@@ -16,19 +16,19 @@ public class Chunk(Vector3I pos)
     public Vector3I Pos = pos;
     public Block[,,] Blocks = new Block[X, Y, Z];
 
-    static Vector3I[] directs =
+    static Vector3I[] _directs =
     [
-        new Vector3I(0, 0, 1),
-        new Vector3I(0, 0, -1),
-        new Vector3I(1, 0, 0),
-        new Vector3I(-1, 0, 0),
-        new Vector3I(0, 1, 0),
-        new Vector3I(0, -1, 0)
+        new (0, 0, 1),
+        new (0, 0, -1),
+        new (1, 0, 0),
+        new (-1, 0, 0),
+        new (0, 1, 0),
+        new (0, -1, 0)
     ];
 
     public static bool LocalPosInChunk(Vector3 pos)
     {
-        return pos.X >= 0 && pos.X < X && pos.Y >= 0 && pos.Y < Y && pos.Z >= 0 && pos.Z < Z;
+        return pos.X >= 0 && pos is { X: < X, Y: >= 0 } and { Y: < Y, Z: >= 0 and < Z };
     }
 
     public Vector3 GetGlobalPos(Vector3I inChunkPos)
@@ -58,48 +58,7 @@ public class Chunk(Vector3I pos)
             Size = new(2, 2, 2)
         };
 
-        var transforms = await Task.Run(() =>
-        {
-            var transforms = new List<(Vector3, Block)>()
-            {
-                Capacity = X * Y * Z
-            };
-            for (int i = 0; i < X; ++i)
-            {
-                for (int j = 0; j < Y; ++j)
-                {
-                    for (int k = 0; k < Z; ++k)
-                    {
-                        var block = Blocks[i, j, k];
-                        if (block == null)
-                        {
-                            continue;
-                        }
-                        var blockPos = new Vector3I(i, j, k);
-                        bool renderFlag = false;
-                        for (int l = 0; l < 6; ++l)
-                        {
-                            var direct = directs[l];
-                            var blockPos2 = blockPos + direct;
-                            if (blockPos2.X < 0 || blockPos2.X >= X || blockPos2.Y < 0 || blockPos2.Y >= Y || blockPos2.Z < 0 || blockPos2.Z >= Z)
-                            {
-                                continue;
-                            }
-                            if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
-                            {
-                                renderFlag = true;
-                                break;
-                            }
-                        }
-                        if (renderFlag)
-                        {
-                            transforms.Add((blockPos, block));
-                        }
-                    }
-                }
-            }
-            return transforms;
-        });
+        var transforms = await FindVisibleBlocks();
         multiMesh.InstanceCount = transforms.Count;
         for (int i = 0; i < transforms.Count; ++i)
         {
@@ -109,16 +68,58 @@ public class Chunk(Vector3I pos)
         return multiMesh;
     }
 
+    public async Task<List<(Vector3, Block)>> FindVisibleBlocks()
+    {
+        var transforms = await Task.Run(() =>
+                {
+                    var transforms = new List<(Vector3, Block)>()
+                    {
+                        Capacity = X * Y * Z
+                    };
+                    for (int i = 0; i < X; ++i)
+                    {
+                        for (int j = 0; j < Y; ++j)
+                        {
+                            for (int k = 0; k < Z; ++k)
+                            {
+                                var block = Blocks[i, j, k];
+                                if (block == null)
+                                {
+                                    continue;
+                                }
+                                var blockPos = new Vector3I(i, j, k);
+                                bool renderFlag = false;
+                                for (int l = 0; l < 6; ++l)
+                                {
+                                    var direct = _directs[l];
+                                    var blockPos2 = blockPos + direct;
+                                    if (blockPos2.X < 0 || blockPos2.X >= X || blockPos2.Y < 0 || blockPos2.Y >= Y || blockPos2.Z < 0 || blockPos2.Z >= Z)
+                                    {
+                                        continue;
+                                    }
+                                    if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
+                                    {
+                                        renderFlag = true;
+                                        break;
+                                    }
+                                }
+                                if (renderFlag)
+                                {
+                                    transforms.Add((blockPos, block));
+                                }
+                            }
+                        }
+                    }
+                    return transforms;
+                });
+        return transforms;
+    }
+
     public async Task<MultiMeshInstance3D> GenerateMultiMeshInstance3D()
     {
         var multiMeshInstance3D = new MultiMeshInstance3D();
         multiMeshInstance3D.Multimesh = await GenerateMultiMesh();
-        var mat = new ShaderMaterial();
-        mat.Shader = RenderShaderResources.LoadTexture;
-        mat.SetShaderParameter("atlas", GD.Load<Texture2D>("res://resources/tiles/Atlas.png"));
-        // TODO: read dynamically
-        mat.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
-        multiMeshInstance3D.MaterialOverride = mat;
+        multiMeshInstance3D.MaterialOverride = RenderShaderResources.Material;
         return multiMeshInstance3D;
     }
 
@@ -145,10 +146,10 @@ public class ChunksManager
 
     public async Task<Chunk> LoadChunk(string worldPath, Vector3I chunkPos)
     {
-        var chunkPath = WorldFile.GetChunksPath(worldPath).PathJoin(WorldFile.GetChunkFIleName(chunkPos));
+        var chunkPath = WorldFile.GetChunksPath(worldPath).PathJoin(WorldFile.GetChunkFileName(chunkPos));
         if (File.Exists(chunkPath))
         {
-            using var f = File.OpenRead(chunkPath);
+            await using var f = File.OpenRead(chunkPath);
             var chunkData = JsonSerializer.Deserialize<Chunk>(f);
             Chunks.TryAdd(chunkPos, chunkData);
             return chunkData;

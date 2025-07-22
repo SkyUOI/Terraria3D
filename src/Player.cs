@@ -38,7 +38,7 @@ public partial class Player : CharacterBody3D
     Camera3D _camera3D;
 
     [Export]
-    public bool Enable = false;
+    public bool Enable;
 
     public override void _Ready()
     {
@@ -63,11 +63,11 @@ public partial class Player : CharacterBody3D
     private void MoveOutOfBlock()
     {
         // GD.Print("fk");
-        if (!_main.chunksManager.BlockExists(Position))
+        if (!_main.ChunksManager.BlockExists(Position))
         {
             return;
         }
-        while (_main.chunksManager.BlockExists(Position))
+        while (_main.ChunksManager.BlockExists(Position))
         {
             Position += Vector3.Up;
         }

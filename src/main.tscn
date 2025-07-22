@@ -18,13 +18,13 @@ background_mode = 2
 sky = SubResource("Sky_kmhfv")
 tonemap_mode = 2
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "renderer", "collisionManager")]
+[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "_renderer", "_collisionManager")]
 script = ExtResource("1_fyndt")
 MainGameUi = NodePath("MainGameUI")
 Player = NodePath("Player")
 ChunkTimer = NodePath("ChunksLoadAndUnload")
-renderer = NodePath("Renderer")
-collisionManager = NodePath("CollisionManager")
+_renderer = NodePath("Renderer")
+_collisionManager = NodePath("CollisionManager")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)

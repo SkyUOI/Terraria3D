@@ -33,7 +33,7 @@ public partial class Renderer : Node3D
         {
             var meshInstance3D = await chunk.GenerateMultiMeshInstance3D();
             CallDeferred(Node.MethodName.AddChild, meshInstance3D);
-            meshInstance3D.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
+            meshInstance3D.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetRealStartPoint());
             // GD.Print($"Rendered Chunk: {meshInstance3D.GlobalPosition}");
             RenderedChunks.TryAdd(chunk.Pos, meshInstance3D);
         }

@@ -18,7 +18,7 @@ public class Dirt : IBlock
     public static BoxShape3D GetShape()
     {
         var shape = new BoxShape3D();
-        shape.Size = new Vector3(2, 2, 2);
+        shape.Size = new Vector3(Consts.BlockSize, Consts.BlockSize, Consts.BlockSize);
         // GD.Print(ret);
         return shape;
     }

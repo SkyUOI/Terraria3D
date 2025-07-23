@@ -46,7 +46,7 @@ public partial class CollisionManager : Node
         var chunkNode = new StaticBody3D();
         // AddChild(chunkNode);
         CallDeferred(Node.MethodName.AddChild, chunkNode);
-        chunkNode.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetStartPoint());
+        chunkNode.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetRealStartPoint());
 
         var shape = new ConcavePolygonShape3D();
         // GD.Print($"Mesh Faces: {allFaces.Count}");

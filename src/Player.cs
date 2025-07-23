@@ -8,7 +8,7 @@ namespace Terraria3D;
 public partial class Player : CharacterBody3D
 {
     [Export]
-    public int Speed = 5;
+    public int Speed = 3;
     [Export]
     public int RotateSenY = 3;
     [Export]
@@ -65,11 +65,11 @@ public partial class Player : CharacterBody3D
     private void MoveOutOfBlock()
     {
         // GD.Print("fk");
-        if (!_main.ChunksManager.BlockExists(Position))
+        if (!ChunksManager.BlockExists(Position))
         {
             return;
         }
-        while (_main.ChunksManager.BlockExists(Position))
+        while (ChunksManager.BlockExists(Position))
         {
             Position += Vector3.Up;
         }
@@ -87,6 +87,7 @@ public partial class Player : CharacterBody3D
             return;
         }
         Move(delta);
+        // GD.Print(Utils.GetChunk(Position));
     }
 
     public override void _Input(InputEvent @event)

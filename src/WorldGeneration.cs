@@ -23,7 +23,7 @@ public partial class WorldGeneration : Node
             {
                 for (var j = 0; j < Chunk.Z; ++j)
                 {
-                    var pos = chunk.GetGlobalPos(new Vector3I(i, 0, j));
+                    var pos = chunk.GetGlobalChunkPos(new Vector3I(i, 0, j));
                     var pos2d = new Vector2(pos.X, pos.Z);
                     var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
                     for (var k = heightRange.Item1; k <= Math.Min(height, heightRange.Item2); ++k)
@@ -37,7 +37,7 @@ public partial class WorldGeneration : Node
 
     public static int ConvertNoiseToHeight(float noise)
     {
-        var height = (int)((noise + 1) * 30);
+        var height = (int)((noise + 1) * 30) - 10;
         // GD.Print($"height: {height} noise: {noise}");
         return height;
     }

@@ -36,20 +36,20 @@ public class ChunkTest
     public void TestLocalPosValidation()
     {
         // Valid positions
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(0, 0, 0))).IsTrue();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(15, 15, 15))).IsTrue();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(0, 0, 0))).IsTrue();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(15, 15, 15))).IsTrue();
 
         // Invalid positions
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(16, 0, 0))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(0, 16, 0))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(0, 0, 16))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(-1, 0, 0))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(0, -1, 0))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(0, 0, -1))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(-1, -1, -1))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(16, 15, 15))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(15, 16, 15))).IsFalse();
-        AssertThat(Chunk.LocalPosInChunk(new Vector3(15, 15, 16))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(16, 0, 0))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(0, 16, 0))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(0, 0, 16))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(-1, 0, 0))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(0, -1, 0))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(0, 0, -1))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(-1, -1, -1))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(16, 15, 15))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(15, 16, 15))).IsFalse();
+        AssertThat(Chunk.InLocalChunkPos(new Vector3(15, 15, 16))).IsFalse();
     }
 
     [TestCase]
@@ -60,22 +60,22 @@ public class ChunkTest
         var chunk = new Chunk(new Vector3I(2, 3, 4));
         var localPos = new Vector3I(5, 6, 7);
 
-        var globalPos = chunk.GetGlobalPos(localPos);
-        var expectedGlobal = new Vector3(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7);
+        var globalPos = chunk.GetGlobalChunkPos(localPos);
+        var expectedGlobal = new Vector3I(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7);
         AssertThat(globalPos).IsEqual(expectedGlobal);
 
-        var convertedLocal = chunk.GetLocalPos(globalPos);
+        var convertedLocal = chunk.GetLocalPosFromGlobalRealPos(globalPos);
         AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
 
         // Test negative positions
         chunk = new Chunk(new Vector3I(-1, -2, -3));
         localPos = new Vector3I(5, 6, 7);
 
-        globalPos = chunk.GetGlobalPos(localPos);
-        expectedGlobal = new Vector3(-1 * Chunk.X + 5, -2 * Chunk.Y + 6, -3 * Chunk.Z + 7);
+        globalPos = chunk.GetGlobalChunkPos(localPos);
+        expectedGlobal = new Vector3I(-1 * Chunk.X + 5, -2 * Chunk.Y + 6, -3 * Chunk.Z + 7);
         AssertThat(globalPos).IsEqual(expectedGlobal);
 
-        convertedLocal = chunk.GetLocalPos(globalPos);
+        convertedLocal = chunk.GetLocalPosFromGlobalRealPos(globalPos);
         AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
     }
 
@@ -179,13 +179,13 @@ public class ChunkTest
     {
         // Test positive position
         var chunk = new Chunk(new Vector3I(2, 3, 4));
-        var startPoint = chunk.GetStartPoint();
+        var startPoint = chunk.GetRealStartPoint();
         var expected = new Vector3(2 * Chunk.X, 3 * Chunk.Y, 4 * Chunk.Z);
         AssertThat(startPoint).IsEqual(expected);
 
         // Test negative position
         chunk = new Chunk(new Vector3I(-1, -2, -3));
-        startPoint = chunk.GetStartPoint();
+        startPoint = chunk.GetRealStartPoint();
         expected = new Vector3(-1 * Chunk.X, -2 * Chunk.Y, -3 * Chunk.Z);
         AssertThat(startPoint).IsEqual(expected);
     }

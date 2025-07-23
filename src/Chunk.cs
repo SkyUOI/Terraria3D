@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 
 namespace Terraria3D;
@@ -28,7 +29,7 @@ public class Chunk(Vector3I pos)
 
     public static Mesh UnitMesh = new BoxMesh
     {
-        Size = new Vector3(2, 2, 2)
+        Size = new Vector3(Consts.BlockSize, Consts.BlockSize, Consts.BlockSize)
     };
 
     public static Transform3D FromBlockPos(Vector3I pos)
@@ -36,19 +37,29 @@ public class Chunk(Vector3I pos)
         return new Transform3D(Basis.Identity, pos);
     }
 
-    public static bool LocalPosInChunk(Vector3 pos)
+    public static bool InLocalChunkPos(Vector3 pos)
     {
         return pos.X >= 0 && pos is { X: < X, Y: >= 0 } and { Y: < Y, Z: >= 0 and < Z };
     }
 
-    public Vector3 GetGlobalPos(Vector3I inChunkPos)
+    public Vector3I GetGlobalChunkPos(Vector3I inChunkPos)
     {
-        return new Vector3(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
+        return new Vector3I(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
     }
 
-    public Vector3 GetLocalPos(Vector3 pos)
+    public Vector3 ConvertToLocalRealPos(Vector3I pos)
     {
-        return new Vector3((int)(pos.X - Pos.X * X), (int)(pos.Y - Pos.Y * Y), (int)(pos.Z - Pos.Z * Z));
+        return new Vector3(pos.X * Consts.BlockSize, pos.Y * Consts.BlockSize, pos.Z * Consts.BlockSize);
+    }
+
+    public Vector3 GetLocalPosFromGlobalRealPos(Vector3 pos)
+    {
+        return new Vector3((int)(pos.X / Consts.BlockSize - Pos.X * X), (int)(pos.Y / Consts.BlockSize - Pos.Y * Y), (int)(pos.Z / Consts.BlockSize - Pos.Z * Z));
+    }
+
+    public Vector3I GetLocalPosFromGlobalChunkPos(Vector3 pos)
+    {
+        return new Vector3I((int)(pos.X - Pos.X * X), (int)(pos.Y - Pos.Y * Y), (int)(pos.Z - Pos.Z * Z));
     }
 
     public (int, int) HeightRange()
@@ -75,11 +86,11 @@ public class Chunk(Vector3I pos)
         return multiMesh;
     }
 
-    public async Task<List<(Vector3I, Block)>> FindVisibleBlocks()
+    public async Task<List<(Vector3, Block)>> FindVisibleBlocks()
     {
         var transforms = await Task.Run(() =>
                 {
-                    var transforms = new List<(Vector3I, Block)>()
+                    var transforms = new List<(Vector3, Block)>()
                     {
                         Capacity = X * Y * Z
                     };
@@ -102,6 +113,21 @@ public class Chunk(Vector3I pos)
                                     var blockPos2 = blockPos + direct;
                                     if (blockPos2.X < 0 || blockPos2.X >= X || blockPos2.Y < 0 || blockPos2.Y >= Y || blockPos2.Z < 0 || blockPos2.Z >= Z)
                                     {
+                                        // GD.Print("rendered side block");
+                                        // renderFlag = true;
+                                        // break;
+                                        var nearChunkPos = Pos + direct;
+                                        if (!ChunksManager.Chunks.TryGetValue(nearChunkPos, out var nearChunk))
+                                        {
+                                            continue;
+                                        }
+                                        var nearBlockPos = nearChunk.GetLocalPosFromGlobalChunkPos(GetGlobalChunkPos(blockPos2));
+                                        // GD.Print($"{nearBlockPos}");
+                                        if (nearChunk.Blocks[nearBlockPos.X, nearBlockPos.Y, nearBlockPos.Z] == null)
+                                        {
+                                            renderFlag = true;
+                                            break;
+                                        }
                                         continue;
                                     }
                                     if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
@@ -112,7 +138,7 @@ public class Chunk(Vector3I pos)
                                 }
                                 if (renderFlag)
                                 {
-                                    transforms.Add((blockPos, block));
+                                    transforms.Add((ConvertToLocalRealPos(blockPos), block));
                                 }
                             }
                         }
@@ -130,17 +156,17 @@ public class Chunk(Vector3I pos)
         return multiMeshInstance3D;
     }
 
-    public Vector3 GetStartPoint()
+    public Vector3 GetRealStartPoint()
     {
-        return new Vector3(Pos.X * X, Pos.Y * Y, Pos.Z * Z);
+        return new Vector3(Pos.X * X * Consts.BlockSize, Pos.Y * Y * Consts.BlockSize, Pos.Z * Z * Consts.BlockSize);
     }
 }
 
 public class ChunksManager
 {
-    public ConcurrentDictionary<Vector3I, Chunk> Chunks { get; set; } = new();
+    public static ConcurrentDictionary<Vector3I, Chunk> Chunks { get; set; } = new();
 
-    public async Task CheckAndLoadChunk(string worldPath, Vector3 pos)
+    public static async Task CheckAndLoadChunk(string worldPath, Vector3 pos)
     {
         var chunkPos = Utils.GetChunk(pos);
         if (Chunks.ContainsKey(chunkPos))
@@ -151,7 +177,7 @@ public class ChunksManager
         // GD.Print($"Loaded Chunk: {dir}");
     }
 
-    public async Task<Chunk> LoadChunk(string worldPath, Vector3I chunkPos)
+    public static async Task<Chunk> LoadChunk(string worldPath, Vector3I chunkPos)
     {
         var chunkPath = WorldFile.GetChunksPath(worldPath).PathJoin(WorldFile.GetChunkFileName(chunkPos));
         if (File.Exists(chunkPath))
@@ -167,20 +193,20 @@ public class ChunksManager
         return chunk;
     }
 
-    public void UnloadChunk(Vector3I chunkPos)
+    public static void UnloadChunk(Vector3I chunkPos)
     {
         Chunks.TryRemove(chunkPos, out _);
     }
 
-    public bool BlockExists(Vector3 pos)
+    public static bool BlockExists(Vector3 pos)
     {
         var chunkPos = Utils.GetChunk(pos);
         if (!Chunks.TryGetValue(chunkPos, out Chunk chunk))
         {
             return false;
         }
-        var blockPos = chunk.GetLocalPos(pos);
-        if (!Chunk.LocalPosInChunk(blockPos))
+        var blockPos = chunk.GetLocalPosFromGlobalRealPos(pos);
+        if (!Chunk.InLocalChunkPos(blockPos))
         {
             return false;
         }

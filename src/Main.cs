@@ -158,8 +158,25 @@ public partial class Main : Node3D
                         {
                             continue;
                         }
-                        await AddChunk(chunkPos);
+                        var generatedChunk = await ChunksManager.LoadChunk(_worldPath, chunkPos);
                         // GD.Print($"Loaded Chunk: {chunkPos}");
+                    }
+                }
+            }
+            for (int i = -_renderChunkDistance; i <= _renderChunkDistance; ++i)
+            {
+                for (int j = -_renderChunkDistance; j <= _renderChunkDistance; ++j)
+                {
+                    for (int k = -_renderChunkDistance; k <= _renderChunkDistance; ++k)
+                    {
+                        var chunkPos = new Vector3I(playerChunkPos.X + i, playerChunkPos.Y + j, playerChunkPos.Z + k);
+                        if (!ChunksManager.Chunks.TryGetValue(chunkPos, out var generatedChunk))
+                        {
+                            continue;
+                        }
+                        // GD.Print($"Loaded Chunk: {chunkPos}");
+                        await _renderer.RenderChunk(generatedChunk);
+                        await _collisionManager.AddCollision(generatedChunk);
                     }
                 }
             }
@@ -172,14 +189,6 @@ public partial class Main : Node3D
         var tmp = (chunkPos - playerChunkPos).Abs();
         return tmp.X > _renderChunkDistance || tmp.Y > _renderChunkDistance || tmp.Z > _renderChunkDistance;
     }
-
-    async Task AddChunk(Vector3I chunkPos)
-    {
-        var generatedChunk = await ChunksManager.LoadChunk(_worldPath, chunkPos);
-        await _renderer.RenderChunk(generatedChunk);
-        await _collisionManager.AddCollision(generatedChunk);
-    }
-
     void RemoveChunk(Vector3I chunkPos)
     {
         ChunksManager.UnloadChunk(chunkPos);

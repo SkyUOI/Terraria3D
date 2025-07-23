@@ -2,39 +2,41 @@ using Godot;
 
 namespace Terraria3D.ui.main_game_ui.bar;
 
-public partial class Bar : Control
+public partial class BarUI : Control
 {
-    public item.Item[] hotbarItem;
-    public item.Item[,] inventoryItem;
+    public Bar bar;
 
-    public void SetHotbarItem(Terraria3D.item.Item[] item)
+    public void SetBarItem(Terraria3D.Bar bar)
     {
-        hotbarItem = item;
+        this.bar = bar;
+    }
+
+    public void SetHotbarItem()
+    {
         HBoxContainer hotbar = this.GetNode<HBoxContainer>("HotBar");
-        for (int i = 0; i < 9; ++i)
+        for (int i = 0; i < Bar.ColSize; ++i)
         {
-            if (hotbarItem[i] == null)
+            if (bar.hotbarItem[i] == null)
             {
                 continue;
             }
-            TextureRect texture = hotbarItem[i].Icon.Duplicate() as TextureRect;
+            TextureRect texture = bar.hotbarItem[i].Icon.Duplicate() as TextureRect;
             hotbar.GetChild<Panel>(i).AddChild(texture);
         }
     }
 
-    public void SetInventoryItem(Terraria3D.item.Item[,] item)
+    public void SetInventoryItem()
     {
-        inventoryItem = item;
         GridContainer inventory = this.GetNode<GridContainer>("Inventory");
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < Bar.RowSize; ++i)
         {
-            for (int j = 0; j < 9; ++j)
+            for (int j = 0; j < Bar.ColSize; ++j)
             {
-                if (inventoryItem[i, j] == null)
+                if (bar.inventoryItem[i, j] == null)
                 {
                     continue;
                 }
-                TextureRect texture = inventoryItem[i, j].Icon.Duplicate() as TextureRect;
+                TextureRect texture = bar.inventoryItem[i, j].Icon.Duplicate() as TextureRect;
                 inventory.GetChild<Panel>(i * 9 + j).AddChild(texture);
             }
         }

@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cs6osvyxd75m4" path="res://src/ui/main_game_ui/stars/Star_B.png" id="12_b10dl"]
 [ext_resource type="Texture2D" uid="uid://c4ewqsc5c88kh" path="res://src/ui/main_game_ui/stars/Star_C.png" id="13_2c7pp"]
 [ext_resource type="Texture2D" uid="uid://bg2vx2ocpigdj" path="res://src/ui/main_game_ui/stars/Star_Fill.png" id="14_lqmw5"]
-[ext_resource type="Script" uid="uid://tdsfarkj72i0" path="res://src/ui/main_game_ui/bar/Bar.cs" id="17_6bmbn"]
+[ext_resource type="Script" uid="uid://tdsfarkj72i0" path="res://src/ui/main_game_ui/bar/BarUI.cs" id="17_6bmbn"]
 [ext_resource type="Texture2D" uid="uid://bqhpvbyhwe5s2" path="res://src/ui/main_game_ui/bar/CategoryPanel.png" id="17_edwbw"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6bmbn"]
@@ -160,6 +160,11 @@ custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Panel10" type="Panel" parent="Bar/HotBar"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
 [node name="Inventory" type="GridContainer" parent="Bar"]
 visible = false
 layout_mode = 1
@@ -168,7 +173,7 @@ anchor_top = 1.2
 anchor_bottom = 1.2
 offset_right = 40.0
 offset_bottom = 40.0
-columns = 9
+columns = 10
 
 [node name="Panel1" type="Panel" parent="Bar/Inventory"]
 custom_minimum_size = Vector2(40, 40)
@@ -346,6 +351,26 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
 [node name="Panel36" type="Panel" parent="Bar/Inventory"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Panel37" type="Panel" parent="Bar/Inventory"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Panel38" type="Panel" parent="Bar/Inventory"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Panel39" type="Panel" parent="Bar/Inventory"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Panel40" type="Panel" parent="Bar/Inventory"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")

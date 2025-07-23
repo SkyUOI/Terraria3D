@@ -24,14 +24,7 @@ public partial class MainGameUi : Control
             GetNode("Stars").Call("set_mp", 50);
             GetNode("Stars").Call("set_mp_max", 200);
             var ironPickaxe = GD.Load<PackedScene>("res://src/item/IronPickaxe/iron_pickaxe.tscn").Instantiate<item.Item>();
-            var bar = GetNode<bar.Bar>("Bar");
-            bar.SetHotbarItem([ironPickaxe, null, null, null, null, null, null, null, null]);
-            bar.SetInventoryItem(new[,] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, ironPickaxe, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-            });
+            var bar = GetNode<bar.BarUI>("Bar");
         }
     }
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cmm8rt65lceqp"]
+[gd_scene load_steps=22 format=3 uid="uid://cmm8rt65lceqp"]
 
 [ext_resource type="Script" uid="uid://cqfa4qjosca6m" path="res://src/ui/main_game_ui/MainGameUi.cs" id="1_2c7pp"]
 [ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
@@ -18,9 +18,13 @@
 [ext_resource type="Texture2D" uid="uid://bg2vx2ocpigdj" path="res://src/ui/main_game_ui/stars/Star_Fill.png" id="14_lqmw5"]
 [ext_resource type="Script" uid="uid://tdsfarkj72i0" path="res://src/ui/main_game_ui/bar/BarUI.cs" id="17_6bmbn"]
 [ext_resource type="Texture2D" uid="uid://bqhpvbyhwe5s2" path="res://src/ui/main_game_ui/bar/CategoryPanel.png" id="17_edwbw"]
+[ext_resource type="Texture2D" uid="uid://dwwc8prhjt6l0" path="res://src/ui/main_game_ui/bar/CategoryPanelHighlight.png" id="19_x53c7"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6bmbn"]
 texture = ExtResource("17_edwbw")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4oj5a"]
+texture = ExtResource("19_x53c7")
 
 [node name="MainGameUI" type="Control"]
 layout_mode = 3
@@ -120,50 +124,252 @@ custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Label" type="Label" parent="Bar/HotBar/Panel1"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "1"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel1"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
+
 [node name="Panel2" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Label" type="Label" parent="Bar/HotBar/Panel2"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "2"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel2"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
 
 [node name="Panel3" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Label" type="Label" parent="Bar/HotBar/Panel3"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "3"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel3"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
+
 [node name="Panel4" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Label" type="Label" parent="Bar/HotBar/Panel4"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "4"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel4"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
 
 [node name="Panel5" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Label" type="Label" parent="Bar/HotBar/Panel5"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "5"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel5"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
+
 [node name="Panel6" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Label" type="Label" parent="Bar/HotBar/Panel6"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "6"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel6"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
 
 [node name="Panel7" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Label" type="Label" parent="Bar/HotBar/Panel7"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "7"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel7"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
+
 [node name="Panel8" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Label" type="Label" parent="Bar/HotBar/Panel8"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "8"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel8"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
 
 [node name="Panel9" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
 
+[node name="Label" type="Label" parent="Bar/HotBar/Panel9"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "9"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel9"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
+
 [node name="Panel10" type="Panel" parent="Bar/HotBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_6bmbn")
+
+[node name="Label" type="Label" parent="Bar/HotBar/Panel10"]
+z_index = 4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.1
+anchor_bottom = 0.2
+offset_right = 40.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 40
+text = "0
+"
+
+[node name="Highlight" type="Panel" parent="Bar/HotBar/Panel10"]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
 
 [node name="Inventory" type="GridContainer" parent="Bar"]
 visible = false

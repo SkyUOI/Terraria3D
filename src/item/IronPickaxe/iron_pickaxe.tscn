@@ -3,8 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://bj3fie2bne1su" path="res://src/item/IronPickaxe/Item_1.png" id="1_56ebc"]
 [ext_resource type="Script" uid="uid://7lgq0gloyrf7" path="res://src/item/IronPickaxe/IronPickaxe.cs" id="1_tgkt2"]
 
-[node name="IronPickaxe" type="Node2D"]
+[node name="IronPickaxe" type="Node2D" node_paths=PackedStringArray("Icon")]
 script = ExtResource("1_tgkt2")
+Icon = NodePath("Icon")
 
 [node name="Icon" type="TextureRect" parent="."]
 anchors_preset = 8

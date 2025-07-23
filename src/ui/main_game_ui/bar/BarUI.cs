@@ -6,38 +6,73 @@ public partial class BarUI : Control
 {
     public Bar bar;
 
-    public void SetBarItem(Terraria3D.Bar bar)
+    public HBoxContainer hotbar;
+    public GridContainer inventory;
+
+    public override void _Ready()
     {
-        this.bar = bar;
+        base._Ready();
+        hotbar = this.GetNode<HBoxContainer>("HotBar");
+        inventory = this.GetNode<GridContainer>("Inventory");
     }
 
-    public void SetHotbarItem()
+
+    public void DrawAll()
     {
-        HBoxContainer hotbar = this.GetNode<HBoxContainer>("HotBar");
+        DrawHotbarItem();
+        DrawInventoryItem();
+        DrawHighlight();
+    }
+
+    public void DrawHighlight()
+    {
+        foreach (var child in hotbar.GetChildren())
+        {
+            (child.GetNode("Highlight") as Panel).Visible = false;
+        }
+        (hotbar.GetChild<Panel>(bar.CurrentHotbarId).GetNode("Highlight") as Panel).Visible = true;
+    }
+
+    public void DrawHotbarItem()
+    {
         for (int i = 0; i < Bar.ColSize; ++i)
         {
-            if (bar.hotbarItem[i] == null)
+            if (bar.HotbarItem[i] == null)
             {
                 continue;
             }
-            TextureRect texture = bar.hotbarItem[i].Icon.Duplicate() as TextureRect;
+            TextureRect texture = bar.HotbarItem[i].Icon.Duplicate() as TextureRect;
+            foreach (var child in hotbar.GetChild<Panel>(i).GetChildren())
+            {
+                if (child is TextureRect)
+                {
+                    child.QueueFree();
+                }
+
+            }
             hotbar.GetChild<Panel>(i).AddChild(texture);
         }
     }
 
-    public void SetInventoryItem()
+    public void DrawInventoryItem()
     {
-        GridContainer inventory = this.GetNode<GridContainer>("Inventory");
         for (int i = 0; i < Bar.RowSize; ++i)
         {
             for (int j = 0; j < Bar.ColSize; ++j)
             {
-                if (bar.inventoryItem[i, j] == null)
+                if (bar.InventoryItem[i, j] == null)
                 {
                     continue;
                 }
-                TextureRect texture = bar.inventoryItem[i, j].Icon.Duplicate() as TextureRect;
-                inventory.GetChild<Panel>(i * 9 + j).AddChild(texture);
+                TextureRect texture = bar.InventoryItem[i, j].Icon.Duplicate() as TextureRect;
+                foreach (var child in inventory.GetChild<Panel>(i).GetChildren())
+                {
+                    if (child is TextureRect)
+                    {
+                        child.QueueFree();
+                    }
+                }
+                inventory.GetChild<Panel>(i * Bar.ColSize + j).AddChild(texture);
             }
         }
     }

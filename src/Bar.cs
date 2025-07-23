@@ -8,14 +8,14 @@ public partial class Bar : Node
     
     public const int RowSize = 4;
     public const int ColSize = 10;
-    public item.Item[] hotbarItem;
-    public item.Item[,] inventoryItem;
+    public item.Item[] HotbarItem;
+    public item.Item[,] InventoryItem;
 
     public static Bar EmptyBar()
     {
         var bar = new Bar();
-        bar.hotbarItem = new item.Item[ColSize];
-        bar.inventoryItem = new item.Item[RowSize, ColSize];
+        bar.HotbarItem = new item.Item[ColSize];
+        bar.InventoryItem = new item.Item[RowSize, ColSize];
         return bar;
     }
 

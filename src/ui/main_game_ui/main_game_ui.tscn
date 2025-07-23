@@ -166,6 +166,7 @@ text = "2"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel2"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -191,6 +192,7 @@ text = "3"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel3"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -216,6 +218,7 @@ text = "4"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel4"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -241,6 +244,7 @@ text = "5"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel5"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -266,6 +270,7 @@ text = "6"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel6"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -291,6 +296,7 @@ text = "7"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel7"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -316,6 +322,7 @@ text = "8"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel8"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -341,6 +348,7 @@ text = "9"
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel9"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")
@@ -367,6 +375,7 @@ text = "0
 
 [node name="Highlight" type="Panel" parent="Bar/HotBar/Panel10"]
 visible = false
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_4oj5a")

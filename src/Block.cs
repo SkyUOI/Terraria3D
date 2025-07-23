@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Godot;
 using Terraria3D.block.NormalBlock;
 
@@ -8,26 +10,51 @@ namespace Terraria3D;
 public enum BlockId
 {
     Nop = 0,
-    Dirt = 2
+    Dirt = 2,
+    Water = 3
 }
 
 public interface IBlock
 {
     static abstract BlockId Id { get; }
 
-    static abstract Color GetShaderData();
+    public static Color GetShaderData()
+    {
+        return (Color)SharedData.AtlasData.Atlas["Tiles_0"].First();
+    }
 
-    static BoxShape3D GetShape() => null;
+    public static BoxShape3D GetShape()
+    {
+        var shape = new BoxShape3D();
+        shape.Size = new Vector3(Consts.BlockSize, Consts.BlockSize, Consts.BlockSize);
+        // GD.Print(ret);
+        return shape;
+    }
 }
 
 public class BlockRegistry
 {
     // 存储所有方块类型
     public static Dictionary<BlockId, (Type, Func<Color>, Func<BoxShape3D>)> BlockTypes { get; } = new();
+    public static MethodInfo DefaultGetShaderDataMethod = typeof(IBlock).GetMethod("GetShaderData");
+    public static MethodInfo DefaultGetShapeMethod = typeof(IBlock).GetMethod("GetShape");
 
     static BlockRegistry()
     {
-        RegisterBlock<Dirt>();
+        // RegisterBlock<Dirt>();
+        var blockTypes = Assembly.GetExecutingAssembly()
+                                         .GetTypes()
+                                         .Where(t => t.IsClass && !t.IsAbstract && typeof(IBlock).IsAssignableFrom(t));
+
+        foreach (var type in blockTypes)
+        {
+            // 构造 RegisterBlock<具体类型>() 的泛型方法并调用
+            var method = typeof(BlockRegistry)
+                         .GetMethod(nameof(RegisterBlock), BindingFlags.Public | BindingFlags.Static)
+                         .MakeGenericMethod(type);
+            GD.Print($"Registering block type: {type.Name}");
+            method.Invoke(null, null);   // 静态方法，实例参数传 null
+        }
     }
 
     // 注册方块类型
@@ -43,8 +70,9 @@ public class BlockRegistry
         }
         else
         {
-            throw new Exception(
-                $"Block {typeof(T).Name} must implement IBlock interface");
+            BlockTypes.Add(T.Id,
+                            (typeof(T), (Func<Color>)Delegate.CreateDelegate(typeof(Func<Color>), DefaultGetShaderDataMethod),
+                                (Func<BoxShape3D>)Delegate.CreateDelegate(typeof(Func<BoxShape3D>), DefaultGetShapeMethod)));
         }
     }
 

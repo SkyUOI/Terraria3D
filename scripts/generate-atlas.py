@@ -11,6 +11,9 @@ SPLIT_JSON = "resources/tiles/split.json"
 images = []
 with open(SPLIT_JSON) as f:
     split_json = json.load(f)
+
+name_idx = 0
+
 # print(split_json)
 for (k, v) in split_json.items():
     img = Image.open(os.path.join(TILE_DIR, k))
@@ -20,7 +23,8 @@ for (k, v) in split_json.items():
         w = i["region"]["w"]
         h = i["region"]["h"]
         split_img = img.crop((x, y, x+w, y+h))
-        images.append((k[:-4], idx, split_img))       # (name, PIL.Image)
+        images.append((str(name_idx), idx, split_img))       # (name, PIL.Image)
+        name_idx+=1
 
 packer = newPacker()
 for (id, idx, img) in images:

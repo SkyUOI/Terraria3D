@@ -11,7 +11,7 @@ public partial class Renderer : Node3D
     [Export]
     Main _main { get; set; }
 
-    ConcurrentDictionary<Vector3I, MultiMeshInstance3D> RenderedChunks = new();
+    ConcurrentDictionary<Vector3I, MeshInstance3D> RenderedChunks = new();
 
     public override void _Process(double delta)
     {
@@ -27,14 +27,15 @@ public partial class Renderer : Node3D
         }
         if (hasAddedToSceneTree)
         {
-            renderedChunk.CallDeferred(MultiMeshInstance3D.MethodName.SetMultimesh, await chunk.GenerateMultiMesh());
+            renderedChunk.CallDeferred(MeshInstance3D.MethodName.SetMesh, await chunk.GenerateMesh());
         }
         else
         {
-            var meshInstance3D = await chunk.GenerateMultiMeshInstance3D();
+            // GD.Print("Rendering Chunk");
+            var meshInstance3D = await chunk.GenerateMeshInstance3D();
             CallDeferred(Node.MethodName.AddChild, meshInstance3D);
             meshInstance3D.CallDeferred(Node3D.MethodName.SetPosition, chunk.GetRealStartPoint());
-            // GD.Print($"Rendered Chunk: {meshInstance3D.GlobalPosition}");
+            // GD.Print($"Rendered Chunk: {chunk.Pos}");
             RenderedChunks.TryAdd(chunk.Pos, meshInstance3D);
         }
     }
@@ -61,8 +62,6 @@ public class RenderShaderResources
         Atlas ??= GD.Load<Texture2D>("res://resources/tiles/Atlas.png");
         Material.Shader = LoadTexture;
         Material.SetShaderParameter("atlas", Atlas);
-        // TODO: read dynamically
-        Material.SetShaderParameter("atlas_size", new Vector2(1024, 1024));
     }
 
     public static void Preload()

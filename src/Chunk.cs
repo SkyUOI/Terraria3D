@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
@@ -8,6 +9,10 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 
 namespace Terraria3D;
+
+record Triangle(int[] Vertex, int[] UVs);
+
+record Face(params Triangle[] Triangles);
 
 public class Chunk(Vector3I pos)
 {
@@ -19,12 +24,60 @@ public class Chunk(Vector3I pos)
 
     static Vector3I[] _directs =
     [
-        new (0, 0, 1),
-        new (0, 0, -1),
+        Vector3I.Up,
+        Vector3I.Down,
+        Vector3I.Right,
+        Vector3I.Left,
+        Vector3I.Back,
+        Vector3I.Forward,
+    ];
+
+    static Vector3[] _vertex =
+    [
+        new (0, 0, 0),
         new (1, 0, 0),
-        new (-1, 0, 0),
+        new (1, 1, 0),
         new (0, 1, 0),
-        new (0, -1, 0)
+        new (0, 0, 1),
+        new (1, 0, 1),
+        new (1, 1, 1),
+        new (0, 1, 1)
+    ];
+
+    static Vector2[] _uvs =
+    [
+        new (0, 0),
+        new (1, 0),
+        new (1, 1),
+        new (0, 1)
+    ];
+
+    static Face[] _facesPosition =
+    [
+        new (
+            new([3,2,7], [0, 3, 1]),
+            new([2,6,7], [3, 2, 1])
+        ),
+        new(
+            new ([4,5,0], [0, 3, 1]),
+            new ([5, 1, 0], [3, 2, 1])
+        ),
+        new(
+            new ([6, 2, 5], [0,3,1]),
+            new ([2,1,5], [3, 2, 1])
+        ),
+        new(
+            new ([3,7,0], [0, 3, 1]),
+            new ([7,4,0], [3, 2, 1])
+        ),
+        new(
+            new ([7,6,4], [0, 3, 1]),
+            new ([6,5,4], [3, 2, 1])
+        ),
+        new(
+            new ([2, 3, 1], [0,3,1]),
+            new ([3, 0, 1], [3, 2, 1])
+        ),
     ];
 
     public static Mesh UnitMesh = new BoxMesh
@@ -47,17 +100,27 @@ public class Chunk(Vector3I pos)
         return new Vector3I(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
     }
 
-    public Vector3 ConvertToLocalRealPos(Vector3I pos)
+    public Vector3 ConvertLocalChunkPosToLocalRealPos(Vector3I pos)
     {
         return new Vector3(pos.X * Consts.BlockSize, pos.Y * Consts.BlockSize, pos.Z * Consts.BlockSize);
     }
 
-    public Vector3 GetLocalPosFromGlobalRealPos(Vector3 pos)
+    public Vector3 ConvertGlobalChunkPosToGlobalRealPos(Vector3I pos)
+    {
+        return new Vector3(pos.X * Consts.BlockSize, pos.Y * Consts.BlockSize, pos.Z * Consts.BlockSize);
+    }
+
+    public Vector3 ConvertLocalChunkPosToGlobalRealPos(Vector3I pos)
+    {
+        return new Vector3((Pos.X * X + pos.X) * Consts.BlockSize, (Pos.Y * Y + pos.Y) * Consts.BlockSize, (Pos.Z * Z + pos.Z) * Consts.BlockSize);
+    }
+
+    public Vector3 GetLocalChunkPosFromGlobalRealPos(Vector3 pos)
     {
         return new Vector3((int)(pos.X / Consts.BlockSize - Pos.X * X), (int)(pos.Y / Consts.BlockSize - Pos.Y * Y), (int)(pos.Z / Consts.BlockSize - Pos.Z * Z));
     }
 
-    public Vector3I GetLocalPosFromGlobalChunkPos(Vector3 pos)
+    public Vector3I GetLocalChunkPosFromGlobalChunkPos(Vector3 pos)
     {
         return new Vector3I((int)(pos.X - Pos.X * X), (int)(pos.Y - Pos.Y * Y), (int)(pos.Z - Pos.Z * Z));
     }
@@ -67,30 +130,35 @@ public class Chunk(Vector3I pos)
         return (Pos.Y * Y, (Pos.Y + 1) * Y - 1);
     }
 
-    public async Task<MultiMesh> GenerateMultiMesh()
+    public async Task<Mesh> GenerateMesh()
     {
-        var multiMesh = new MultiMesh()
+        var surfaceTool = new SurfaceTool();
+        surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
+        var faces = await FindVisibleFaces();
+        foreach (var face in faces)
         {
-            TransformFormat = MultiMesh.TransformFormatEnum.Transform3D,
-            UseCustomData = true
-        };
-        multiMesh.Mesh = UnitMesh;
-
-        var transforms = await FindVisibleBlocks();
-        multiMesh.InstanceCount = transforms.Count;
-        for (int i = 0; i < transforms.Count; ++i)
-        {
-            multiMesh.SetInstanceTransform(i, new Transform3D(Basis.Identity, transforms[i].Item1));
-            multiMesh.SetInstanceCustomData(i, transforms[i].Item2.GetShaderData());
+            for (int i = 0; i < face.Item1.Triangles.Length; ++i)
+            {
+                var triangle = face.Item1.Triangles[i];
+                for (int j = 0; j < 3; ++j)
+                {
+                    surfaceTool.SetUV(_uvs[triangle.UVs[j]]);
+                    // surfaceTool.SetColor(face.Item2.GetShaderData());
+                    surfaceTool.AddVertex(_vertex[triangle.Vertex[j]] * Consts.BlockSize + face.Item3);
+                }
+            }
         }
-        return multiMesh;
+        surfaceTool.GenerateNormals();
+        var mesh = surfaceTool.Commit();
+        // GD.Print($"mesh: {mesh} faces: {faces.Count}");
+        return mesh;
     }
 
-    public async Task<List<(Vector3, Block)>> FindVisibleBlocks()
+    private async Task<List<(Face, Block, Vector3)>> FindVisibleFaces()
     {
         var transforms = await Task.Run(() =>
                 {
-                    var transforms = new List<(Vector3, Block)>()
+                    var transforms = new List<(Face, Block, Vector3)>()
                     {
                         Capacity = X * Y * Z
                     };
@@ -106,7 +174,7 @@ public class Chunk(Vector3I pos)
                                     continue;
                                 }
                                 var blockPos = new Vector3I(i, j, k);
-                                bool renderFlag = false;
+                                var realPos = ConvertLocalChunkPosToLocalRealPos(blockPos);
                                 for (int l = 0; l < 6; ++l)
                                 {
                                     var direct = _directs[l];
@@ -121,39 +189,35 @@ public class Chunk(Vector3I pos)
                                         {
                                             continue;
                                         }
-                                        var nearBlockPos = nearChunk.GetLocalPosFromGlobalChunkPos(GetGlobalChunkPos(blockPos2));
+                                        var nearBlockPos = nearChunk.GetLocalChunkPosFromGlobalChunkPos(GetGlobalChunkPos(blockPos2));
                                         // GD.Print($"{nearBlockPos}");
                                         if (nearChunk.Blocks[nearBlockPos.X, nearBlockPos.Y, nearBlockPos.Z] == null)
                                         {
-                                            renderFlag = true;
-                                            break;
+                                            transforms.Add((_facesPosition[l], block, realPos));
+                                            // GD.Print("fk");
                                         }
-                                        continue;
                                     }
-                                    if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
+                                    else if (Blocks[blockPos2.X, blockPos2.Y, blockPos2.Z] == null)
                                     {
-                                        renderFlag = true;
-                                        break;
+                                        transforms.Add((_facesPosition[l], block, realPos));
+                                        // GD.Print("fk");
                                     }
-                                }
-                                if (renderFlag)
-                                {
-                                    transforms.Add((ConvertToLocalRealPos(blockPos), block));
                                 }
                             }
                         }
                     }
                     return transforms;
                 });
+        // GD.Print("Found all faces");
         return transforms;
     }
 
-    public async Task<MultiMeshInstance3D> GenerateMultiMeshInstance3D()
+    public async Task<MeshInstance3D> GenerateMeshInstance3D()
     {
-        var multiMeshInstance3D = new MultiMeshInstance3D();
-        multiMeshInstance3D.Multimesh = await GenerateMultiMesh();
-        multiMeshInstance3D.MaterialOverride = RenderShaderResources.Material;
-        return multiMeshInstance3D;
+        var MeshInstance3D = new MeshInstance3D();
+        MeshInstance3D.Mesh = await GenerateMesh();
+        MeshInstance3D.MaterialOverride = RenderShaderResources.Material;
+        return MeshInstance3D;
     }
 
     public Vector3 GetRealStartPoint()
@@ -205,7 +269,7 @@ public class ChunksManager
         {
             return false;
         }
-        var blockPos = chunk.GetLocalPosFromGlobalRealPos(pos);
+        var blockPos = chunk.GetLocalChunkPosFromGlobalRealPos(pos);
         if (!Chunk.InLocalChunkPos(blockPos))
         {
             return false;

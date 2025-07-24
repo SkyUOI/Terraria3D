@@ -5,7 +5,7 @@ namespace Terraria3D;
 
 public partial class Bar : Node
 {
-    
+
     public const int RowSize = 4;
     public const int ColSize = 10;
     public item.Item[] HotbarItem;

@@ -27,22 +27,8 @@ public partial class CollisionManager : Node
         {
             return;
         }
-        var visibleChunks = await chunk.FindVisibleBlocks();
-        var allFaces = new List<Vector3>()
-        {
-            Capacity = visibleChunks.Count * ShapeFaces.Length
-        };
-        for (var i = 0; i < visibleChunks.Count; i++)
-        {
-            foreach (var j in ShapeFaces)
-            {
-                allFaces.Add(j + visibleChunks[i].Item1);
-            }
-        }
-        if (allFaces.Count == 0)
-        {
-            return;
-        }
+        var visibleChunks = await chunk.GenerateMesh();
+        var allFaces = visibleChunks.GetFaces();
         var chunkNode = new StaticBody3D();
         // AddChild(chunkNode);
         CallDeferred(Node.MethodName.AddChild, chunkNode);
@@ -50,7 +36,7 @@ public partial class CollisionManager : Node
 
         var shape = new ConcavePolygonShape3D();
         // GD.Print($"Mesh Faces: {allFaces.Count}");
-        shape.SetFaces(allFaces.ToArray());
+        shape.SetFaces(allFaces);
         var collision = new CollisionShape3D();
         collision.Shape = shape;
         // chunkNode.AddChild(collision);

@@ -27,7 +27,7 @@ public class Region
 
     public static explicit operator Color(Region region)
     {
-        return new Color(region.X, region.Y, region.W, region.H);
+        return new Color(region.X, region.Y, region.H, region.W);
     }
 }
 
@@ -51,12 +51,12 @@ public class AtlasData
     public Dictionary<string, Source> Sources { get; set; }
     [JsonExtensionData]
     public Dictionary<string, JsonElement> AtlasReceive { get; set; }
-    private Dictionary<string, List<Region>> _atlas;
+    private Dictionary<int, List<Region>> _atlas;
     [JsonIgnore]
-    public Dictionary<string, List<Region>> Atlas =>
+    public Dictionary<int, List<Region>> Atlas =>
           _atlas ??= AtlasReceive
                 .ToDictionary(
-                    kv => kv.Key,
+                    kv => kv.Key.ToInt(),
                     kv => JsonSerializer.Deserialize<List<Region>>(kv.Value.ToString())
                 );
 }

@@ -14,14 +14,11 @@ public enum BlockId
     Water = 3
 }
 
-public interface IBlock
+public interface IBlockType
 {
     static abstract BlockId Id { get; }
 
-    public static Color GetShaderData()
-    {
-        return (Color)SharedData.AtlasData.Atlas["Tiles_0"].First();
-    }
+    public static Color GetShaderData() => new Color(0, 0, 0);
 
     public static BoxShape3D GetShape()
     {
@@ -36,15 +33,15 @@ public class BlockRegistry
 {
     // 存储所有方块类型
     public static Dictionary<BlockId, (Type, Func<Color>, Func<BoxShape3D>)> BlockTypes { get; } = new();
-    public static MethodInfo DefaultGetShaderDataMethod = typeof(IBlock).GetMethod("GetShaderData");
-    public static MethodInfo DefaultGetShapeMethod = typeof(IBlock).GetMethod("GetShape");
+    public static MethodInfo DefaultGetShaderDataMethod = typeof(IBlockType).GetMethod("GetShaderData");
+    public static MethodInfo DefaultGetShapeMethod = typeof(IBlockType).GetMethod("GetShape");
 
     static BlockRegistry()
     {
         // RegisterBlock<Dirt>();
         var blockTypes = Assembly.GetExecutingAssembly()
                                          .GetTypes()
-                                         .Where(t => t.IsClass && !t.IsAbstract && typeof(IBlock).IsAssignableFrom(t));
+                                         .Where(t => t.IsClass && !t.IsAbstract && typeof(IBlockType).IsAssignableFrom(t));
 
         foreach (var type in blockTypes)
         {
@@ -58,7 +55,7 @@ public class BlockRegistry
     }
 
     // 注册方块类型
-    public static void RegisterBlock<T>() where T : IBlock
+    public static void RegisterBlock<T>() where T : IBlockType
     {
         var getShaderDataMethod = typeof(T).GetMethod("GetShaderData");
         var getShapeMethod = typeof(T).GetMethod("GetShape");
@@ -108,6 +105,11 @@ public class BlockRegistry
 public class Block(BlockId blockId, Func<Color> getShaderDataDelegate, Func<BoxShape3D> getShapeDelegate)
 {
     public BlockId BlockId = blockId;
+
+    // liquid volume
+    public float Volume = 0;
+
+    public (int, int)[] FaceTextures = new (int, int)[6];
 
     public Func<Color> GetShaderData = getShaderDataDelegate;
     public Func<BoxShape3D> GetShape = getShapeDelegate;

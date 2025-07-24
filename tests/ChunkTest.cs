@@ -64,7 +64,7 @@ public class ChunkTest
         var expectedGlobal = new Vector3I(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7);
         AssertThat(globalPos).IsEqual(expectedGlobal);
 
-        var convertedLocal = chunk.GetLocalPosFromGlobalRealPos(globalPos);
+        var convertedLocal = chunk.GetLocalChunkPosFromGlobalRealPos(globalPos);
         AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
 
         // Test negative positions
@@ -75,7 +75,7 @@ public class ChunkTest
         expectedGlobal = new Vector3I(-1 * Chunk.X + 5, -2 * Chunk.Y + 6, -3 * Chunk.Z + 7);
         AssertThat(globalPos).IsEqual(expectedGlobal);
 
-        convertedLocal = chunk.GetLocalPosFromGlobalRealPos(globalPos);
+        convertedLocal = chunk.GetLocalChunkPosFromGlobalRealPos(globalPos);
         AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
     }
 
@@ -99,78 +99,6 @@ public class ChunkTest
         (min, max) = chunk.HeightRange();
         AssertThat(min).IsEqual(-16);
         AssertThat(max).IsEqual(-1);
-    }
-
-    [TestCase]
-    [RequireGodotRuntime]
-    public async Task TestMultiMeshGeneration()
-    {
-        var chunk = new Chunk(new Vector3I(0, 0, 0));
-
-        // Test with empty chunk
-        var multiMesh = await chunk.GenerateMultiMesh();
-        AssertThat(multiMesh.InstanceCount).IsEqual(0);
-
-        // Add blocks in a cross pattern to ensure proper exposure
-        chunk.Blocks[7, 7, 7] = BlockRegistry.NewBlock(BlockId.Dirt);  // Center block
-        chunk.Blocks[7, 7, 6] = BlockRegistry.NewBlock(BlockId.Dirt);  // North
-        chunk.Blocks[7, 7, 8] = BlockRegistry.NewBlock(BlockId.Dirt); // South
-        chunk.Blocks[6, 7, 7] = BlockRegistry.NewBlock(BlockId.Dirt);  // West
-        chunk.Blocks[8, 7, 7] = BlockRegistry.NewBlock(BlockId.Dirt); // East
-        chunk.Blocks[7, 6, 7] = BlockRegistry.NewBlock(BlockId.Dirt);  // Down
-        chunk.Blocks[7, 8, 7] = BlockRegistry.NewBlock(BlockId.Dirt); // Up
-
-        // Add an isolated block that should be fully exposed
-        chunk.Blocks[0, 0, 0] = BlockRegistry.NewBlock(BlockId.Dirt);
-
-        multiMesh = await chunk.GenerateMultiMesh();
-        // Center block should be surrounded and not rendered
-        // Isolated block should be rendered
-        // All directional blocks should be rendered (7 total)
-        AssertThat(multiMesh.InstanceCount).IsEqual(7);
-
-        // Verify transforms for each instance
-        var expectedPositions = new List<Vector3>
-        {
-            new Vector3(7, 7, 6),  // North
-            new Vector3(7, 7, 8),  // South
-            new Vector3(6, 7, 7),  // West
-            new Vector3(8, 7, 7),  // East
-            new Vector3(7, 6, 7),  // Down
-            new Vector3(7, 8, 7),  // Up
-            new Vector3(0, 0, 0)   // Isolated block
-        };
-
-        var dirtShaderData = BlockRegistry.GetShaderData(BlockId.Dirt);
-
-        for (int i = 0; i < multiMesh.InstanceCount; i++)
-        {
-            var transform = multiMesh.GetInstanceTransform(i);
-            var position = transform.Origin;
-
-            // Verify position is in expected positions
-            AssertThat(expectedPositions).Contains(position);
-            expectedPositions.Remove(position);
-
-            // Verify custom data (shader data) based on block type
-            var customData = multiMesh.GetInstanceCustomData(i);
-            AssertThat(customData).IsEqual(dirtShaderData);
-        }
-
-        // Ensure all expected positions were found
-        AssertThat(expectedPositions).IsEmpty();
-
-        // Test MultiMeshInstance3D creation
-        var instance = await chunk.GenerateMultiMeshInstance3D();
-        AddNode(instance);
-        AssertThat(instance).IsNotNull();
-        AssertThat(instance.Multimesh).IsEqual(multiMesh);
-
-        // Verify material properties
-        var material = instance.MaterialOverride as ShaderMaterial;
-        AssertThat(material).IsNotNull();
-        AssertThat(material.Shader).IsNotNull();
-        AssertThat(material.GetShaderParameter("atlas")).IsNotNull();
     }
 
     [TestCase]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqhpvbyhwe5s2"
-path="res://.godot/imported/CategoryPanel.png-6e443ac23f00ceee5009618ba09af916.ctex"
+uid="uid://dwwc8prhjt6l0"
+path="res://.godot/imported/CategoryPanelHighlight.png-32e0add3cb6456fe93ebb595a34d3f1e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/ui/main_game_ui/bar/CategoryPanel.png"
-dest_files=["res://.godot/imported/CategoryPanel.png-6e443ac23f00ceee5009618ba09af916.ctex"]
+source_file="res://src/ui/main_game_ui/invertory/CategoryPanelHighlight.png"
+dest_files=["res://.godot/imported/CategoryPanelHighlight.png-32e0add3cb6456fe93ebb595a34d3f1e.ctex"]
 
 [params]
 

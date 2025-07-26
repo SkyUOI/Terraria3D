@@ -1,0 +1,58 @@
+using Godot;
+
+public partial class ItemGrid() : TextureRect
+{
+    bool AtTop { get; set; }
+    Vector2I Index;
+
+    [Export]
+    public Texture2D BackGround { get; set; } = GD.Load<Texture2D>("res://src/ui/main_game_ui/invertory/CategoryPanel.png");
+    [Export]
+    public TextureButton ItemIcon { get; set; }
+    [Export]
+    public Label Num { get; set; }
+    [Export]
+    public Label IndexShow { get; set; }
+
+    public void Init(bool Top, Vector2I Index)
+    {
+        AtTop = Top;
+        this.Index = Index;
+    }
+
+    public override void _Ready()
+    {
+        Visible = AtTop;
+        if (AtTop)
+        {
+            var tmp = Modulate;
+            tmp.A = 0.7f;
+            tmp.R += 0.5f;
+            tmp.G += 0.5f;
+            tmp.B += 0.5f;
+            Modulate = tmp;
+            IndexShow.Text = (Index.Y % 10).ToString();
+        }
+        else
+        {
+            var tmp = Modulate;
+            tmp.A = 0.7f;
+            Modulate = tmp;
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("escape"))
+        {
+            if (!AtTop)
+            {
+                Visible = !Visible;
+            }
+        }
+        var item = Inventory.Items[Index.X, Index.Y];
+        if (item != null)
+        {
+        }
+    }
+}

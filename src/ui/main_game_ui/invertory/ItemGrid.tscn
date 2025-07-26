@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://ditpwma2b32f7"]
+
+[ext_resource type="Texture2D" uid="uid://bqhpvbyhwe5s2" path="res://src/ui/main_game_ui/invertory/CategoryPanel.png" id="1_cqroh"]
+[ext_resource type="Script" uid="uid://cjyeklj6e8oow" path="res://src/ui/main_game_ui/invertory/ItemGrid.cs" id="1_ovyj8"]
+[ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="3_ovyj8"]
+
+[node name="ItemGrid" type="TextureRect" node_paths=PackedStringArray("ItemIcon", "Num", "IndexShow")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(22, 22)
+texture = ExtResource("1_cqroh")
+stretch_mode = 2
+script = ExtResource("1_ovyj8")
+ItemIcon = NodePath("ItemIcon")
+Num = NodePath("Num")
+IndexShow = NodePath("Index")
+
+[node name="Num" type="Label" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 22.0
+offset_right = 38.0
+offset_bottom = 45.0
+theme_override_fonts/font = ExtResource("3_ovyj8")
+theme_override_font_sizes/font_size = 0
+
+[node name="ItemIcon" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 42.0
+offset_bottom = 42.0
+
+[node name="Index" type="Label" parent="."]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 14.0
+offset_bottom = 20.0
+theme_override_fonts/font = ExtResource("3_ovyj8")
+theme_override_font_sizes/font_size = 0

@@ -10,9 +10,7 @@ public partial class IronPickaxe : Node, IItem
     public Texture2D Icon { get; set; }
     public Item NewItem()
     {
-        var item = new Item();
-        item.Id = Id;
-        item.Icon = Icon;
+        var item = new Item(Id, Icon, 0);
         return item;
     }
 }

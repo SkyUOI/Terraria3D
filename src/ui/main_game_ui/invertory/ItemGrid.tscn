@@ -4,7 +4,24 @@
 [ext_resource type="Script" uid="uid://cjyeklj6e8oow" path="res://src/ui/main_game_ui/invertory/ItemGrid.cs" id="1_ovyj8"]
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="3_ovyj8"]
 
-[node name="ItemGrid" type="TextureRect" node_paths=PackedStringArray("ItemIcon", "Num", "IndexShow")]
+[node name="ItemGrid" type="Control" node_paths=PackedStringArray("BackGround", "ItemIcon", "Num", "IndexShow")]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -22.0
+offset_top = -22.0
+offset_right = 22.0
+offset_bottom = 22.0
+pivot_offset = Vector2(22, 22)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ovyj8")
+BackGround = NodePath("BackGround")
+ItemIcon = NodePath("ItemIcon")
+Num = NodePath("Num")
+IndexShow = NodePath("Index")
+
+[node name="BackGround" type="TextureRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,32 +30,28 @@ grow_vertical = 2
 pivot_offset = Vector2(22, 22)
 texture = ExtResource("1_cqroh")
 stretch_mode = 2
-script = ExtResource("1_ovyj8")
-ItemIcon = NodePath("ItemIcon")
-Num = NodePath("Num")
-IndexShow = NodePath("Index")
 
 [node name="Num" type="Label" parent="."]
 layout_mode = 0
-offset_left = 10.0
+offset_left = 7.0
 offset_top = 22.0
-offset_right = 38.0
+offset_right = 35.0
 offset_bottom = 45.0
 theme_override_fonts/font = ExtResource("3_ovyj8")
 theme_override_font_sizes/font_size = 0
 
 [node name="ItemIcon" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 42.0
-offset_bottom = 42.0
+offset_right = 44.0
+offset_bottom = 44.0
+pivot_offset = Vector2(22, 22)
+stretch_mode = 3
 
 [node name="Index" type="Label" parent="."]
 layout_mode = 0
 offset_left = 6.0
-offset_top = 1.0
+offset_top = 2.0
 offset_right = 14.0
-offset_bottom = 20.0
+offset_bottom = 21.0
 theme_override_fonts/font = ExtResource("3_ovyj8")
 theme_override_font_sizes/font_size = 0

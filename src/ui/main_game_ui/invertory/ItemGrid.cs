@@ -1,12 +1,12 @@
 using Godot;
 
-public partial class ItemGrid() : TextureRect
+public partial class ItemGrid : Control
 {
     bool AtTop { get; set; }
     Vector2I Index;
 
     [Export]
-    public Texture2D BackGround { get; set; } = GD.Load<Texture2D>("res://src/ui/main_game_ui/invertory/CategoryPanel.png");
+    public TextureRect BackGround { get; set; }
     [Export]
     public TextureButton ItemIcon { get; set; }
     [Export]
@@ -25,12 +25,12 @@ public partial class ItemGrid() : TextureRect
         Visible = AtTop;
         if (AtTop)
         {
-            var tmp = Modulate;
+            var tmp = BackGround.Modulate;
             tmp.A = 0.7f;
             tmp.R += 0.5f;
             tmp.G += 0.5f;
             tmp.B += 0.5f;
-            Modulate = tmp;
+            BackGround.Modulate = tmp;
             IndexShow.Text = (Index.Y % 10).ToString();
         }
         else
@@ -53,6 +53,11 @@ public partial class ItemGrid() : TextureRect
         var item = Inventory.Items[Index.X, Index.Y];
         if (item != null)
         {
+            if (item.Count != 0)
+            {
+                Num.Text = item.Count.ToString();
+            }
+            ItemIcon.TextureNormal = item.Icon;
         }
     }
 }

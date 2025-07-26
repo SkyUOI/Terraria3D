@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cmm8rt65lceqp"]
+[gd_scene load_steps=21 format=3 uid="uid://cmm8rt65lceqp"]
 
 [ext_resource type="Script" uid="uid://cqfa4qjosca6m" path="res://src/ui/main_game_ui/MainGameUi.cs" id="1_2c7pp"]
 [ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
@@ -17,7 +17,11 @@
 [ext_resource type="Texture2D" uid="uid://c4ewqsc5c88kh" path="res://src/ui/main_game_ui/stars/Star_C.png" id="13_2c7pp"]
 [ext_resource type="Texture2D" uid="uid://bg2vx2ocpigdj" path="res://src/ui/main_game_ui/stars/Star_Fill.png" id="14_lqmw5"]
 [ext_resource type="PackedScene" uid="uid://ditpwma2b32f7" path="res://src/ui/main_game_ui/invertory/ItemGrid.tscn" id="18_6bmbn"]
+[ext_resource type="Script" uid="uid://b16plvtu45pgg" path="res://src/ui/main_game_ui/settings.gd" id="19_x53c7"]
 [ext_resource type="Script" uid="uid://okhtf7u5ll0d" path="res://src/ui/main_game_ui/invertory/InventoryUI.cs" id="20_4oj5a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bmbn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="MainGameUI" type="Control" node_paths=PackedStringArray("inventoryUI")]
 layout_mode = 3
@@ -109,8 +113,33 @@ anchor_top = 1.2
 anchor_bottom = 1.2
 offset_left = 34.0
 offset_top = -743.6
-offset_right = 84.0
-offset_bottom = -703.6
+offset_right = 501.0
+offset_bottom = -504.6
 columns = 10
 script = ExtResource("20_4oj5a")
 ItemGridScene = ExtResource("18_6bmbn")
+
+[node name="Settings" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.883868
+anchor_top = 0.901235
+anchor_right = 0.991507
+anchor_bottom = 0.96142
+offset_left = -28.216
+offset_top = -4.0
+offset_right = -20.2161
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset = Vector2(66, 25)
+theme_override_fonts/font = ExtResource("9_b10dl")
+theme_override_font_sizes/font_size = 37
+theme_override_styles/focus = SubResource("StyleBoxFlat_6bmbn")
+text = "Settings"
+flat = true
+script = ExtResource("19_x53c7")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="mouse_entered" from="Settings" to="Settings" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Settings" to="Settings" method="_on_mouse_exited"]

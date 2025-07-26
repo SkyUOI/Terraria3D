@@ -4,29 +4,32 @@
 name: .NET
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - uses: MikeSchulze/gdunit4-action@v1
-      with:
-        godot-version: '4.4.1'
-        paths: 'res://tests'
-        godot-net: true
-        dotnet-version: net8.0
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 9.0.x
+            - name: Restore dependencies
+              run: dotnet restore
+            - name: Check style
+              run: dotnet format Terraria3D.sln --verify-no-changes
+            - name: Build
+              run: dotnet build --no-restore
+            - uses: MikeSchulze/gdunit4-action@v1
+              with:
+                  godot-version: "4.4.1"
+                  paths: "res://tests"
+                  godot-net: true
+                  dotnet-version: net8.0
+                  publish-report: false
+                  upload-report: false

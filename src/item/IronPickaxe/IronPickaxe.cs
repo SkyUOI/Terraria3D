@@ -4,15 +4,15 @@ namespace Terraria3D.item.IronPickaxe;
 
 public partial class IronPickaxe : Node, IItem
 {
-	public static ItemId Id => ItemId.IronPickaxe;
+    public static ItemId Id => ItemId.IronPickaxe;
 
-	[Export]
-	public Texture2D Icon { get; set; }
-	public Item NewItem()
-	{
-		var item = new Item();
-		item.Id = Id;
-		item.Icon = Icon;
-		return item;
-	}
+    [Export]
+    public Texture2D Icon { get; set; }
+    public Item NewItem()
+    {
+        var item = new Item();
+        item.Id = Id;
+        item.Icon = Icon;
+        return item;
+    }
 }

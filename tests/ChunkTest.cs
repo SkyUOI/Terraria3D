@@ -56,27 +56,40 @@ public class ChunkTest
     [RequireGodotRuntime]
     public void TestPositionConversions()
     {
-        // Test positive positions
         var chunk = new Chunk(new Vector3I(2, 3, 4));
+
+        // Test FromBlockPos
+        var blockPos = new Vector3I(1, 2, 3);
+        var transform = Chunk.FromBlockPos(blockPos);
+        AssertThat(transform.Origin).IsEqual(blockPos);
+
+        // Test GetGlobalChunkPos
         var localPos = new Vector3I(5, 6, 7);
-
         var globalPos = chunk.GetGlobalChunkPos(localPos);
-        var expectedGlobal = new Vector3I(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7);
-        AssertThat(globalPos).IsEqual(expectedGlobal);
+        AssertThat(globalPos).IsEqual(new Vector3I(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7));
 
-        var convertedLocal = chunk.GetLocalChunkPosFromGlobalRealPos(globalPos);
-        AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
+        // Test ConvertLocalChunkPosToLocalRealPos
+        var realPos = chunk.ConvertLocalChunkPosToLocalRealPos(localPos);
+        AssertThat(realPos).IsEqual(new Vector3(5 * Consts.BlockSize, 6 * Consts.BlockSize, 7 * Consts.BlockSize));
 
-        // Test negative positions
-        chunk = new Chunk(new Vector3I(-1, -2, -3));
-        localPos = new Vector3I(5, 6, 7);
+        // Test ConvertGlobalChunkPosToGlobalRealPos 
+        var globalRealPos = chunk.ConvertGlobalChunkPosToGlobalRealPos(globalPos);
+        AssertThat(globalRealPos).IsEqual(new Vector3(
+            (2 * Chunk.X + 5) * Consts.BlockSize,
+            (3 * Chunk.Y + 6) * Consts.BlockSize,
+            (4 * Chunk.Z + 7) * Consts.BlockSize));
 
-        globalPos = chunk.GetGlobalChunkPos(localPos);
-        expectedGlobal = new Vector3I(-1 * Chunk.X + 5, -2 * Chunk.Y + 6, -3 * Chunk.Z + 7);
-        AssertThat(globalPos).IsEqual(expectedGlobal);
+        // Test ConvertLocalChunkPosToGlobalRealPos
+        var globalRealPos2 = chunk.ConvertLocalChunkPosToGlobalRealPos(localPos);
+        AssertThat(globalRealPos2).IsEqual(globalRealPos);
 
-        convertedLocal = chunk.GetLocalChunkPosFromGlobalRealPos(globalPos);
-        AssertThat(convertedLocal).IsEqual(new Vector3(localPos.X, localPos.Y, localPos.Z));
+        // Test GetLocalChunkPosFromGlobalRealPos
+        var localPos2 = chunk.GetLocalChunkPosFromGlobalRealPos(globalRealPos);
+        AssertThat(localPos2).IsEqual(new Vector3(5, 6, 7));
+
+        // Test GetLocalChunkPosFromGlobalChunkPos
+        var localPos3 = chunk.GetLocalChunkPosFromGlobalChunkPos(globalPos);
+        AssertThat(localPos3).IsEqual(localPos);
     }
 
     [TestCase]
@@ -103,18 +116,40 @@ public class ChunkTest
 
     [TestCase]
     [RequireGodotRuntime]
+    public async Task TestMeshGeneration()
+    {
+        var chunk = new Chunk(Vector3I.Zero);
+
+        // Test with empty chunk
+        var emptyMesh = await chunk.GenerateMesh();
+        AssertThat(emptyMesh.GetSurfaceCount()).IsEqual(0);
+
+        // Test with one block
+        chunk.Blocks[0, 0, 0] = new Block(BlockId.Dirt, () => Colors.White, () => new BoxShape3D());
+        var mesh = await chunk.GenerateMesh();
+        AssertThat(mesh.GetSurfaceCount()).IsEqual(1);
+
+        // Test mesh instance creation
+        var meshInstance = await chunk.GenerateMeshInstance3D();
+        AssertThat(meshInstance.Mesh).IsNotNull();
+        AssertThat(meshInstance.MaterialOverride).IsNotNull();
+        AddNode(meshInstance);
+    }
+
+    [TestCase]
+    [RequireGodotRuntime]
     public void TestGetStartPoint()
     {
         // Test positive position
         var chunk = new Chunk(new Vector3I(2, 3, 4));
         var startPoint = chunk.GetRealStartPoint();
-        var expected = new Vector3(2 * Chunk.X, 3 * Chunk.Y, 4 * Chunk.Z);
+        var expected = new Vector3(2 * Chunk.X * Consts.BlockSize, 3 * Chunk.Y * Consts.BlockSize, 4 * Chunk.Z * Consts.BlockSize);
         AssertThat(startPoint).IsEqual(expected);
 
         // Test negative position
         chunk = new Chunk(new Vector3I(-1, -2, -3));
         startPoint = chunk.GetRealStartPoint();
-        expected = new Vector3(-1 * Chunk.X, -2 * Chunk.Y, -3 * Chunk.Z);
+        expected = new Vector3(-1 * Chunk.X * Consts.BlockSize, -2 * Chunk.Y * Consts.BlockSize, -3 * Chunk.Z * Consts.BlockSize);
         AssertThat(startPoint).IsEqual(expected);
     }
 }

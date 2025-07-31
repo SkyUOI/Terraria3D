@@ -34,8 +34,8 @@ public partial class MainGameUi : Control
             GetNode("Stars").Call("set_mp", 50);
             GetNode("Stars").Call("set_mp_max", 200);
 
-            Inventory.Items[0, 0] = ironPickaxe.NewItem();
-            Inventory.Items[1, 1] = ironPickaxe.NewItem();
+            Inventory.Instance.Items[0, 0] = ironPickaxe.NewItem();
+            Inventory.Instance.Items[1, 1] = ironPickaxe.NewItem();
         }
     }
 

@@ -7,10 +7,10 @@ public partial class IronPickaxe : Node, IItem
     public static ItemId Id => ItemId.IronPickaxe;
 
     [Export]
-    public Texture2D Icon { get; set; }
+    public Texture2D Icon { get; set; } = GD.Load<Texture2D>("res://resources/items/Item_1.png");
     public Item NewItem()
     {
-        var item = new Item(Id, Icon, 0);
+        var item = new Item(Id, Icon, 0, true);
         return item;
     }
 }

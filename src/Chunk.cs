@@ -95,7 +95,7 @@ public class Chunk(Vector3I pos)
         return pos.X >= 0 && pos is { X: < X, Y: >= 0 } and { Y: < Y, Z: >= 0 and < Z };
     }
 
-    public Vector3I GetGlobalChunkPos(Vector3I inChunkPos)
+    public Vector3I GetGlobalChunkPosFromLocalChunkPos(Vector3I inChunkPos)
     {
         return new Vector3I(Pos.X * X + inChunkPos.X, Pos.Y * Y + inChunkPos.Y, Pos.Z * Z + inChunkPos.Z);
     }
@@ -115,9 +115,9 @@ public class Chunk(Vector3I pos)
         return new Vector3((Pos.X * X + pos.X) * Consts.BlockSize, (Pos.Y * Y + pos.Y) * Consts.BlockSize, (Pos.Z * Z + pos.Z) * Consts.BlockSize);
     }
 
-    public Vector3 GetLocalChunkPosFromGlobalRealPos(Vector3 pos)
+    public Vector3I GetLocalChunkPosFromGlobalRealPos(Vector3 pos)
     {
-        return new Vector3((int)(pos.X / Consts.BlockSize - Pos.X * X), (int)(pos.Y / Consts.BlockSize - Pos.Y * Y), (int)(pos.Z / Consts.BlockSize - Pos.Z * Z));
+        return new Vector3I((int)(pos.X / Consts.BlockSize - Pos.X * X), (int)(pos.Y / Consts.BlockSize - Pos.Y * Y), (int)(pos.Z / Consts.BlockSize - Pos.Z * Z));
     }
 
     public Vector3I GetLocalChunkPosFromGlobalChunkPos(Vector3 pos)
@@ -128,6 +128,11 @@ public class Chunk(Vector3I pos)
     public (int, int) HeightRange()
     {
         return (Pos.Y * Y, (Pos.Y + 1) * Y - 1);
+    }
+
+    public Block GetBlock(Vector3I pos)
+    {
+        return Blocks[pos.X, pos.Y, pos.Z];
     }
 
     public async Task<Mesh> GenerateMesh()
@@ -189,7 +194,7 @@ public class Chunk(Vector3I pos)
                                         {
                                             continue;
                                         }
-                                        var nearBlockPos = nearChunk.GetLocalChunkPosFromGlobalChunkPos(GetGlobalChunkPos(blockPos2));
+                                        var nearBlockPos = nearChunk.GetLocalChunkPosFromGlobalChunkPos(GetGlobalChunkPosFromLocalChunkPos(blockPos2));
                                         // GD.Print($"{nearBlockPos}");
                                         if (nearChunk.Blocks[nearBlockPos.X, nearBlockPos.Y, nearBlockPos.Z] == null)
                                         {
@@ -264,16 +269,46 @@ public class ChunksManager
 
     public static bool BlockExists(Vector3 pos)
     {
+        return GetBlock(pos) != null;
+    }
+
+    public static (Chunk, Vector3I) LocateBlock(Vector3 pos)
+    {
         var chunkPos = Utils.GetChunk(pos);
         if (!Chunks.TryGetValue(chunkPos, out Chunk chunk))
         {
-            return false;
+            return (null, Vector3I.Zero);
         }
         var blockPos = chunk.GetLocalChunkPosFromGlobalRealPos(pos);
         if (!Chunk.InLocalChunkPos(blockPos))
         {
-            return false;
+            return (null, Vector3I.Zero);
         }
-        return chunk.Blocks[(int)blockPos.X, (int)blockPos.Y, (int)blockPos.Z] != null;
+        return (chunk, blockPos);
+    }
+
+    public static Block GetBlock(Vector3 pos)
+    {
+        var (chunk, blockPos) = LocateBlock(pos);
+        if (chunk == null)
+        {
+            return null;
+        }
+        return chunk.GetBlock(blockPos);
+    }
+
+    /// <summary>
+    /// Retrieves the real-world position of a block based on its given position.
+    /// </summary>
+    /// <param name="pos">The position of the block to locate.</param>
+    /// <returns>The real-world position of the block if found; otherwise, null.</returns>
+    public static Vector3? GetBlockRealPos(Vector3 pos)
+    {
+        var (chunk, blockPos) = LocateBlock(pos);
+        if (chunk == null)
+        {
+            return null;
+        }
+        return chunk.ConvertLocalChunkPosToGlobalRealPos(blockPos);
     }
 }

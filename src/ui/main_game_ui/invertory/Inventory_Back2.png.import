@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bj3fie2bne1su"
-path="res://.godot/imported/Item_1.png-5da58692fadf49621cc9e5852491fd27.ctex"
+uid="uid://b5l15sixmp3jn"
+path="res://.godot/imported/Inventory_Back2.png-50a0e54e469db8e53bc992552f92ca5f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/item/IronPickaxe/Item_1.png"
-dest_files=["res://.godot/imported/Item_1.png-5da58692fadf49621cc9e5852491fd27.ctex"]
+source_file="res://src/ui/main_game_ui/invertory/Inventory_Back2.png"
+dest_files=["res://.godot/imported/Inventory_Back2.png-50a0e54e469db8e53bc992552f92ca5f.ctex"]
 
 [params]
 

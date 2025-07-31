@@ -65,7 +65,7 @@ public class ChunkTest
 
         // Test GetGlobalChunkPos
         var localPos = new Vector3I(5, 6, 7);
-        var globalPos = chunk.GetGlobalChunkPos(localPos);
+        var globalPos = chunk.GetGlobalChunkPosFromLocalChunkPos(localPos);
         AssertThat(globalPos).IsEqual(new Vector3I(2 * Chunk.X + 5, 3 * Chunk.Y + 6, 4 * Chunk.Z + 7));
 
         // Test ConvertLocalChunkPosToLocalRealPos
@@ -85,7 +85,7 @@ public class ChunkTest
 
         // Test GetLocalChunkPosFromGlobalRealPos
         var localPos2 = chunk.GetLocalChunkPosFromGlobalRealPos(globalRealPos);
-        AssertThat(localPos2).IsEqual(new Vector3(5, 6, 7));
+        AssertThat(localPos2).IsEqual(new Vector3I(5, 6, 7));
 
         // Test GetLocalChunkPosFromGlobalChunkPos
         var localPos3 = chunk.GetLocalChunkPosFromGlobalChunkPos(globalPos);

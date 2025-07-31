@@ -38,6 +38,10 @@ public partial class Player : CharacterBody3D
 
     [Export]
     Camera3D _camera3D;
+    [Export]
+    RayCast3D _rayView;
+    [Export]
+    OutlineBox _outlineBox;
 
     [Export]
     public bool Enable;
@@ -60,6 +64,20 @@ public partial class Player : CharacterBody3D
         MoveOutOfBlock();
         // _main.CheckAndLoadChunk(Position);
         // GD.Print($"player position: {Position}");
+        var selected = Inventory.Instance.GetSelected();
+        if (selected != null && selected.Highlight && _rayView.IsColliding())
+        {
+            var point = _rayView.GetCollisionPoint() - _rayView.GetCollisionNormal();
+            var block = ChunksManager.GetBlockRealPos(point);
+            if (block == null)
+            {
+                GD.Print("collided but no block");
+            }
+            else
+            {
+                _outlineBox.Line(block.Value);
+            }
+        }
     }
 
     private void MoveOutOfBlock()

@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://21hr8ksa3wqx"]
+
+[ext_resource type="Shader" uid="uid://hw6se73slyto" path="res://src/player/outline.gdshader" id="1_6wl3d"]
+[ext_resource type="Script" uid="uid://c5wswmv3o3txx" path="res://src/player/OutlineBox.cs" id="2_ddfv4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6wl3d"]
+render_priority = 0
+shader = ExtResource("1_6wl3d")
+shader_parameter/normal_threshold = 0.1
+shader_parameter/depth_threshold = 0.05
+shader_parameter/depth_artifact_correction_coef = 2.0
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ddfv4"]
+material = SubResource("ShaderMaterial_6wl3d")
+
+[node name="OutlineBox" type="MeshInstance3D"]
+visible = false
+mesh = SubResource("BoxMesh_ddfv4")
+script = ExtResource("2_ddfv4")

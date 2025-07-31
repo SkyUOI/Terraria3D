@@ -2,8 +2,8 @@ using Godot;
 
 public partial class ItemGrid : Control
 {
-    bool AtTop { get; set; }
-    Vector2I Index;
+    public bool AtTop { get; set; }
+    public Vector2I Index;
 
     [Export]
     public TextureRect BackGround { get; set; }
@@ -50,7 +50,7 @@ public partial class ItemGrid : Control
                 Visible = !Visible;
             }
         }
-        var item = Inventory.Items[Index.X, Index.Y];
+        var item = Inventory.Instance.Items[Index.X, Index.Y];
         if (item != null)
         {
             if (item.Count != 0)
@@ -58,6 +58,19 @@ public partial class ItemGrid : Control
                 Num.Text = item.Count.ToString();
             }
             ItemIcon.TextureNormal = item.Icon;
+        }
+    }
+
+    public void Select()
+    {
+        Inventory.Instance.Select(this);
+    }
+
+    public void Unselect(Vector2I newidx)
+    {
+        if (newidx == Index)
+        {
+            return;
         }
     }
 }

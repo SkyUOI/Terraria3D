@@ -1,17 +1,17 @@
 [gd_scene load_steps=4 format=3 uid="uid://ditpwma2b32f7"]
 
-[ext_resource type="Texture2D" uid="uid://bqhpvbyhwe5s2" path="res://src/ui/main_game_ui/invertory/CategoryPanel.png" id="1_cqroh"]
 [ext_resource type="Script" uid="uid://cjyeklj6e8oow" path="res://src/ui/main_game_ui/invertory/ItemGrid.cs" id="1_ovyj8"]
+[ext_resource type="Texture2D" uid="uid://c4rbyyfogvkku" path="res://src/ui/main_game_ui/invertory/Inventory_Back.png" id="2_ovyj8"]
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="3_ovyj8"]
 
 [node name="ItemGrid" type="Control" node_paths=PackedStringArray("BackGround", "ItemIcon", "Num", "IndexShow")]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -22.0
-offset_top = -22.0
-offset_right = 22.0
-offset_bottom = 22.0
-pivot_offset = Vector2(22, 22)
+offset_left = -26.0
+offset_top = -26.0
+offset_right = 26.0
+offset_bottom = 26.0
+pivot_offset = Vector2(26, 26)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_ovyj8")
@@ -27,8 +27,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(22, 22)
-texture = ExtResource("1_cqroh")
+pivot_offset = Vector2(26, 26)
+texture = ExtResource("2_ovyj8")
 stretch_mode = 2
 
 [node name="Num" type="Label" parent="."]
@@ -55,3 +55,5 @@ offset_right = 14.0
 offset_bottom = 21.0
 theme_override_fonts/font = ExtResource("3_ovyj8")
 theme_override_font_sizes/font_size = 0
+
+[connection signal="pressed" from="ItemIcon" to="." method="Select"]

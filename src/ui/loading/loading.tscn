@@ -1,0 +1,102 @@
+[gd_scene load_steps=34 format=3 uid="uid://ds3fa5x54sii1"]
+
+[ext_resource type="Script" uid="uid://cpkt3utyuvb8f" path="res://src/ui/loading/loading.gd" id="1_rm051"]
+[ext_resource type="Texture2D" uid="uid://b3oe24wyvf72f" path="res://src/ui/loading/SplashScreens/Splash_1_0.png" id="2_rhbuj"]
+[ext_resource type="Texture2D" uid="uid://cgvc1js4te3ym" path="res://src/ui/loading/SplashScreens/Splash_2_0.png" id="3_a1lm1"]
+[ext_resource type="Texture2D" uid="uid://c0yttvs01cdfq" path="res://src/ui/loading/SplashScreens/Splash_3_0.png" id="4_imo4c"]
+[ext_resource type="Texture2D" uid="uid://bhmhanfjgndam" path="res://src/ui/loading/SplashScreens/Splash_4_0.png" id="5_pidvm"]
+[ext_resource type="Texture2D" uid="uid://crq44jpt7im2e" path="res://src/ui/loading/SplashScreens/Splash_5_0.png" id="6_8befh"]
+[ext_resource type="Texture2D" uid="uid://boiohoq8d55fu" path="res://src/ui/loading/SplashScreens/Splash_6_0.png" id="7_d0emk"]
+[ext_resource type="Texture2D" uid="uid://dv3ft31l5rs0t" path="res://src/ui/loading/SplashScreens/Splash_7_0.png" id="8_et5kk"]
+[ext_resource type="Texture2D" uid="uid://duadjoti06mlj" path="res://src/ui/loading/SplashScreens/Splash_8_0.png" id="9_qr8hg"]
+[ext_resource type="Texture2D" uid="uid://cjq5k7d1kg7sh" path="res://src/ui/loading/SplashScreens/Splash_9_0.png" id="10_x5lwh"]
+[ext_resource type="Texture2D" uid="uid://dtu3ca04krx7w" path="res://src/ui/loading/SplashScreens/Splash_10_0.png" id="11_r177a"]
+[ext_resource type="Script" uid="uid://dued56eel52gx" path="res://src/ui/loading/mask.gd" id="12_imo4c"]
+[ext_resource type="Texture2D" uid="uid://tbake13r82d" path="res://src/ui/loading/SplashScreens/Splash_1_2.png" id="12_txwo3"]
+[ext_resource type="Texture2D" uid="uid://dsxa5whkhjmcc" path="res://src/ui/loading/SplashScreens/Splash_2_2.png" id="13_ttenb"]
+[ext_resource type="Texture2D" uid="uid://cbflwnewqgws3" path="res://src/ui/loading/SplashScreens/Splash_3_2.png" id="14_yr62v"]
+[ext_resource type="Texture2D" uid="uid://dmqoupx4rfnyc" path="res://src/ui/loading/SplashScreens/Splash_4_2.png" id="15_uagln"]
+[ext_resource type="Texture2D" uid="uid://yld1hu2phkik" path="res://src/ui/loading/SplashScreens/Splash_5_2.png" id="16_riyte"]
+[ext_resource type="Texture2D" uid="uid://tmpv70xm2pfp" path="res://src/ui/loading/SplashScreens/Splash_6_2.png" id="17_1arjr"]
+[ext_resource type="Texture2D" uid="uid://cyw1iad315er1" path="res://src/ui/loading/SplashScreens/Splash_7_2.png" id="18_u7tx6"]
+[ext_resource type="Texture2D" uid="uid://cwf8f2klw1j7j" path="res://src/ui/loading/SplashScreens/Splash_8_2.png" id="19_vihqo"]
+[ext_resource type="Texture2D" uid="uid://rhl4s8n4nu21" path="res://src/ui/loading/SplashScreens/Splash_9_2.png" id="20_xjrgx"]
+[ext_resource type="Texture2D" uid="uid://cl3w88huhy0qg" path="res://src/ui/loading/SplashScreens/Splash_10_2.png" id="21_wybos"]
+[ext_resource type="Texture2D" uid="uid://x1d8ioey7k6o" path="res://src/ui/loading/SplashScreens/Splash_1_1.png" id="22_pu6hb"]
+[ext_resource type="Texture2D" uid="uid://d3ixuuet3yy8v" path="res://src/ui/loading/SplashScreens/Splash_2_1.png" id="23_bobxf"]
+[ext_resource type="Texture2D" uid="uid://dvk1t0ybgxgk2" path="res://src/ui/loading/SplashScreens/Splash_3_1.png" id="24_2kuj8"]
+[ext_resource type="Texture2D" uid="uid://ddmqcmnky4s7j" path="res://src/ui/loading/SplashScreens/Splash_4_1.png" id="25_545ts"]
+[ext_resource type="Texture2D" uid="uid://1bot7tduws0j" path="res://src/ui/loading/SplashScreens/Splash_5_1.png" id="26_mo5ma"]
+[ext_resource type="Texture2D" uid="uid://cnhelonnpnb6f" path="res://src/ui/loading/SplashScreens/Splash_6_1.png" id="27_k0dyl"]
+[ext_resource type="Texture2D" uid="uid://d1sckolhpaa1" path="res://src/ui/loading/SplashScreens/Splash_7_1.png" id="28_o58ap"]
+[ext_resource type="Texture2D" uid="uid://bqsccfd5n4vjv" path="res://src/ui/loading/SplashScreens/Splash_8_1.png" id="29_hnmp1"]
+[ext_resource type="Texture2D" uid="uid://r2h5s4dtnlqr" path="res://src/ui/loading/SplashScreens/Splash_9_1.png" id="30_f0aco"]
+[ext_resource type="Texture2D" uid="uid://ctotnybmoqtkk" path="res://src/ui/loading/SplashScreens/Splash_10_1.png" id="31_q67b2"]
+[ext_resource type="Script" uid="uid://dwpmkj1vaggce" path="res://src/ui/loading/tree.gd" id="33_ttenb"]
+
+[node name="Loading" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rm051")
+bg_textures = Array[Texture2D]([ExtResource("2_rhbuj"), ExtResource("3_a1lm1"), ExtResource("4_imo4c"), ExtResource("5_pidvm"), ExtResource("6_8befh"), ExtResource("7_d0emk"), ExtResource("8_et5kk"), ExtResource("9_qr8hg"), ExtResource("10_x5lwh"), ExtResource("11_r177a")])
+title_textures = Array[Texture2D]([ExtResource("12_txwo3"), ExtResource("13_ttenb"), ExtResource("14_yr62v"), ExtResource("15_uagln"), ExtResource("16_riyte"), ExtResource("17_1arjr"), ExtResource("18_u7tx6"), ExtResource("19_vihqo"), ExtResource("20_xjrgx"), ExtResource("21_wybos")])
+tree_textures = Array[Texture2D]([ExtResource("22_pu6hb"), ExtResource("23_bobxf"), ExtResource("24_2kuj8"), ExtResource("25_545ts"), ExtResource("26_mo5ma"), ExtResource("27_k0dyl"), ExtResource("28_o58ap"), ExtResource("29_hnmp1"), ExtResource("30_f0aco"), ExtResource("31_q67b2")])
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rhbuj")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="Mask" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("12_imo4c")
+
+[node name="Title" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(960, 540)
+texture = ExtResource("12_txwo3")
+stretch_mode = 5
+
+[node name="Tree" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("22_pu6hb")
+script = ExtResource("33_ttenb")

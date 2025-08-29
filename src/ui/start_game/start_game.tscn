@@ -1,20 +1,41 @@
-[gd_scene load_steps=18 format=3 uid="uid://555w0tkkfvvh"]
+[gd_scene load_steps=34 format=3 uid="uid://555w0tkkfvvh"]
 
 [ext_resource type="Script" uid="uid://cb2cqk1bbugia" path="res://src/ui/start_game/StartGame.cs" id="1_0v006"]
 [ext_resource type="Script" uid="uid://dgpst8rten18u" path="res://src/ui/start_game/start.gd" id="1_35y3l"]
+[ext_resource type="Texture2D" uid="uid://bxnpjduqknug2" path="res://src/ui/start_game/background/Background_53.png" id="2_pbyqp"]
+[ext_resource type="Texture2D" uid="uid://dls0nj74sr1w0" path="res://src/ui/start_game/background/Background_55.png" id="2_u75u3"]
+[ext_resource type="Script" uid="uid://bcuv7fyvon3um" path="res://src/ui/start_game/SunPathFollow.cs" id="3_1giy0"]
+[ext_resource type="Texture2D" uid="uid://d06hm0a7aq8xm" path="res://src/ui/start_game/background/Background_54.png" id="3_5o22s"]
+[ext_resource type="Texture2D" uid="uid://dbafgriyofipl" path="res://src/ui/start_game/sun_moon/Sun.png" id="3_jk8po"]
 [ext_resource type="Script" uid="uid://6d7ig2bhqvd2" path="res://src/ui/start_game/mask.gd" id="3_mvjoi"]
+[ext_resource type="Texture2D" uid="uid://t14i6ud13qyn" path="res://src/ui/start_game/sun_moon/moon/Moon_0.png" id="4_1giy0"]
 [ext_resource type="Texture2D" uid="uid://clr0csqm7tqjy" path="res://src/ui/start_game/logo/Logo.png" id="4_1xca7"]
 [ext_resource type="Script" uid="uid://bf5npkwg4fdh6" path="res://src/ui/start_game/logo.gd" id="5_ir4n0"]
 [ext_resource type="Script" uid="uid://bf636pv7wg2tl" path="res://src/ui/start_game/sun_moon.gd" id="6_bnsb7"]
+[ext_resource type="Texture2D" uid="uid://c41x4cymqkdno" path="res://src/ui/start_game/sun_moon/moon/Moon_1.png" id="7_5jnps"]
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="7_bs5xt"]
+[ext_resource type="Texture2D" uid="uid://bbhj6v0p26u8y" path="res://src/ui/start_game/sun_moon/moon/Moon_2.png" id="8_u75u3"]
 [ext_resource type="Script" uid="uid://by8m0xta7iasy" path="res://src/ui/start_game/single_player.gd" id="8_wja57"]
+[ext_resource type="Texture2D" uid="uid://bihpuuv0tnnk7" path="res://src/ui/start_game/sun_moon/moon/Moon_3.png" id="9_npkuc"]
 [ext_resource type="Script" uid="uid://b7g2eagoalffl" path="res://src/ui/start_game/multi_player.gd" id="9_wgx8q"]
 [ext_resource type="Script" uid="uid://cwenattse8fo2" path="res://src/ui/start_game/achievements.gd" id="10_jk8po"]
+[ext_resource type="Texture2D" uid="uid://dsuxwt5rw216o" path="res://src/ui/start_game/sun_moon/moon/Moon_4.png" id="10_pbyqp"]
 [ext_resource type="Script" uid="uid://swk3k11yc22b" path="res://src/ui/start_game/workshop.gd" id="11_1giy0"]
+[ext_resource type="Texture2D" uid="uid://cfvn8e0yg5t0i" path="res://src/ui/start_game/sun_moon/moon/Moon_5.png" id="11_5o22s"]
+[ext_resource type="Texture2D" uid="uid://ce8eth0u4ao2t" path="res://src/ui/start_game/sun_moon/moon/Moon_6.png" id="12_3w1g7"]
 [ext_resource type="Script" uid="uid://ciscuwdbgcggp" path="res://src/ui/start_game/settings.gd" id="12_upgu8"]
+[ext_resource type="Texture2D" uid="uid://xc71ic00cl5o" path="res://src/ui/start_game/sun_moon/moon/Moon_7.png" id="13_jyqst"]
 [ext_resource type="Script" uid="uid://da3w8tjjpdpy6" path="res://src/ui/start_game/credits.gd" id="13_tu0qo"]
+[ext_resource type="Script" uid="uid://c01vx6182ne7v" path="res://src/ui/start_game/background.gd" id="14_5o22s"]
+[ext_resource type="Texture2D" uid="uid://ufv25yhj1ac8" path="res://src/ui/start_game/sun_moon/moon/Moon_8.png" id="14_sdq55"]
 [ext_resource type="Script" uid="uid://ci7hk0somuq84" path="res://src/ui/start_game/exit.gd" id="14_vo4f1"]
 [ext_resource type="Script" uid="uid://cgfpbga4rxsga" path="res://src/ui/start_game/PlayerChoose.cs" id="15_wgx8q"]
+
+[sub_resource type="Curve2D" id="Curve2D_jk8po"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -44, 76, 0, 0, 0, 0, 43, -60, 0, 0, 0, 0, 114, -129, 0, 0, 0, 0, 167, -165, 0, 0, 0, 0, 212, -192, 0, 0, 0, 0, 274, -220, 0, 0, 0, 0, 340, -236, 0, 0, 0, 0, 440, -253, 0, 0, 0, 0, 524, -265, 0, 0, 0, 0, 603, -269, 0, 0, 0, 0, 677, -266, 0, 0, 0, 0, 765, -262, 0, 0, 0, 0, 831, -245, 0, 0, 0, 0, 916, -220, 0, 0, 0, 0, 1003, -186, 0, 0, 0, 0, 1066, -162, 0, 0, 0, 0, 1129, -129, 0, 0, 0, 0, 1170.08, -101.848, 0, 0, 0, 0, 1201, -76, 0, 0, 0, 0, 1259, 24, 0, 0, 0, 0, 1305, 124)
+}
+point_count = 21
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wja57"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -30,6 +51,76 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0v006")
+
+[node name="SunPath" type="Path2D" parent="."]
+position = Vector2(-47, 361)
+curve = SubResource("Curve2D_jk8po")
+
+[node name="SunPathFollow" type="PathFollow2D" parent="SunPath" node_paths=PackedStringArray("startGame")]
+position = Vector2(-44, 76)
+rotation = -1.00169
+script = ExtResource("3_1giy0")
+startGame = NodePath("../..")
+
+[node name="SunMoon" type="Sprite2D" parent="SunPath/SunPathFollow"]
+position = Vector2(0.203133, 2.82114)
+texture = ExtResource("4_1giy0")
+vframes = 8
+script = ExtResource("6_bnsb7")
+sun = ExtResource("3_jk8po")
+moons = Array[Texture2D]([ExtResource("4_1giy0"), ExtResource("7_5jnps"), ExtResource("8_u75u3"), ExtResource("9_npkuc"), ExtResource("10_pbyqp"), ExtResource("11_5o22s"), ExtResource("12_3w1g7"), ExtResource("13_jyqst"), ExtResource("14_sdq55")])
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="SunPath/SunPathFollow"]
+
+[node name="Background" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("14_5o22s")
+first_day_layers = Array[Texture2D]([ExtResource("2_u75u3")])
+second_day_layers = Array[Texture2D]([ExtResource("3_5o22s")])
+third_day_layers = Array[Texture2D]([ExtResource("2_pbyqp")])
+
+[node name="Parallax2D3" type="Parallax2D" parent="Background"]
+scroll_offset = Vector2(0, 264)
+repeat_size = Vector2(1843.2, 0)
+autoscroll = Vector2(15, 0)
+
+[node name="ThirdLayer" type="Sprite2D" parent="Background/Parallax2D3"]
+texture_repeat = 2
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("2_pbyqp")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 2048, 533)
+
+[node name="Parallax2D2" type="Parallax2D" parent="Background"]
+scroll_offset = Vector2(0, 315)
+repeat_size = Vector2(2048, 0)
+autoscroll = Vector2(30, 0)
+
+[node name="SecondLayer" type="Sprite2D" parent="Background/Parallax2D2"]
+texture_repeat = 2
+texture = ExtResource("3_5o22s")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 2048, 533)
+
+[node name="Parallax2D" type="Parallax2D" parent="Background"]
+scroll_offset = Vector2(0, 355)
+repeat_size = Vector2(3072, 0)
+autoscroll = Vector2(50, 0)
+
+[node name="FirstLayer" type="Sprite2D" parent="Background/Parallax2D"]
+texture_repeat = 2
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_u75u3")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 2048, 533)
 
 [node name="Start" type="Button" parent="."]
 visible = false
@@ -47,9 +138,6 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "start game"
 script = ExtResource("1_35y3l")
-
-[node name="SunMoon" type="Sprite2D" parent="."]
-script = ExtResource("6_bnsb7")
 
 [node name="MainButtons" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -176,19 +264,8 @@ theme_override_fonts/font = ExtResource("7_bs5xt")
 theme_override_font_sizes/font_size = 25
 text = "v0.1.0"
 
-[node name="Mask" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
-script = ExtResource("3_mvjoi")
-
 [node name="PlayerChoose" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.3
 anchor_top = 0.3
@@ -214,6 +291,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Mask" type="ColorRect" parent="."]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("3_mvjoi")
+
+[connection signal="screen_exited" from="SunPath/SunPathFollow/VisibleOnScreenNotifier2D" to="SunPath/SunPathFollow/SunMoon" method="_on_visible_on_screen_notifier_2d_screen_exited"]
 [connection signal="pressed" from="Start" to="Start" method="_on_pressed"]
 [connection signal="pressed" from="MainButtons/SinglePlayer" to="MainButtons/SinglePlayer" method="_on_pressed"]
 [connection signal="pressed" from="MainButtons/Exit" to="MainButtons/Exit" method="_on_pressed"]

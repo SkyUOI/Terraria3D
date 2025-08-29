@@ -11,7 +11,12 @@ const res_max_number = 10
 @export var title_textures: Array[Texture2D]
 @export var tree_textures: Array[Texture2D]
 
+const title_min_number = 0
+const title_max_number = 67
+
 func _ready() -> void:
+	random_title()
+	
 	var selected = randi_range(res_min_number, res_max_number)
 	bg.texture = bg_textures[selected - 1]
 	var scale_ratio = get_viewport_rect().size.y / 1000
@@ -29,3 +34,11 @@ func _ready() -> void:
 
 func next():
 	get_tree().change_scene_to_file("res://src/ui/start_game/start_game.tscn")
+
+const game_title_template = "Main.GameTitle.%d"
+
+func random_title():
+	var window = get_tree().root
+	var title_number = randi_range(title_min_number, title_max_number)
+	var key_str = game_title_template % title_number
+	window.title = key_str

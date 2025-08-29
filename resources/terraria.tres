@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=3 format=3 uid="uid://tfv4wuincpb0"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://tfv4wuincpb0"]
 
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="1_08xpn"]
+[ext_resource type="FontFile" uid="uid://oud8uan1esbo" path="res://resources/fonts/SourceHanSansSC-Medium-2.otf" id="2_kmroi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08xpn"]
 bg_color = Color(0.203922, 0.266667, 0.490196, 0.905882)
@@ -16,6 +17,13 @@ corner_radius_bottom_left = 5
 corner_detail = 4
 anti_aliasing = false
 
+[sub_resource type="FontVariation" id="FontVariation_1ubd1"]
+fallbacks = Array[Font]([ExtResource("2_kmroi")])
+base_font = ExtResource("1_08xpn")
+
+[sub_resource type="FontVariation" id="FontVariation_cl6en"]
+base_font = SubResource("FontVariation_1ubd1")
+
 [resource]
-default_font = ExtResource("1_08xpn")
+default_font = SubResource("FontVariation_cl6en")
 Panel/styles/panel = SubResource("StyleBoxFlat_08xpn")

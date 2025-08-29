@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Terraria3D"
-run/main_scene="uid://555w0tkkfvvh"
+run/main_scene="uid://ds3fa5x54sii1"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="uid://dmxk6fun1p10d"
 
@@ -28,6 +28,10 @@ enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 settings/test/test_lookup_folder="tests"
 settings/test/test_discovery=true
 ui/toolbar/run_overall=true
+
+[gui]
+
+theme/custom="uid://tfv4wuincpb0"
 
 [input]
 

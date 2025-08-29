@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites id="2025-08-29" name="report_1" tests="6" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="ChunkTest" package="tests" timestamp="2025-08-29T07:18:50" hostname="localhost" tests="6" failures="0" errors="0" skipped="0" flaky="0" time="0.346">
+		<testcase name="TestChunkInitialization" classname="ChunkTest" time="0.016">
+		</testcase>
+		<testcase name="TestLocalPosValidation" classname="ChunkTest" time="0.001">
+		</testcase>
+		<testcase name="TestPositionConversions" classname="ChunkTest" time="0.032">
+		</testcase>
+		<testcase name="TestHeightRange" classname="ChunkTest" time="0.033">
+		</testcase>
+		<testcase name="TestMeshGeneration" classname="ChunkTest" time="0.129">
+		</testcase>
+		<testcase name="TestGetStartPoint" classname="ChunkTest" time="0.000">
+		</testcase>
+	</testsuite>
+</testsuites>

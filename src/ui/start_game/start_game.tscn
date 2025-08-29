@@ -1,7 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://555w0tkkfvvh"]
+[gd_scene load_steps=18 format=3 uid="uid://555w0tkkfvvh"]
 
 [ext_resource type="Script" uid="uid://cb2cqk1bbugia" path="res://src/ui/start_game/StartGame.cs" id="1_0v006"]
 [ext_resource type="Script" uid="uid://dgpst8rten18u" path="res://src/ui/start_game/start.gd" id="1_35y3l"]
+[ext_resource type="Script" uid="uid://6d7ig2bhqvd2" path="res://src/ui/start_game/mask.gd" id="3_mvjoi"]
+[ext_resource type="Texture2D" uid="uid://clr0csqm7tqjy" path="res://src/ui/start_game/logo/Logo.png" id="4_1xca7"]
+[ext_resource type="Script" uid="uid://bf5npkwg4fdh6" path="res://src/ui/start_game/logo.gd" id="5_ir4n0"]
+[ext_resource type="Script" uid="uid://bf636pv7wg2tl" path="res://src/ui/start_game/sun_moon.gd" id="6_bnsb7"]
+[ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="7_bs5xt"]
+[ext_resource type="Script" uid="uid://by8m0xta7iasy" path="res://src/ui/start_game/single_player.gd" id="8_wja57"]
+[ext_resource type="Script" uid="uid://b7g2eagoalffl" path="res://src/ui/start_game/multi_player.gd" id="9_wgx8q"]
+[ext_resource type="Script" uid="uid://cwenattse8fo2" path="res://src/ui/start_game/achievements.gd" id="10_jk8po"]
+[ext_resource type="Script" uid="uid://swk3k11yc22b" path="res://src/ui/start_game/workshop.gd" id="11_1giy0"]
+[ext_resource type="Script" uid="uid://ciscuwdbgcggp" path="res://src/ui/start_game/settings.gd" id="12_upgu8"]
+[ext_resource type="Script" uid="uid://da3w8tjjpdpy6" path="res://src/ui/start_game/credits.gd" id="13_tu0qo"]
+[ext_resource type="Script" uid="uid://ci7hk0somuq84" path="res://src/ui/start_game/exit.gd" id="14_vo4f1"]
+[ext_resource type="Script" uid="uid://cgfpbga4rxsga" path="res://src/ui/start_game/PlayerChoose.cs" id="15_wgx8q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wja57"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wgx8q"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [node name="StartGame" type="Control"]
 layout_mode = 3
@@ -13,6 +32,7 @@ grow_vertical = 2
 script = ExtResource("1_0v006")
 
 [node name="Start" type="Button" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -28,4 +48,172 @@ grow_vertical = 2
 text = "start game"
 script = ExtResource("1_35y3l")
 
+[node name="SunMoon" type="Sprite2D" parent="."]
+script = ExtResource("6_bnsb7")
+
+[node name="MainButtons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -79.0
+offset_top = -20.0
+offset_right = 79.0
+offset_bottom = 162.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SinglePlayer" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Single Player"
+flat = true
+script = ExtResource("8_wja57")
+
+[node name="MultiPlayer" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Multiplayer"
+flat = true
+script = ExtResource("9_wgx8q")
+
+[node name="Achievements" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Achievements"
+flat = true
+script = ExtResource("10_jk8po")
+
+[node name="Workshop" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Workshop"
+flat = true
+script = ExtResource("11_1giy0")
+
+[node name="Settings" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Settings"
+flat = true
+script = ExtResource("12_upgu8")
+
+[node name="Credits" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
+text = "Credits"
+flat = true
+script = ExtResource("13_tu0qo")
+
+[node name="Exit" type="Button" parent="MainButtons"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxFlat_wgx8q")
+text = "Exit"
+flat = true
+script = ExtResource("14_vo4f1")
+
+[node name="LocateLogo" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 80.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Logo" type="Sprite2D" parent="LocateLogo"]
+texture = ExtResource("4_1xca7")
+script = ExtResource("5_ir4n0")
+
+[node name="Version" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("7_bs5xt")
+theme_override_font_sizes/font_size = 25
+text = "v0.1.0"
+
+[node name="Mask" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("3_mvjoi")
+
+[node name="PlayerChoose" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.3
+anchor_top = 0.3
+anchor_right = 0.7
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("15_wgx8q")
+
+[node name="PlayerListScoll" type="ScrollContainer" parent="PlayerChoose"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerList" type="VBoxContainer" parent="PlayerChoose/PlayerListScoll"]
+layout_mode = 2
+
+[node name="Background" type="Panel" parent="PlayerChoose"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [connection signal="pressed" from="Start" to="Start" method="_on_pressed"]
+[connection signal="pressed" from="MainButtons/SinglePlayer" to="MainButtons/SinglePlayer" method="_on_pressed"]
+[connection signal="pressed" from="MainButtons/Exit" to="MainButtons/Exit" method="_on_pressed"]

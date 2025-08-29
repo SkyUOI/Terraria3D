@@ -1,0 +1,21 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://tfv4wuincpb0"]
+
+[ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="1_08xpn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08xpn"]
+bg_color = Color(0.203922, 0.266667, 0.490196, 0.905882)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 4
+anti_aliasing = false
+
+[resource]
+default_font = ExtResource("1_08xpn")
+Panel/styles/panel = SubResource("StyleBoxFlat_08xpn")

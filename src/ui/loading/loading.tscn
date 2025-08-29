@@ -59,17 +59,6 @@ texture = ExtResource("2_rhbuj")
 expand_mode = 1
 stretch_mode = 3
 
-[node name="Mask" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 1)
-script = ExtResource("12_imo4c")
-
 [node name="Title" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -100,3 +89,14 @@ grow_horizontal = 0
 grow_vertical = 0
 texture = ExtResource("22_pu6hb")
 script = ExtResource("33_ttenb")
+
+[node name="Mask" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("12_imo4c")

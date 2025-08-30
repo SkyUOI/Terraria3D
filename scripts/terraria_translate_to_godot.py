@@ -4,10 +4,12 @@ import os
 import re
 from typing import Dict, List
 
+
 def strip_trailing_commas(json_str):
-    pattern = r',(\s*[\}\]])'
-    cleaned_str = re.sub(pattern, r'\1', json_str)
+    pattern = r",(\s*[\}\]])"
+    cleaned_str = re.sub(pattern, r"\1", json_str)
     return cleaned_str
+
 
 def convert_dict_to_list(d: Dict, key: str) -> List:
     l = []
@@ -19,18 +21,20 @@ def convert_dict_to_list(d: Dict, key: str) -> List:
             l.append([name, v])
     return l
 
+
 def convert_json_to_godot_csv(input_file) -> List:
-    with open(input_file, 'r', encoding="utf-8-sig") as f:
+    with open(input_file, "r", encoding="utf-8-sig") as f:
         cleaned_str = strip_trailing_commas(f.read())
         data: Dict = json.loads(cleaned_str)
     return convert_dict_to_list(data, os.path.splitext(os.path.basename(input_file))[0])
 
 
 def save_csv(data, lang, output_file):
-    with open(output_file, 'w', newline='', encoding='utf-8') as f:
+    with open(output_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["KEYS", lang])
         writer.writerows(data)
+
 
 def convert_all(root_dir: str):
     os.chdir(root_dir)
@@ -39,7 +43,7 @@ def convert_all(root_dir: str):
         if "csv_convert" in i:
             continue
         lang_all_trans = []
-        for (root, _, files) in os.walk(i):
+        for root, _, files in os.walk(i):
             for file in files:
                 if file.endswith(".json"):
                     path = os.path.join(root, file)
@@ -54,6 +58,7 @@ def convert_all(root_dir: str):
 def main():
     os.makedirs("localization/csv_convert", exist_ok=True)
     convert_all("localization")
+
 
 if __name__ == "__main__":
     main()

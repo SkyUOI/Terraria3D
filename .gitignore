@@ -25,3 +25,6 @@ Terraria3D.sln.DotSettings.user
 
 .runsettings
 reports/
+
+# Python
+__pycache__/

@@ -22,7 +22,7 @@ jobs:
             - name: Restore dependencies
               run: dotnet restore
             - name: Check style
-              run: dotnet format Terraria3D.sln --verify-no-changes
+              run: dotnet format Terraria3D.sln --exclude addons --verify-no-changes
             - name: Build
               run: dotnet build --no-restore
             - uses: MikeSchulze/gdunit4-action@v1

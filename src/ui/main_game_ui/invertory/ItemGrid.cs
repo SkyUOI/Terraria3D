@@ -50,14 +50,5 @@ public partial class ItemGrid : Control
                 Visible = !Visible;
             }
         }
-        var item = Inventory.Items[Index.X, Index.Y];
-        if (item != null)
-        {
-            if (item.Count != 0)
-            {
-                Num.Text = item.Count.ToString();
-            }
-            ItemIcon.TextureNormal = item.Icon;
-        }
     }
 }

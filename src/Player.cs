@@ -33,8 +33,6 @@ public partial class Player : CharacterBody3D
     public int ManaMax = 20;
     [Export]
     public float JumpVelocity = 8f;
-    [Export]
-    Timer _chunksTimer;
 
     [Export]
     Camera3D _camera3D;
@@ -57,22 +55,8 @@ public partial class Player : CharacterBody3D
     public override void _Process(double delta)
     {
         base._Process(delta);
-        MoveOutOfBlock();
         // _main.CheckAndLoadChunk(Position);
         // GD.Print($"player position: {Position}");
-    }
-
-    private void MoveOutOfBlock()
-    {
-        // GD.Print("fk");
-        if (!ChunksManager.BlockExists(Position))
-        {
-            return;
-        }
-        while (ChunksManager.BlockExists(Position))
-        {
-            Position += Vector3.Up;
-        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -80,10 +64,7 @@ public partial class Player : CharacterBody3D
         base._PhysicsProcess(delta);
         if (!Enable)
         {
-            if (!_chunksTimer.IsStopped())
-            {
-                StartRunning();
-            }
+            StartRunning();
             return;
         }
         Move(delta);

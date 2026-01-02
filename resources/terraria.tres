@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://tfv4wuincpb0"]
+[gd_resource type="Theme" format=3 uid="uid://tfv4wuincpb0"]
 
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="1_08xpn"]
 [ext_resource type="FontFile" uid="uid://oud8uan1esbo" path="res://resources/fonts/SourceHanSansSC-Medium-2.otf" id="2_kmroi"]

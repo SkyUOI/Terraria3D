@@ -38,10 +38,11 @@ public class WorldFile
             State = data.RandomState
         };
         main.WorldRandom = rand;
-        WorldGeneration.Noise = new FastNoiseLite
-        {
-            Seed = (int)data.Seed
-        };
+        
+        // WorldGeneration.Noise = new FastNoiseLite
+        // {
+        //     Seed = (int)data.Seed
+        // };
     }
 
     static public void CreateWorld(string wldName)

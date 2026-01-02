@@ -1,0 +1,6 @@
+[gd_resource type="VoxelStreamScript" format=3 uid="uid://c7ypdehnci74y"]
+
+[ext_resource type="Script" uid="uid://writg8f2fxsm" path="res://src/WorldSaver.cs" id="1_r0e5e"]
+
+[resource]
+script = ExtResource("1_r0e5e")

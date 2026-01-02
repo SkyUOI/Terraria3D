@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dt626b1warwpw"]
+[gd_scene format=3 uid="uid://dt626b1warwpw"]
 
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
-[ext_resource type="PackedScene" uid="uid://ba4q36dtk385" path="res://src/renderer.tscn" id="4_fyndt"]
-[ext_resource type="Script" uid="uid://c3hwhl7pel5kf" path="res://src/CollisionManager.cs" id="5_fyndt"]
+[ext_resource type="VoxelBlockyLibrary" uid="uid://ce2a0g58mq1hy" path="res://src/blocks_library.tres" id="6_kmhfv"]
+[ext_resource type="VoxelGeneratorScript" uid="uid://bh5830o64osrc" path="res://src/generator.tres" id="6_rlaii"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fyndt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -18,42 +18,36 @@ background_mode = 2
 sky = SubResource("Sky_kmhfv")
 tonemap_mode = 2
 
-[node name="Main" type="Node3D" node_paths=PackedStringArray("MainGameUi", "Player", "ChunkTimer", "_renderer", "_collisionManager")]
+[sub_resource type="VoxelMesherBlocky" id="VoxelMesherBlocky_fyndt"]
+library = ExtResource("6_kmhfv")
+
+[node name="Main" type="Node3D" unique_id=316245344 node_paths=PackedStringArray("MainGameUi", "Player")]
 script = ExtResource("1_fyndt")
 MainGameUi = NodePath("MainGameUI")
 Player = NodePath("Player")
-ChunkTimer = NodePath("ChunksLoadAndUnload")
-_renderer = NodePath("Renderer")
-_collisionManager = NodePath("CollisionManager")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1528762187]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1364938509]
 environment = SubResource("Environment_rlaii")
 
-[node name="Player" parent="." node_paths=PackedStringArray("_main", "_mainGameUi", "_chunksTimer") groups=["Persist"] instance=ExtResource("1_eewff")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 23.8811, 0)
+[node name="Player" parent="." unique_id=2051381744 node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist"] instance=ExtResource("1_eewff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 _main = NodePath("..")
 _mainGameUi = NodePath("../MainGameUI")
-_chunksTimer = NodePath("../ChunksLoadAndUnload")
 
-[node name="MainGameUI" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_3cfgd")]
+[node name="MainGameUI" parent="." unique_id=906674000 node_paths=PackedStringArray("Player") instance=ExtResource("4_3cfgd")]
 Player = NodePath("../Player")
 
-[node name="ChunksLoadAndUnload" type="Timer" parent="."]
-wait_time = 5.0
-
-[node name="LoadPLayer" type="Timer" parent="."]
+[node name="LoadPLayer" type="Timer" parent="." unique_id=14764337]
 wait_time = 2.0
 one_shot = true
 
-[node name="Renderer" parent="." node_paths=PackedStringArray("_main") instance=ExtResource("4_fyndt")]
-_main = NodePath("..")
+[node name="Terrarin" type="VoxelTerrain" parent="." unique_id=129273979]
+generator = ExtResource("6_rlaii")
+mesher = SubResource("VoxelMesherBlocky_fyndt")
+run_stream_in_editor = false
 
-[node name="CollisionManager" type="Node3D" parent="."]
-script = ExtResource("5_fyndt")
-
-[connection signal="timeout" from="ChunksLoadAndUnload" to="." method="_on_chunks_timer_timeout"]
 [connection signal="timeout" from="LoadPLayer" to="Player" method="StartRunning"]

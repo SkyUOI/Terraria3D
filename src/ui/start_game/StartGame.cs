@@ -21,7 +21,7 @@ public partial class StartGame : Control
         base._Process(delta);
         if (!SunManual)
         {
-            DayTime += delta * (1.0 / 15) * Consts.DayTime;
+            DayTime += delta * (1.0 / 15) * Constants.DayTime;
         }
     }
 }

@@ -58,7 +58,7 @@ curve = SubResource("Curve2D_jk8po")
 
 [node name="SunPathFollow" type="PathFollow2D" parent="SunPath" node_paths=PackedStringArray("startGame")]
 position = Vector2(-44, 76)
-rotation = -1.00169
+rotation = -1.0016918
 script = ExtResource("3_1giy0")
 startGame = NodePath("../..")
 
@@ -121,6 +121,7 @@ texture = ExtResource("2_u75u3")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 2048, 533)
+region_filter_clip_enabled = true
 
 [node name="Start" type="Button" parent="."]
 visible = false
@@ -156,8 +157,8 @@ grow_vertical = 2
 [node name="SinglePlayer" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -168,8 +169,8 @@ script = ExtResource("8_wja57")
 [node name="MultiPlayer" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -180,8 +181,8 @@ script = ExtResource("9_wgx8q")
 [node name="Achievements" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -192,8 +193,8 @@ script = ExtResource("10_jk8po")
 [node name="Workshop" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -204,8 +205,8 @@ script = ExtResource("11_1giy0")
 [node name="Settings" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -216,8 +217,8 @@ script = ExtResource("12_upgu8")
 [node name="Credits" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
@@ -228,8 +229,8 @@ script = ExtResource("13_tu0qo")
 [node name="Exit" type="Button" parent="MainButtons"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
+theme_override_colors/font_hover_color = Color(1, 0.843137, 0.305882, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxFlat_wgx8q")

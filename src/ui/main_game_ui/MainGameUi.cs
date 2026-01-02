@@ -1,5 +1,4 @@
 using Godot;
-using Terraria3D.item.IronPickaxe;
 
 namespace Terraria3D.ui.main_game_ui;
 
@@ -9,8 +8,6 @@ public partial class MainGameUi : Control
     public Player Player { get; set; }
     [Export]
     InventoryUI inventoryUI { get; set; }
-
-    public IronPickaxe ironPickaxe { get; set; } = GD.Load<PackedScene>("res://src/item/IronPickaxe/iron_pickaxe.tscn").Instantiate() as IronPickaxe;
 
     public override void _Ready()
     {
@@ -33,9 +30,6 @@ public partial class MainGameUi : Control
             GetNode("Hearts").Call("set_hp_max", 460);
             GetNode("Stars").Call("set_mp", 50);
             GetNode("Stars").Call("set_mp_max", 200);
-
-            Inventory.Items[0, 0] = ironPickaxe.NewItem();
-            Inventory.Items[1, 1] = ironPickaxe.NewItem();
         }
     }
 

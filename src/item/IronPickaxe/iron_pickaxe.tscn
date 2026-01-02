@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://3imatdstn2ev"]
-
-[ext_resource type="Texture2D" uid="uid://bj3fie2bne1su" path="res://src/item/IronPickaxe/Item_1.png" id="1_56ebc"]
-[ext_resource type="Script" uid="uid://7lgq0gloyrf7" path="res://src/item/IronPickaxe/IronPickaxe.cs" id="1_tgkt2"]
-
-[node name="IronPickaxe" type="Node"]
-script = ExtResource("1_tgkt2")
-Icon = ExtResource("1_56ebc")

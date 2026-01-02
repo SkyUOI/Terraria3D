@@ -1,0 +1,23 @@
+[gd_resource type="VoxelBlockyLibrary" format=3 uid="uid://ce2a0g58mq1hy"]
+
+[ext_resource type="Texture2D" uid="uid://dqhewyaosobho" path="res://resources/tiles/Atlas.png" id="1_8441h"]
+
+[sub_resource type="VoxelBlockyModelEmpty" id="VoxelBlockyModelEmpty_8uh7m"]
+resource_name = "air"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ywob0"]
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_8441h")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+texture_filter = 0
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_6uqi0"]
+resource_name = "dirt"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+mesh_ortho_rotation_index = 10
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_8441h"]
+resource_name = "grass"
+
+[resource]
+models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8uh7m"), SubResource("VoxelBlockyModelCube_6uqi0"), SubResource("VoxelBlockyModelCube_8441h")])

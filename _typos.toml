@@ -6,3 +6,5 @@ extend-exclude = [
     "localization",
     "*.uid"
 ]
+[default.extend-words]
+lod = "lod"

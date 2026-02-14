@@ -46,8 +46,10 @@ wait_time = 2.0
 one_shot = true
 
 [node name="Terrarin" type="VoxelTerrain" parent="." unique_id=129273979]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 generator = ExtResource("6_rlaii")
 mesher = SubResource("VoxelMesherBlocky_fyndt")
 run_stream_in_editor = false
+mesh_block_size = 32
 
 [connection signal="timeout" from="LoadPLayer" to="Player" method="StartRunning"]

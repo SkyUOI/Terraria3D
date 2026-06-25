@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cmm8rt65lceqp"]
 
 [ext_resource type="Script" uid="uid://cqfa4qjosca6m" path="res://src/ui/main_game_ui/MainGameUi.cs" id="1_2c7pp"]
-[ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
+[ext_resource type="Script" uid="uid://c60x6p5y30y1o" path="res://src/ui/main_game_ui/hearts/Hearts.cs" id="1_diech"]
 [ext_resource type="Texture2D" uid="uid://b2v72bcx6coip" path="res://src/ui/main_game_ui/hearts/Heart_Fill.png" id="2_c45df"]
 [ext_resource type="Texture2D" uid="uid://yp6i008rsike" path="res://src/ui/main_game_ui/hearts/Heart_Fill_B.png" id="3_m6116"]
 [ext_resource type="Texture2D" uid="uid://knixnbg0w4le" path="res://src/ui/main_game_ui/hearts/Heart_Left.png" id="4_idygw"]
@@ -10,20 +10,20 @@
 [ext_resource type="Texture2D" uid="uid://b64i4gsco0i51" path="res://src/ui/main_game_ui/hearts/Heart_Right_Fancy.png" id="7_mdo0c"]
 [ext_resource type="Texture2D" uid="uid://cuviregbtt3v8" path="res://src/ui/main_game_ui/hearts/Heart_Single_Fancy.png" id="8_lqmw5"]
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="9_b10dl"]
-[ext_resource type="Script" uid="uid://cwgdb2msbamch" path="res://src/ui/main_game_ui/stars/stars.gd" id="9_m6116"]
+[ext_resource type="Script" uid="uid://b4kq3awjicsxt" path="res://src/ui/main_game_ui/stars/Stars.cs" id="9_m6116"]
 [ext_resource type="Texture2D" uid="uid://ixfg0qx38480" path="res://src/ui/main_game_ui/stars/Star_Single.png" id="10_mdo0c"]
 [ext_resource type="Texture2D" uid="uid://bcug78weielsp" path="res://src/ui/main_game_ui/stars/Star_A.png" id="11_lqmw5"]
 [ext_resource type="Texture2D" uid="uid://cs6osvyxd75m4" path="res://src/ui/main_game_ui/stars/Star_B.png" id="12_b10dl"]
 [ext_resource type="Texture2D" uid="uid://c4ewqsc5c88kh" path="res://src/ui/main_game_ui/stars/Star_C.png" id="13_2c7pp"]
 [ext_resource type="Texture2D" uid="uid://bg2vx2ocpigdj" path="res://src/ui/main_game_ui/stars/Star_Fill.png" id="14_lqmw5"]
 [ext_resource type="PackedScene" uid="uid://ditpwma2b32f7" path="res://src/ui/main_game_ui/invertory/ItemGrid.tscn" id="18_6bmbn"]
-[ext_resource type="Script" uid="uid://b16plvtu45pgg" path="res://src/ui/main_game_ui/settings.gd" id="19_x53c7"]
+[ext_resource type="Script" uid="uid://bvjap8w8helx8" path="res://src/ui/main_game_ui/SettingsButton.cs" id="19_x53c7"]
 [ext_resource type="Script" uid="uid://okhtf7u5ll0d" path="res://src/ui/main_game_ui/invertory/InventoryUI.cs" id="20_4oj5a"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bmbn"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="MainGameUI" type="Control" unique_id=1969782537 node_paths=PackedStringArray("inventoryUI")]
+[node name="MainGameUI" type="Control" unique_id=1969782537 node_paths=PackedStringArray("InventoryUI", "Hearts", "Stars")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,9 +31,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2c7pp")
+Hearts = NodePath("Hearts")
+Stars = NodePath("Stars")
 inventoryUI = NodePath("InventoryUI")
 
-[node name="Hearts" type="Control" parent="." unique_id=512877184]
+[node name="Hearts" type="Control" parent="." unique_id=512877184 node_paths=PackedStringArray("Label", "Frame", "HeartRed", "HeartYellow", "Timer")]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -42,6 +44,11 @@ offset_top = 20.0
 offset_right = -285.0
 grow_horizontal = 0
 script = ExtResource("1_diech")
+Label = NodePath("Label")
+Frame = NodePath("Frame")
+HeartRed = NodePath("HeartRed")
+HeartYellow = NodePath("HeartYellow")
+Timer = NodePath("Timer")
 heart_fill_red = ExtResource("2_c45df")
 heart_fill_yellow = ExtResource("3_m6116")
 heart_left = ExtResource("4_idygw")
@@ -74,7 +81,7 @@ theme_override_fonts/font = ExtResource("9_b10dl")
 theme_override_font_sizes/font_size = 40
 text = "text"
 
-[node name="Stars" type="Control" parent="." unique_id=142015431]
+[node name="Stars" type="Control" parent="." unique_id=142015431 node_paths=PackedStringArray("Label", "Frame", "Star", "Timer")]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -83,6 +90,10 @@ offset_top = 40.0
 offset_right = -30.0
 grow_horizontal = 0
 script = ExtResource("9_m6116")
+Label = NodePath("Label")
+Frame = NodePath("Frame")
+Star = NodePath("Star")
+Timer = NodePath("Timer")
 star_single = ExtResource("10_mdo0c")
 star_up = ExtResource("11_lqmw5")
 star_middle = ExtResource("12_b10dl")

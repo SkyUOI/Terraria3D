@@ -3,6 +3,27 @@
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="1_08xpn"]
 [ext_resource type="FontFile" uid="uid://oud8uan1esbo" path="res://resources/fonts/SourceHanSansSC-Medium-2.otf" id="2_kmroi"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmroi"]
+bg_color = Color(0.21176471, 0.2784314, 0.49803922, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.93333334, 0.85882354, 0.3137255, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nqns5"]
+bg_color = Color(0.21176471, 0.2784314, 0.49803922, 0.5372549)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 3
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08xpn"]
 bg_color = Color(0.203922, 0.266667, 0.490196, 0.905882)
 border_width_left = 2
@@ -26,4 +47,11 @@ base_font = SubResource("FontVariation_1ubd1")
 
 [resource]
 default_font = SubResource("FontVariation_cl6en")
+Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/constants/outline_size = 6
+Button/styles/hover = SubResource("StyleBoxFlat_kmroi")
+Button/styles/normal = SubResource("StyleBoxFlat_nqns5")
+Label/colors/font_outline_color = Color(0, 0, 0, 1)
+Label/constants/outline_size = 6
 Panel/styles/panel = SubResource("StyleBoxFlat_08xpn")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_08xpn")

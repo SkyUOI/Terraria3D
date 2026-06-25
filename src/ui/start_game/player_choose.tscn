@@ -1,0 +1,159 @@
+[gd_scene format=3 uid="uid://b5du1hplkppul"]
+
+[ext_resource type="Script" uid="uid://cgfpbga4rxsga" path="res://src/ui/start_game/PlayerChoose.cs" id="1_jgo38"]
+
+[node name="PlayerChoose" type="Control" unique_id=1513429508 node_paths=PackedStringArray("playerList")]
+layout_mode = 3
+anchor_left = 0.3
+anchor_top = 0.3
+anchor_right = 0.7
+anchor_bottom = 0.9
+offset_top = -61.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jgo38")
+playerList = NodePath("PlayerListScoll/PlayerList")
+
+[node name="DeleteButton" type="Button" parent="." unique_id=1588923412]
+visible = false
+layout_mode = 0
+offset_left = 303.99997
+offset_top = 338.8
+offset_right = 491.99997
+offset_bottom = 388.8
+theme_override_font_sizes/font_size = 22
+disabled = true
+text = "Legacy.LegacyMenu.17"
+flat = true
+
+[node name="PlayButton" type="Button" parent="." unique_id=1557458888]
+visible = false
+layout_mode = 0
+offset_left = 495.99997
+offset_top = 338.8
+offset_right = 607.0
+offset_bottom = 388.8
+theme_override_font_sizes/font_size = 22
+disabled = true
+text = "Main.UI.Play"
+flat = true
+
+[node name="PlayerListScoll" type="ScrollContainer" parent="." unique_id=1283725933]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerList" type="VBoxContainer" parent="PlayerListScoll" unique_id=906756445]
+layout_mode = 2
+
+[node name="Background" type="Panel" parent="." unique_id=683704396]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=542060586]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -109.000015
+offset_top = -37.0
+offset_right = 108.999985
+offset_bottom = 9.0
+grow_horizontal = 2
+
+[node name="TitleLabel" type="Label" parent="Panel" unique_id=1194357006]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Main.UI.SelectPlayer"
+horizontal_alignment = 1
+
+[node name="ActionButtons" type="HBoxContainer" parent="." unique_id=720278072]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="BackButton" type="Button" parent="ActionButtons" unique_id=1081256053]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Legacy.LegacyMenu.5"
+
+[node name="NewButton" type="Button" parent="ActionButtons" unique_id=485989568]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Main.UI.New"
+
+[node name="CreateDialog" type="Control" parent="." unique_id=1183350329]
+visible = false
+z_index = 5
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Overlay" type="ColorRect" parent="CreateDialog" unique_id=1162929683]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.5)
+
+[node name="DialogPanel" type="Panel" parent="CreateDialog" unique_id=1208426278]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = 80.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CreateDialog/DialogPanel" unique_id=1396376737]
+layout_mode = 0
+theme_override_constants/separation = 8
+
+[node name="DialogTitle" type="Label" parent="CreateDialog/DialogPanel/VBoxContainer" unique_id=1219714850]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Legacy.LegacyMenu.16"
+horizontal_alignment = 1
+
+[node name="NameInput" type="LineEdit" parent="CreateDialog/DialogPanel/VBoxContainer" unique_id=1582107006]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+placeholder_text = "Legacy.LegacyMenu.45"
+
+[node name="Buttons" type="HBoxContainer" parent="CreateDialog/DialogPanel/VBoxContainer" unique_id=511951986]
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="CreateDialog/DialogPanel/VBoxContainer/Buttons" unique_id=1475468357]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Legacy.LegacyMenu.28"
+flat = true
+
+[node name="CancelButton" type="Button" parent="CreateDialog/DialogPanel/VBoxContainer/Buttons" unique_id=174233847]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Legacy.LegacyMenu.6"
+flat = true
+
+[connection signal="pressed" from="DeleteButton" to="." method="OnDeletePressed"]
+[connection signal="pressed" from="PlayButton" to="." method="OnPlayPressed"]
+[connection signal="pressed" from="ActionButtons/BackButton" to="." method="OnBackPressed"]
+[connection signal="pressed" from="ActionButtons/NewButton" to="." method="OnNewPlayerPressed"]
+[connection signal="pressed" from="CreateDialog/DialogPanel/VBoxContainer/Buttons/CreateButton" to="." method="OnCreateConfirm"]
+[connection signal="pressed" from="CreateDialog/DialogPanel/VBoxContainer/Buttons/CancelButton" to="." method="OnCreateCancel"]

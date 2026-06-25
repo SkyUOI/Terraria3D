@@ -80,12 +80,23 @@ public partial class Main : Node3D
 
     private int _renderChunkDistance = 9;
 
+    /// <summary>Player name passed from the start screen. Set before changing scene.</summary>
+    public static string SelectedPlayerName { get; set; } = string.Empty;
+
     public override void _Ready()
     {
         // if (OS.HasFeature("editor"))
         // {
         // }
         base._Ready();
+
+        // Load player data if a player was selected from start screen
+        if (!string.IsNullOrEmpty(SelectedPlayerName))
+        {
+            var plrFile = new PlrFile();
+            plrFile.Load(SelectedPlayerName, Player);
+            SelectedPlayerName = string.Empty;
+        }
 
         MouseInGame();
         WorldFile.LoadOrCreate(_worldPath, this);

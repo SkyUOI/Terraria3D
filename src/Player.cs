@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Godot;
@@ -135,6 +136,9 @@ public class PlrData(string name)
     public int HealthMax = 100;
     public int Mana = 20;
     public int ManaMax = 20;
+    public string Difficulty { get; set; } = "Classic";
+    public long PlayTimeSeconds { get; set; } = 0;
+    public string CreatedAt { get; set; } = DateTime.Now.ToString("o");
 }
 
 public class PlrFile
@@ -161,5 +165,46 @@ public class PlrFile
         var data = JsonSerializer.Deserialize<PlrData>(f);
         player.Position = data.Position;
         player.PlayerName = data.Name;
+    }
+
+    /// <summary>List all player save files in user://Players/.</summary>
+    public static List<PlrData> ListPlayers()
+    {
+        var result = new List<PlrData>();
+        var dir = ProjectSettings.GlobalizePath(PlrDir);
+        if (!Directory.Exists(dir))
+            return result;
+
+        foreach (var filePath in Directory.GetFiles(dir, "*.plr"))
+        {
+            try
+            {
+                var json = File.ReadAllText(filePath);
+                var data = JsonSerializer.Deserialize<PlrData>(json);
+                if (data != null)
+                    result.Add(data);
+            }
+            catch
+            {
+                // Skip corrupt files
+            }
+        }
+        return result;
+    }
+
+    /// <summary>Delete a player save file by name.</summary>
+    public static void DeletePlayer(string name)
+    {
+        var dir = ProjectSettings.GlobalizePath(PlrDir);
+        var filePath = Path.Join(dir, name + ".plr");
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+    }
+
+    /// <summary>Check if a player save file exists.</summary>
+    public static bool PlayerExists(string name)
+    {
+        var dir = ProjectSettings.GlobalizePath(PlrDir);
+        return File.Exists(Path.Join(dir, name + ".plr"));
     }
 }

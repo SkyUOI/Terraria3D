@@ -18,9 +18,6 @@ dotnet build
 # Format C# code (excludes addons/)
 dotnet format Terraria3D.sln --exclude addons
 
-# Format GDScript (requires gdtoolkit via uv)
-uv run gdformat src
-
 # Format Python scripts (requires ruff)
 ruff format
 
@@ -31,7 +28,53 @@ python scripts/pre-commit.py
 typos
 ```
 
-**Testing:** The project uses gdUnit4. Tests live in `res://tests/` (currently only a stub `ChunkTest.cs`). Test configuration is in `.runsettings.template`. Tests run in CI via the `MikeSchulze/gdunit4-action` GitHub Action. There is no straightforward CLI command to run tests locally — tests run inside the Godot editor via the gdUnit4 plugin, or via `dotnet test` with the gdUnit4 test adapter.
+## Coding Conventions
+
+### No `GetNode` — use `[Export]` for node references
+
+**Strict rule: never use `GetNode<T>()` or `GetNode()` to obtain node references.** Always declare an exported property and set it in the editor via the `.tscn` file.
+
+```csharp
+// ✗ WRONG — GetNode
+private UIManager _uiManager;
+public override void _Ready()
+{
+    _uiManager = GetNode<UIManager>("/root/StartGame/UIManager");
+}
+
+// ✓ RIGHT — [Export] property, set in editor
+[Export]
+public UIManager UiManager { get; set; }
+```
+
+**Why:** This keeps node wiring visible and editable in the Godot editor rather than buried in code. It also avoids string-based paths that break silently when the scene tree changes.
+
+**No exceptions.** This includes:
+- Child node access (`GetNode("Child")` → `[Export] public Node Child { get; set; }`)
+- Sibling/parent access (`GetNode("../Sibling")` → `[Export] public Node Sibling { get; set; }`)
+- Absolute paths (`GetNode("/root/Foo/Bar")` → `[Export] public Bar Bar { get; set; }`)
+
+### Never edit `.tscn` files directly — always use Godot AI MCP
+
+**Strict rule: `.tscn` scene files must NEVER be modified by hand, via `sed`, `Write`/`Edit` tools, or any Python script.** Scene files are complex and fragile; direct edits risk corrupting resource references, breaking UIDs, and silently losing data (textures, node hierarchy, signal connections).
+
+All scene modifications — adding/removing nodes, changing script references, setting exported properties, updating `node_paths`, or changing signal connections — must go through the **Godot AI MCP** tools (`mcp__godot-ai__*`):
+
+| Task | Use this MCP tool |
+|---|---|
+| Add `[Export]` node references | `batch_execute` with `node_set_property` to set NodePath values |
+| Change script references | `script_attach` or `batch_execute` |
+| Spawn new nodes | `node_create` |
+| Move/reparent nodes | `node_manage` (`reparent`, `move`) |
+| Wire signals | `signal_manage` (`connect`) |
+| Update UI layout | `ui_manage` (`set_anchor_preset`, `build_layout`) |
+
+The `.tscn` format is Godot's internal serialization — Godot itself is the only safe writer. The MCP tools go through the editor's undo system and maintain referential integrity.
+
+**No exceptions.** If the MCP tool doesn't support a needed operation, ask the user — never fall back to direct file edits.
+
+### Testing
+The project uses gdUnit4. Tests live in `res://tests/`. Test configuration is in `.runsettings.template`. Tests run in CI via the `MikeSchulze/gdunit4-action` GitHub Action. There is no straightforward CLI command to run tests locally — tests run inside the Godot editor via the gdUnit4 plugin, or via `dotnet test` with the gdUnit4 test adapter.
 
 ## High-Level Architecture
 
@@ -59,9 +102,8 @@ typos
 - **Inventory:** 5 rows × 10 columns (`Inventory.cs`)
 
 ### UI Layer
-- **C# files** under `src/ui/` — `MainGameUi.cs` (HUD), `InventoryUI.cs` (grid), `StartGame.cs` (main menu), `PlayerChoose.cs`
-- **GDScript files** under `src/ui/*/` — visual widgets (hearts.gd, stars.gd, buttons with hover animations, sun/moon path, loading screen)
-- Shared button behavior via `button_base.gd` (scale-up on hover to 1.4x)
+- **C# files** under `src/ui/` — all UI is now C#: `MainGameUi.cs` (HUD), `InventoryUI.cs` / `ItemGrid.cs` (inventory grid), `StartGame.cs` (main menu), `PlayerChoose.cs` (character selection), `UIManager.cs` (menu navigation), `SettingsPanel.cs` (settings), `Hearts.cs` / `Stars.cs` (health/mana display), `ButtonBase.cs` + subclasses (menu buttons with hover animations), `Loading.cs` (splash screen), and more
+- Shared button behavior via `ButtonBase.cs` (scale-up on hover to 1.4x)
 - Custom theme: `resources/terraria.tres`
 
 ### Localization
@@ -70,14 +112,14 @@ English (`en-US/`) and Simplified Chinese (`zh-Hans/`) via JSON files, converted
 ### Dev Tooling
 - **Python scripts** in `scripts/` managed by `uv` (Python 3.12, deps: pillow, rectpack)
 - `scripts/generate-atlas.py` — packs tile textures into an atlas, outputs JSON metadata
-- `scripts/pre-commit.py` — runs `gdformat`, `dotnet format`, and `ruff format`
+- `scripts/pre-commit.py` — runs `dotnet format` and `ruff format`
 
 ### CI (`.github/workflows/`)
 | Workflow | What it checks |
 |---|---|
 | `ci.yml` | Spell-check with `typos` |
 | `dotnet.yml` | `dotnet restore` → `dotnet format --verify-no-changes` → `dotnet build` → gdUnit4 tests |
-| `gdscript.yml` | `gdformat -c src` |
+| `gdscript.yml` | `gdformat -c src` (skipped if no .gd files found)
 
 ### Editor Plugins
 - **gdUnit4** (`addons/gdUnit4/`) — test framework for GDScript and C#

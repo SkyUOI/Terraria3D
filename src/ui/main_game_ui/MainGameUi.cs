@@ -7,7 +7,11 @@ public partial class MainGameUi : Control
     [Export]
     public Player Player { get; set; }
     [Export]
-    InventoryUI inventoryUI { get; set; }
+    public InventoryUI InventoryUI { get; set; }
+    [Export]
+    public hearts.Hearts Hearts { get; set; }
+    [Export]
+    public stars.Stars Stars { get; set; }
 
     public override void _Ready()
     {
@@ -19,22 +23,22 @@ public partial class MainGameUi : Control
         base._Process(delta);
         if (Player != null)
         {
-            GetNode("Hearts").Call("set_hp", Player.Health);
-            GetNode("Hearts").Call("set_hp_max", Player.HealthMax);
-            GetNode("Stars").Call("set_mp", Player.Mana);
-            GetNode("Stars").Call("set_mp_max", Player.ManaMax);
+            Hearts.SetHp(Player.Health);
+            Hearts.SetHpMax(Player.HealthMax);
+            Stars.SetMp(Player.Mana);
+            Stars.SetMpMax(Player.ManaMax);
         }
         else
         {
-            GetNode("Hearts").Call("set_hp", 100);
-            GetNode("Hearts").Call("set_hp_max", 460);
-            GetNode("Stars").Call("set_mp", 50);
-            GetNode("Stars").Call("set_mp_max", 200);
+            Hearts.SetHp(100);
+            Hearts.SetHpMax(460);
+            Stars.SetMp(50);
+            Stars.SetMpMax(200);
         }
     }
 
     public bool PointInUi(Vector2 point)
     {
-        return GetNode<Control>("Hearts").GetGlobalRect().HasPoint(point) || GetNode<Control>("Stars").GetGlobalRect().HasPoint(point);
+        return Hearts.GetGlobalRect().HasPoint(point) || Stars.GetGlobalRect().HasPoint(point);
     }
 }

@@ -18,18 +18,19 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v4
               with:
-                  dotnet-version: 9.0.x
+                  dotnet-version: 10.0.x
             - name: Restore dependencies
               run: dotnet restore
             - name: Check style
               run: dotnet format Terraria3D.sln --exclude addons --verify-no-changes
             - name: Build
               run: dotnet build --no-restore
-            - uses: MikeSchulze/gdunit4-action@v1
-              with:
-                  godot-version: "4.4.1"
-                  paths: "res://tests"
-                  godot-net: true
-                  dotnet-version: net8.0
-                  publish-report: false
-                  upload-report: false
+            # Self-built godot version, ignore it now
+            # - uses: MikeSchulze/gdunit4-action@v1
+            #   with:
+            #       godot-version: "4.4.1"
+            #       paths: "res://tests"
+            #       godot-net: true
+            #       dotnet-version: net8.0
+            #       publish-report: false
+            #       upload-report: false

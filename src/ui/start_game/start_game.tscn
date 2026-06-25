@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://555w0tkkfvvh"]
+[gd_scene format=3 uid="uid://555w0tkkfvvh"]
 
 [ext_resource type="Script" uid="uid://cb2cqk1bbugia" path="res://src/ui/start_game/StartGame.cs" id="1_0v006"]
 [ext_resource type="Script" uid="uid://dgpst8rten18u" path="res://src/ui/start_game/start.gd" id="1_35y3l"]
@@ -43,7 +43,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wgx8q"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="StartGame" type="Control"]
+[node name="StartGame" type="Control" unique_id=1958359442]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,17 +52,17 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0v006")
 
-[node name="SunPath" type="Path2D" parent="."]
+[node name="SunPath" type="Path2D" parent="." unique_id=1732677288]
 position = Vector2(-47, 361)
 curve = SubResource("Curve2D_jk8po")
 
-[node name="SunPathFollow" type="PathFollow2D" parent="SunPath" node_paths=PackedStringArray("startGame")]
+[node name="SunPathFollow" type="PathFollow2D" parent="SunPath" unique_id=303833480 node_paths=PackedStringArray("startGame")]
 position = Vector2(-44, 76)
 rotation = -1.0016918
 script = ExtResource("3_1giy0")
 startGame = NodePath("../..")
 
-[node name="SunMoon" type="Sprite2D" parent="SunPath/SunPathFollow"]
+[node name="SunMoon" type="Sprite2D" parent="SunPath/SunPathFollow" unique_id=683282875]
 position = Vector2(0.203133, 2.82114)
 texture = ExtResource("4_1giy0")
 vframes = 8
@@ -70,9 +70,9 @@ script = ExtResource("6_bnsb7")
 sun = ExtResource("3_jk8po")
 moons = Array[Texture2D]([ExtResource("4_1giy0"), ExtResource("7_5jnps"), ExtResource("8_u75u3"), ExtResource("9_npkuc"), ExtResource("10_pbyqp"), ExtResource("11_5o22s"), ExtResource("12_3w1g7"), ExtResource("13_jyqst"), ExtResource("14_sdq55")])
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="SunPath/SunPathFollow"]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="SunPath/SunPathFollow" unique_id=1701273854]
 
-[node name="Background" type="Control" parent="."]
+[node name="Background" type="Control" parent="." unique_id=1455909890]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -84,12 +84,12 @@ first_day_layers = Array[Texture2D]([ExtResource("2_u75u3")])
 second_day_layers = Array[Texture2D]([ExtResource("3_5o22s")])
 third_day_layers = Array[Texture2D]([ExtResource("2_pbyqp")])
 
-[node name="Parallax2D3" type="Parallax2D" parent="Background"]
+[node name="Parallax2D3" type="Parallax2D" parent="Background" unique_id=760019293]
 scroll_offset = Vector2(0, 264)
 repeat_size = Vector2(1843.2, 0)
 autoscroll = Vector2(15, 0)
 
-[node name="ThirdLayer" type="Sprite2D" parent="Background/Parallax2D3"]
+[node name="ThirdLayer" type="Sprite2D" parent="Background/Parallax2D3" unique_id=1937925452]
 texture_repeat = 2
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("2_pbyqp")
@@ -97,24 +97,24 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 2048, 533)
 
-[node name="Parallax2D2" type="Parallax2D" parent="Background"]
+[node name="Parallax2D2" type="Parallax2D" parent="Background" unique_id=1387157753]
 scroll_offset = Vector2(0, 315)
 repeat_size = Vector2(2048, 0)
 autoscroll = Vector2(30, 0)
 
-[node name="SecondLayer" type="Sprite2D" parent="Background/Parallax2D2"]
+[node name="SecondLayer" type="Sprite2D" parent="Background/Parallax2D2" unique_id=456612720]
 texture_repeat = 2
 texture = ExtResource("3_5o22s")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 2048, 533)
 
-[node name="Parallax2D" type="Parallax2D" parent="Background"]
+[node name="Parallax2D" type="Parallax2D" parent="Background" unique_id=1313805337]
 scroll_offset = Vector2(0, 355)
 repeat_size = Vector2(3072, 0)
 autoscroll = Vector2(50, 0)
 
-[node name="FirstLayer" type="Sprite2D" parent="Background/Parallax2D"]
+[node name="FirstLayer" type="Sprite2D" parent="Background/Parallax2D" unique_id=859617933]
 texture_repeat = 2
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("2_u75u3")
@@ -123,7 +123,7 @@ region_enabled = true
 region_rect = Rect2(0, 0, 2048, 533)
 region_filter_clip_enabled = true
 
-[node name="Start" type="Button" parent="."]
+[node name="Start" type="Button" parent="." unique_id=1830542477]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -140,7 +140,7 @@ grow_vertical = 2
 text = "start game"
 script = ExtResource("1_35y3l")
 
-[node name="MainButtons" type="VBoxContainer" parent="."]
+[node name="MainButtons" type="VBoxContainer" parent="." unique_id=1972579180]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -154,7 +154,7 @@ offset_bottom = 162.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SinglePlayer" type="Button" parent="MainButtons"]
+[node name="SinglePlayer" type="Button" parent="MainButtons" unique_id=452789790]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -166,7 +166,7 @@ text = "Legacy.LegacyMenu.12"
 flat = true
 script = ExtResource("8_wja57")
 
-[node name="MultiPlayer" type="Button" parent="MainButtons"]
+[node name="MultiPlayer" type="Button" parent="MainButtons" unique_id=748355948]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -178,7 +178,7 @@ text = "Legacy.LegacyMenu.13"
 flat = true
 script = ExtResource("9_wgx8q")
 
-[node name="Achievements" type="Button" parent="MainButtons"]
+[node name="Achievements" type="Button" parent="MainButtons" unique_id=1319711184]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -190,7 +190,7 @@ text = "Legacy.LegacyMenu.131"
 flat = true
 script = ExtResource("10_jk8po")
 
-[node name="Workshop" type="Button" parent="MainButtons"]
+[node name="Workshop" type="Button" parent="MainButtons" unique_id=1244709125]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -202,7 +202,7 @@ text = "Main.UI.Workshop"
 flat = true
 script = ExtResource("11_1giy0")
 
-[node name="Settings" type="Button" parent="MainButtons"]
+[node name="Settings" type="Button" parent="MainButtons" unique_id=1469978759]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -214,7 +214,7 @@ text = "Legacy.LegacyMenu.14"
 flat = true
 script = ExtResource("12_upgu8")
 
-[node name="Credits" type="Button" parent="MainButtons"]
+[node name="Credits" type="Button" parent="MainButtons" unique_id=850584924]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -226,7 +226,7 @@ text = "Main.UI.Credits"
 flat = true
 script = ExtResource("13_tu0qo")
 
-[node name="Exit" type="Button" parent="MainButtons"]
+[node name="Exit" type="Button" parent="MainButtons" unique_id=1638908582]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -238,7 +238,7 @@ text = "Legacy.LegacyMenu.15"
 flat = true
 script = ExtResource("14_vo4f1")
 
-[node name="LocateLogo" type="Control" parent="."]
+[node name="LocateLogo" type="Control" parent="." unique_id=721310121]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -249,11 +249,11 @@ offset_right = 20.0
 offset_bottom = 40.0
 grow_horizontal = 2
 
-[node name="Logo" type="Sprite2D" parent="LocateLogo"]
+[node name="Logo" type="Sprite2D" parent="LocateLogo" unique_id=1312059146]
 texture = ExtResource("4_1xca7")
 script = ExtResource("5_ir4n0")
 
-[node name="Version" type="Label" parent="."]
+[node name="Version" type="Label" parent="." unique_id=484349849]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -265,7 +265,7 @@ theme_override_fonts/font = ExtResource("7_bs5xt")
 theme_override_font_sizes/font_size = 25
 text = "v0.1.0"
 
-[node name="PlayerChoose" type="Control" parent="."]
+[node name="PlayerChoose" type="Control" parent="." unique_id=1580842059]
 visible = false
 layout_mode = 1
 anchor_left = 0.3
@@ -276,15 +276,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("15_wgx8q")
 
-[node name="PlayerListScoll" type="ScrollContainer" parent="PlayerChoose"]
+[node name="PlayerListScoll" type="ScrollContainer" parent="PlayerChoose" unique_id=261098420]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="PlayerList" type="VBoxContainer" parent="PlayerChoose/PlayerListScoll"]
+[node name="PlayerList" type="VBoxContainer" parent="PlayerChoose/PlayerListScoll" unique_id=1942955883]
 layout_mode = 2
 
-[node name="Background" type="Panel" parent="PlayerChoose"]
+[node name="Background" type="Panel" parent="PlayerChoose" unique_id=1908286124]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -292,7 +292,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Mask" type="ColorRect" parent="."]
+[node name="Mask" type="ColorRect" parent="." unique_id=2058949836]
 visible = false
 z_index = 1
 layout_mode = 1

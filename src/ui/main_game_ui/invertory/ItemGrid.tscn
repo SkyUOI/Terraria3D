@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://ditpwma2b32f7"]
+[gd_scene format=3 uid="uid://ditpwma2b32f7"]
 
 [ext_resource type="Texture2D" uid="uid://bqhpvbyhwe5s2" path="res://src/ui/main_game_ui/invertory/CategoryPanel.png" id="1_cqroh"]
 [ext_resource type="Script" uid="uid://cjyeklj6e8oow" path="res://src/ui/main_game_ui/invertory/ItemGrid.cs" id="1_ovyj8"]
 [ext_resource type="FontFile" uid="uid://lequwpycmxoa" path="res://resources/fonts/ANDYB.TTF" id="3_ovyj8"]
 
-[node name="ItemGrid" type="Control" node_paths=PackedStringArray("BackGround", "ItemIcon", "Num", "IndexShow")]
+[node name="ItemGrid" type="Control" unique_id=1225264571 node_paths=PackedStringArray("BackGround", "ItemIcon", "Num", "IndexShow")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -22.0
@@ -20,7 +20,7 @@ ItemIcon = NodePath("ItemIcon")
 Num = NodePath("Num")
 IndexShow = NodePath("Index")
 
-[node name="BackGround" type="TextureRect" parent="."]
+[node name="BackGround" type="TextureRect" parent="." unique_id=654550104]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,7 +31,7 @@ pivot_offset = Vector2(22, 22)
 texture = ExtResource("1_cqroh")
 stretch_mode = 2
 
-[node name="Num" type="Label" parent="."]
+[node name="Num" type="Label" parent="." unique_id=880622766]
 layout_mode = 0
 offset_left = 7.0
 offset_top = 22.0
@@ -40,14 +40,14 @@ offset_bottom = 45.0
 theme_override_fonts/font = ExtResource("3_ovyj8")
 theme_override_font_sizes/font_size = 0
 
-[node name="ItemIcon" type="TextureButton" parent="."]
+[node name="ItemIcon" type="TextureButton" parent="." unique_id=1527972327]
 layout_mode = 0
 offset_right = 44.0
 offset_bottom = 44.0
 pivot_offset = Vector2(22, 22)
 stretch_mode = 3
 
-[node name="Index" type="Label" parent="."]
+[node name="Index" type="Label" parent="." unique_id=42187752]
 layout_mode = 0
 offset_left = 6.0
 offset_top = 2.0

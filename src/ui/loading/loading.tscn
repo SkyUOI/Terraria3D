@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ds3fa5x54sii1"]
+[gd_scene format=3 uid="uid://ds3fa5x54sii1"]
 
 [ext_resource type="Script" uid="uid://cpkt3utyuvb8f" path="res://src/ui/loading/loading.gd" id="1_rm051"]
 [ext_resource type="Texture2D" uid="uid://b3oe24wyvf72f" path="res://src/ui/loading/SplashScreens/Splash_1_0.png" id="2_rhbuj"]
@@ -34,7 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://ctotnybmoqtkk" path="res://src/ui/loading/SplashScreens/Splash_10_1.png" id="31_q67b2"]
 [ext_resource type="Script" uid="uid://dwpmkj1vaggce" path="res://src/ui/loading/tree.gd" id="33_ttenb"]
 
-[node name="Loading" type="Control"]
+[node name="Loading" type="Control" unique_id=379339237]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,7 +46,7 @@ bg_textures = Array[Texture2D]([ExtResource("2_rhbuj"), ExtResource("3_a1lm1"), 
 title_textures = Array[Texture2D]([ExtResource("12_txwo3"), ExtResource("13_ttenb"), ExtResource("14_yr62v"), ExtResource("15_uagln"), ExtResource("16_riyte"), ExtResource("17_1arjr"), ExtResource("18_u7tx6"), ExtResource("19_vihqo"), ExtResource("20_xjrgx"), ExtResource("21_wybos")])
 tree_textures = Array[Texture2D]([ExtResource("22_pu6hb"), ExtResource("23_bobxf"), ExtResource("24_2kuj8"), ExtResource("25_545ts"), ExtResource("26_mo5ma"), ExtResource("27_k0dyl"), ExtResource("28_o58ap"), ExtResource("29_hnmp1"), ExtResource("30_f0aco"), ExtResource("31_q67b2")])
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=2031319320]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -59,7 +59,7 @@ texture = ExtResource("2_rhbuj")
 expand_mode = 1
 stretch_mode = 3
 
-[node name="Title" type="TextureRect" parent="."]
+[node name="Title" type="TextureRect" parent="." unique_id=1692595909]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -76,7 +76,7 @@ pivot_offset = Vector2(960, 540)
 texture = ExtResource("12_txwo3")
 stretch_mode = 5
 
-[node name="Tree" type="TextureRect" parent="."]
+[node name="Tree" type="TextureRect" parent="." unique_id=1017223503]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -90,7 +90,7 @@ grow_vertical = 0
 texture = ExtResource("22_pu6hb")
 script = ExtResource("33_ttenb")
 
-[node name="Mask" type="ColorRect" parent="."]
+[node name="Mask" type="ColorRect" parent="." unique_id=923637866]
 visible = false
 layout_mode = 1
 anchors_preset = 15

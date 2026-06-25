@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cmm8rt65lceqp"]
+[gd_scene format=3 uid="uid://cmm8rt65lceqp"]
 
 [ext_resource type="Script" uid="uid://cqfa4qjosca6m" path="res://src/ui/main_game_ui/MainGameUi.cs" id="1_2c7pp"]
 [ext_resource type="Script" uid="uid://nn44bvbojo0x" path="res://src/ui/main_game_ui/hearts/hearts.gd" id="1_diech"]
@@ -23,7 +23,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bmbn"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="MainGameUI" type="Control" node_paths=PackedStringArray("inventoryUI")]
+[node name="MainGameUI" type="Control" unique_id=1969782537 node_paths=PackedStringArray("inventoryUI")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,7 +33,7 @@ grow_vertical = 2
 script = ExtResource("1_2c7pp")
 inventoryUI = NodePath("InventoryUI")
 
-[node name="Hearts" type="Control" parent="."]
+[node name="Hearts" type="Control" parent="." unique_id=512877184]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -50,18 +50,18 @@ heart_right = ExtResource("6_m6h3f")
 heart_right_fancy = ExtResource("7_mdo0c")
 heart_single_fancy = ExtResource("8_lqmw5")
 
-[node name="Frame" type="Node2D" parent="Hearts"]
+[node name="Frame" type="Node2D" parent="Hearts" unique_id=1941285994]
 
-[node name="HeartRed" type="Node2D" parent="Hearts"]
+[node name="HeartRed" type="Node2D" parent="Hearts" unique_id=2053001390]
 z_index = 1
 
-[node name="HeartYellow" type="Node2D" parent="Hearts"]
+[node name="HeartYellow" type="Node2D" parent="Hearts" unique_id=351804317]
 z_index = 2
 
-[node name="Timer" type="Timer" parent="Hearts"]
+[node name="Timer" type="Timer" parent="Hearts" unique_id=49690378]
 autostart = true
 
-[node name="Label" type="Label" parent="Hearts"]
+[node name="Label" type="Label" parent="Hearts" unique_id=1897595295]
 visible = false
 z_index = 4
 layout_mode = 0
@@ -74,7 +74,7 @@ theme_override_fonts/font = ExtResource("9_b10dl")
 theme_override_font_sizes/font_size = 40
 text = "text"
 
-[node name="Stars" type="Control" parent="."]
+[node name="Stars" type="Control" parent="." unique_id=142015431]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -89,15 +89,15 @@ star_middle = ExtResource("12_b10dl")
 star_down = ExtResource("13_2c7pp")
 star_fill = ExtResource("14_lqmw5")
 
-[node name="Frame" type="Node2D" parent="Stars"]
+[node name="Frame" type="Node2D" parent="Stars" unique_id=507837327]
 
-[node name="Star" type="Node2D" parent="Stars"]
+[node name="Star" type="Node2D" parent="Stars" unique_id=1027454227]
 z_index = 1
 
-[node name="Timer" type="Timer" parent="Stars"]
+[node name="Timer" type="Timer" parent="Stars" unique_id=1134985550]
 autostart = true
 
-[node name="Label" type="Label" parent="Stars"]
+[node name="Label" type="Label" parent="Stars" unique_id=994937803]
 z_index = 4
 layout_mode = 0
 offset_right = 40.0
@@ -106,7 +106,7 @@ scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = ExtResource("9_b10dl")
 theme_override_font_sizes/font_size = 40
 
-[node name="InventoryUI" type="GridContainer" parent="."]
+[node name="InventoryUI" type="GridContainer" parent="." unique_id=1079215046]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.2
@@ -119,7 +119,7 @@ columns = 10
 script = ExtResource("20_4oj5a")
 ItemGridScene = ExtResource("18_6bmbn")
 
-[node name="Settings" type="Button" parent="."]
+[node name="Settings" type="Button" parent="." unique_id=1286251416]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.883868

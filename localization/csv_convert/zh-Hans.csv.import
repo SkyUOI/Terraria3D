@@ -15,3 +15,5 @@ dest_files=["res://localization/csv_convert/zh-Hans.zh_Hans.translation"]
 
 compress=true
 delimiter=0
+unescape_keys=false
+unescape_translations=true

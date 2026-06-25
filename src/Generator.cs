@@ -35,7 +35,7 @@ partial class Generator : VoxelGeneratorScript
                 var height = ConvertNoiseToHeight(Noise.GetNoise2Dv(pos2d));
                 if (height >= originInVoxels.Y)
                 {
-                    outBuffer.FillArea((ulong)BlocksLibrary.Dirt, new Vector3I(i, 0, j), new Vector3I(i + 1, Math.Min(height - originInVoxels.Y, Constants.ChunkY - 1) + 1, j + 1), (uint)VoxelBuffer.ChannelId.ChannelType);
+                    outBuffer.FillArea((ulong)Blocks.Model(BlockType.Dirt), new Vector3I(i, 0, j), new Vector3I(i + 1, Math.Min(height - originInVoxels.Y, Constants.ChunkY - 1) + 1, j + 1), (uint)VoxelBuffer.ChannelId.ChannelType);
                 }
             }
         }

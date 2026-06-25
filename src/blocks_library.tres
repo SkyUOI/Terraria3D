@@ -18,6 +18,7 @@ mesh_ortho_rotation_index = 10
 
 [sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_8441h"]
 resource_name = "grass"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
 
 [resource]
 models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8uh7m"), SubResource("VoxelBlockyModelCube_6uqi0"), SubResource("VoxelBlockyModelCube_8441h")])

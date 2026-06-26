@@ -74,9 +74,19 @@ public partial class Main : Node3D
     public Control MainGameUi { get; set; }
     public RandomNumberGenerator WorldRandom;
     [Export]
-    Player Player { get; set; }
+    public Player Player { get; set; }
     [Export]
     bool RecreateWorld { get; set; }
+
+    // --- Entity system ---
+    [Export]
+    public Node3D Entities { get; set; }
+    [Export]
+    public entities.spawning.SpawnManager SpawnManager { get; set; }
+
+    /// <summary>Game time in minutes (0–1440). 0 = dawn.</summary>
+    public float WorldTime { get; private set; } = 360f; // start at 6:00 AM
+    public bool IsNight => WorldTime < 270 || WorldTime > 1170;
 
     private int _renderChunkDistance = 9;
 

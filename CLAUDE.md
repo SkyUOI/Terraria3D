@@ -32,7 +32,7 @@ typos
 
 ### No `GetNode` — use `[Export]` for node references
 
-**Strict rule: never use `GetNode<T>()` or `GetNode()` to obtain node references.** Always declare an exported property and set it in the editor via the `.tscn` file.
+**Strict rule: never use `GetNode<T>()`, `GetNode()`, or `FindChild()` to obtain node references.** Always declare an exported property and set it in the editor via the `.tscn` file.
 
 ```csharp
 // ✗ WRONG — GetNode
@@ -53,6 +53,38 @@ public UIManager UiManager { get; set; }
 - Child node access (`GetNode("Child")` → `[Export] public Node Child { get; set; }`)
 - Sibling/parent access (`GetNode("../Sibling")` → `[Export] public Node Sibling { get; set; }`)
 - Absolute paths (`GetNode("/root/Foo/Bar")` → `[Export] public Bar Bar { get; set; }`)
+- **No auto-discovery fallbacks** — never use `FindChild()`, `FindChildren()`, or `GetTree().GetFirstNodeInGroup()` as a fallback when an `[Export]` is null. If the reference isn't wired in the editor, let it fail — that's a scene configuration bug that should be caught, not silently patched at runtime.
+
+### No configuring Timer or signals in code — use the editor
+
+**Strict rule: Timer properties and signal connections must be configured in the Godot editor, not in C# code.**
+
+```csharp
+// ✗ WRONG — configuring Timer in _Ready()
+public override void _Ready()
+{
+    _spawnTimer.OneShot = false;
+    _spawnTimer.WaitTime = 2.0f;
+    _spawnTimer.Start();
+    _spawnTimer.Timeout += OnSpawnTimerTimeout;
+}
+
+// ✓ RIGHT — Timer properties set in editor, signal connected in editor
+// The code only declares the [Export] and the handler method.
+[Export]
+public Timer SpawnTimer { get; set; }
+
+private void OnSpawnTimerTimeout()
+{
+    // ...
+}
+```
+
+**What goes in the editor:**
+- Timer node: `wait_time`, `one_shot`, `autostart`
+- Signal connections: e.g. Timer's `timeout` → parent's `OnSpawnTimerTimeout`
+
+**No exceptions.** Do not call `Start()`, `Stop()`, or connect signals on Timer/other nodes in code unless the logic genuinely requires dynamic runtime control (e.g. pausing during cutscenes). Static configuration belongs in the `.tscn`.
 
 ### Never edit `.tscn` files directly — always use Godot AI MCP
 
@@ -62,12 +94,14 @@ All scene modifications — adding/removing nodes, changing script references, s
 
 | Task | Use this MCP tool |
 |---|---|
-| Add `[Export]` node references | `batch_execute` with `node_set_property` to set NodePath values |
+| Add `[Export]` node references | **Not supported by MCP** — user must drag-and-drop in the editor Inspector |
 | Change script references | `script_attach` or `batch_execute` |
 | Spawn new nodes | `node_create` |
 | Move/reparent nodes | `node_manage` (`reparent`, `move`) |
 | Wire signals | `signal_manage` (`connect`) |
 | Update UI layout | `ui_manage` (`set_anchor_preset`, `build_layout`) |
+| Set node properties (value types) | `node_set_property` or `batch_execute` `set_property` |
+| Set Timer properties | `set_property` (e.g. `wait_time`, `one_shot`, `autostart`) |
 
 The `.tscn` format is Godot's internal serialization — Godot itself is the only safe writer. The MCP tools go through the editor's undo system and maintain referential integrity.
 

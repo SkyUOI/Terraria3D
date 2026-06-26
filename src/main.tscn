@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://mqwsbdpmw7ri" path="res://src/player.tscn" id="1_eewff"]
 [ext_resource type="Script" uid="uid://dyltbg4xwo7xn" path="res://src/Main.cs" id="1_fyndt"]
 [ext_resource type="PackedScene" uid="uid://cmm8rt65lceqp" path="res://src/ui/main_game_ui/main_game_ui.tscn" id="4_3cfgd"]
+[ext_resource type="Script" uid="uid://dhd22yrddqrh5" path="res://src/entities/spawning/SpawnManager.cs" id="6_5mrjc"]
 [ext_resource type="VoxelBlockyLibrary" uid="uid://ce2a0g58mq1hy" path="res://src/blocks_library.tres" id="6_kmhfv"]
 [ext_resource type="VoxelGeneratorScript" uid="uid://bh5830o64osrc" path="res://src/generator.tres" id="6_rlaii"]
 
@@ -21,10 +22,12 @@ tonemap_mode = 2
 [sub_resource type="VoxelMesherBlocky" id="VoxelMesherBlocky_fyndt"]
 library = ExtResource("6_kmhfv")
 
-[node name="Main" type="Node3D" unique_id=316245344 node_paths=PackedStringArray("MainGameUi", "Player")]
+[node name="Main" type="Node3D" unique_id=316245344 node_paths=PackedStringArray("MainGameUi", "Player", "Entities", "SpawnManager")]
 script = ExtResource("1_fyndt")
 MainGameUi = NodePath("MainGameUI")
 Player = NodePath("Player")
+Entities = NodePath("Entities")
+SpawnManager = NodePath("SpawnManager")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1528762187]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
@@ -33,7 +36,7 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1364938509]
 environment = SubResource("Environment_rlaii")
 
-[node name="Player" parent="." unique_id=2051381744 node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist"] instance=ExtResource("1_eewff")]
+[node name="Player" parent="." unique_id=2051381744 node_paths=PackedStringArray("_main", "_mainGameUi") groups=["Persist", "player"] instance=ExtResource("1_eewff")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 _main = NodePath("..")
 _mainGameUi = NodePath("../MainGameUI")
@@ -52,4 +55,16 @@ mesher = SubResource("VoxelMesherBlocky_fyndt")
 run_stream_in_editor = false
 mesh_block_size = 32
 
+[node name="Entities" type="Node3D" parent="." unique_id=1374651486]
+
+[node name="SpawnManager" type="Node3D" parent="." unique_id=1982228250 node_paths=PackedStringArray("SpawnTimer", "Target")]
+script = ExtResource("6_5mrjc")
+SpawnTimer = NodePath("SpawnTimer")
+Target = NodePath("../Player")
+
+[node name="SpawnTimer" type="Timer" parent="SpawnManager" unique_id=1116078522]
+wait_time = 2.0
+autostart = true
+
 [connection signal="timeout" from="LoadPLayer" to="Player" method="StartRunning"]
+[connection signal="timeout" from="SpawnManager/SpawnTimer" to="SpawnManager" method="OnSpawnTimerTimeout"]

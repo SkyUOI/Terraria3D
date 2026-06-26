@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cas3abo5shxq0"]
+
+[ext_resource type="Script" uid="uid://bbo464vyfkakd" path="res://src/entities/enemies/Enemy.cs" id="1_bpr7o"]
+[ext_resource type="Script" uid="uid://b5tsstbljf5ms" path="res://src/entities/components/HealthComponent.cs" id="2_bis50"]
+[ext_resource type="Script" uid="uid://bus4lr5qh3cvi" path="res://src/entities/components/AiController.cs" id="3_vg7io"]
+[ext_resource type="Script" uid="uid://cn1vdxsltxccd" path="res://src/entities/components/LootComponent.cs" id="4_nnqmv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_85yxh"]
+size = Vector3(0.8, 0.8, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stat2"]
+size = Vector3(0.8, 0.8, 0.8)
+
+[node name="GreenSlime" type="CharacterBody3D" unique_id=851985827 node_paths=PackedStringArray("HitCollider", "BodyMesh", "Health", "Ai", "Loot")]
+script = ExtResource("1_bpr7o")
+TypeId = "GreenSlime"
+HitCollider = NodePath("HitCollider")
+BodyMesh = NodePath("BodyMesh")
+Health = NodePath("Health")
+Ai = NodePath("Ai")
+Loot = NodePath("Loot")
+
+[node name="HitCollider" type="CollisionShape3D" parent="." unique_id=1468693007]
+shape = SubResource("BoxShape3D_85yxh")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=528711405]
+mesh = SubResource("BoxMesh_stat2")
+
+[node name="Health" type="Node" parent="." unique_id=10941443]
+script = ExtResource("2_bis50")
+
+[node name="Ai" type="Node" parent="." unique_id=1811060371]
+script = ExtResource("3_vg7io")
+
+[node name="Loot" type="Node" parent="." unique_id=1746492761]
+script = ExtResource("4_nnqmv")

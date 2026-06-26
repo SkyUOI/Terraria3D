@@ -1,4 +1,5 @@
 using Godot;
+using Terraria3D.achievements;
 using Terraria3D.entities.components;
 using Terraria3D.items;
 
@@ -179,6 +180,9 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
     public virtual void OnDeath()
     {
         GD.Print($"[Entity] {TypeId} died");
+
+        // Trigger first-kill achievement
+        AchievementManager.Unlock("FIRST_KILL");
 
         if (Loot != null && DroppedItemScene != null && Player != null)
         {

@@ -46,7 +46,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wgx8q"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[node name="StartGame" type="Control" unique_id=1958359442]
+[node name="StartGame" type="Control" unique_id=1958359442 node_paths=PackedStringArray("PlayerChoose", "UIManager")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,6 +54,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0v006")
+PlayerChoose = NodePath("PlayerChoose")
+UIManager = NodePath("UIManager")
 
 [node name="SunPath" type="Path2D" parent="." unique_id=1732677288]
 position = Vector2(-47, 361)
@@ -70,8 +72,8 @@ position = Vector2(0.203133, 2.82114)
 texture = ExtResource("4_1giy0")
 vframes = 8
 script = ExtResource("6_bnsb7")
-sun = ExtResource("3_jk8po")
-moons = Array[Texture2D]([ExtResource("4_1giy0"), ExtResource("7_5jnps"), ExtResource("8_u75u3"), ExtResource("9_npkuc"), ExtResource("10_pbyqp"), ExtResource("11_5o22s"), ExtResource("12_3w1g7"), ExtResource("13_jyqst"), ExtResource("14_sdq55")])
+Sun = ExtResource("3_jk8po")
+Moons = Array[Texture2D]([ExtResource("4_1giy0"), ExtResource("7_5jnps"), ExtResource("8_u75u3"), ExtResource("9_npkuc"), ExtResource("10_pbyqp"), ExtResource("11_5o22s"), ExtResource("12_3w1g7"), ExtResource("13_jyqst"), ExtResource("14_sdq55")])
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="SunPath/SunPathFollow" unique_id=1701273854]
 
@@ -83,9 +85,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("14_5o22s")
-first_day_layers = Array[Texture2D]([ExtResource("2_u75u3")])
-second_day_layers = Array[Texture2D]([ExtResource("3_5o22s")])
-third_day_layers = Array[Texture2D]([ExtResource("2_pbyqp")])
+FirstDayLayers = Array[Texture2D]([ExtResource("2_u75u3")])
+SecondDayLayers = Array[Texture2D]([ExtResource("3_5o22s")])
+ThirdDayLayers = Array[Texture2D]([ExtResource("2_pbyqp")])
 
 [node name="Parallax2D3" type="Parallax2D" parent="Background" unique_id=760019293]
 scroll_offset = Vector2(0, 264)
@@ -158,8 +160,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SinglePlayer" type="Button" parent="MainButtons" unique_id=452789790 node_paths=PackedStringArray("PlayerChoose", "UiManager")]
-PlayerChoose = NodePath("../../PlayerChoose")
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -170,9 +170,10 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Legacy.LegacyMenu.12"
 flat = true
 script = ExtResource("8_wja57")
+PlayerChoose = NodePath("../../PlayerChoose")
+UiManager = NodePath("../../UIManager")
 
 [node name="MultiPlayer" type="Button" parent="MainButtons" unique_id=748355948 node_paths=PackedStringArray("UiManager")]
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -183,9 +184,9 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Legacy.LegacyMenu.13"
 flat = true
 script = ExtResource("9_wgx8q")
+UiManager = NodePath("../../UIManager")
 
 [node name="Achievements" type="Button" parent="MainButtons" unique_id=1319711184 node_paths=PackedStringArray("UiManager")]
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -196,9 +197,9 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Legacy.LegacyMenu.131"
 flat = true
 script = ExtResource("10_jk8po")
+UiManager = NodePath("../../UIManager")
 
 [node name="Workshop" type="Button" parent="MainButtons" unique_id=1244709125 node_paths=PackedStringArray("UiManager")]
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -209,9 +210,9 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Main.UI.Workshop"
 flat = true
 script = ExtResource("11_1giy0")
+UiManager = NodePath("../../UIManager")
 
 [node name="Settings" type="Button" parent="MainButtons" unique_id=1469978759 node_paths=PackedStringArray("UiManager")]
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -222,9 +223,9 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Legacy.LegacyMenu.14"
 flat = true
 script = ExtResource("12_upgu8")
+UiManager = NodePath("../../UIManager")
 
 [node name="Credits" type="Button" parent="MainButtons" unique_id=850584924 node_paths=PackedStringArray("UiManager")]
-UiManager = NodePath("../../UIManager")
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.568627, 0.568627, 0.576471, 1)
@@ -235,6 +236,7 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_wja57")
 text = "Main.UI.Credits"
 flat = true
 script = ExtResource("13_tu0qo")
+UiManager = NodePath("../../UIManager")
 
 [node name="Exit" type="Button" parent="MainButtons" unique_id=1638908582]
 layout_mode = 2
@@ -297,8 +299,6 @@ MainButtons = NodePath("../MainButtons")
 PlayerChoosePanel = NodePath("../PlayerChoose")
 
 [node name="SettingsPanel" type="Control" parent="." unique_id=1892757352 node_paths=PackedStringArray("UIManager", "StartGame")]
-UIManager = NodePath("../UIManager")
-StartGame = NodePath("..")
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -307,6 +307,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("32_80eri")
+UIManager = NodePath("../UIManager")
+StartGame = NodePath("..")
 
 [node name="PanelContainer" type="PanelContainer" parent="SettingsPanel" unique_id=895916242]
 layout_mode = 1
@@ -429,13 +431,13 @@ text = "Legacy.LegacyMenu.5"
 flat = true
 
 [node name="CreditsPanel" type="Control" parent="." unique_id=1608837481 node_paths=PackedStringArray("UIManager", "BackButton")]
-UIManager = NodePath("../UIManager")
-BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 visible = false
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("33_iel43")
+UIManager = NodePath("../UIManager")
+BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 
 [node name="PanelContainer" type="PanelContainer" parent="CreditsPanel" unique_id=3995297]
 layout_mode = 0
@@ -486,13 +488,13 @@ text = "Legacy.LegacyMenu.5"
 flat = true
 
 [node name="MultiplayerPanel" type="Control" parent="." unique_id=1953547855 node_paths=PackedStringArray("UIManager", "BackButton")]
-UIManager = NodePath("../UIManager")
-BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 visible = false
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("33_iel43")
+UIManager = NodePath("../UIManager")
+BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 
 [node name="PanelContainer" type="PanelContainer" parent="MultiplayerPanel" unique_id=1250801115]
 layout_mode = 0
@@ -533,13 +535,13 @@ text = "Legacy.LegacyMenu.5"
 flat = true
 
 [node name="AchievementsPanel" type="Control" parent="." unique_id=1931935160 node_paths=PackedStringArray("UIManager", "BackButton")]
-UIManager = NodePath("../UIManager")
-BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 visible = false
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("33_iel43")
+UIManager = NodePath("../UIManager")
+BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 
 [node name="PanelContainer" type="PanelContainer" parent="AchievementsPanel" unique_id=2070239141]
 layout_mode = 0
@@ -580,13 +582,13 @@ text = "Legacy.LegacyMenu.5"
 flat = true
 
 [node name="WorkshopPanel" type="Control" parent="." unique_id=301032884 node_paths=PackedStringArray("UIManager", "BackButton")]
-UIManager = NodePath("../UIManager")
-BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 visible = false
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("33_iel43")
+UIManager = NodePath("../UIManager")
+BackButton = NodePath("PanelContainer/Panel/VBoxContainer/BackButton")
 
 [node name="PanelContainer" type="PanelContainer" parent="WorkshopPanel" unique_id=1753522993]
 layout_mode = 0

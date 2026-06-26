@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using Godot;
 using System;
+using Terraria3D.achievements;
 using System.Text.Json.Serialization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -110,6 +111,7 @@ public partial class Main : Node3D
         }
 
         MouseInGame();
+        AchievementManager.Load();
         WorldFile.LoadOrCreate(_worldPath, this);
         MainGameUi.InventoryUI.Player = Player;
     }

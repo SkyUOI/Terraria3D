@@ -10,12 +10,15 @@ public partial class StartGame : Control
     public double DayTime { get; set; } = 0;
     [Export]
     public PlayerChoose PlayerChoose { get; set; }
+    [Export]
+    public UIManager UIManager { get; set; }
 
 
     public override void _Ready()
     {
         base._Ready();
         PlayerChoose.Hide();
+        PlayerChoose.UIManager = UIManager;
         // Apply saved settings on startup
         GameSettings.Apply();
     }

@@ -1,6 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 using Terraria3D;
+using Terraria3D.ui.start_game;
 
 public partial class PlayerChoose : Control
 {
@@ -15,6 +16,7 @@ public partial class PlayerChoose : Control
     private Button _playButton = null!;
     private Button _deleteButton = null!;
     private string _selectedPlayerName = string.Empty;
+    public UIManager UIManager;
 
     public void LoadAndShow()
     {
@@ -132,8 +134,6 @@ public partial class PlayerChoose : Control
 
     public void OnBackPressed()
     {
-        // Call UIManager.go_back() on the GDScript side
-        var uiManager = GetNode("/root/StartGame/UIManager");
-        uiManager.Call("go_back");
+        UIManager.GoBack();
     }
 }

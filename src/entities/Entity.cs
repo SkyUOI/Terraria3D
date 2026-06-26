@@ -1,5 +1,6 @@
 using Godot;
 using Terraria3D.entities.components;
+using Terraria3D.items;
 
 namespace Terraria3D.entities;
 
@@ -30,6 +31,14 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
 
     [Export]
     public LootComponent Loot { get; set; }
+
+    /// <summary>Scene template for dropped items (set by SpawnManager).</summary>
+    [Export]
+    public PackedScene DroppedItemScene { get; set; }
+
+    /// <summary>Reference to the player (set by SpawnManager) for item pickup.</summary>
+    [Export]
+    public Player Player { get; set; }
 
     // --- Exported stats (overridden by EntityRegistry on spawn) ---
     [Export]
@@ -161,11 +170,21 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
     {
         GD.Print($"[Entity] {TypeId} died");
 
-        if (Loot != null)
+        if (Loot != null && DroppedItemScene != null && Player != null)
         {
             var drops = Loot.Roll();
             foreach (var (itemId, amount) in drops)
+            {
+                if (!ItemRegistry.Exists(itemId)) continue;
+
+                var item = DroppedItemScene.Instantiate<DroppedItem>();
+                item.ItemId = itemId;
+                item.Amount = amount;
+                item.Target = Player;
+                item.GlobalPosition = GlobalPosition;
+                GetParent().AddChild(item);
                 GD.Print($"[Entity] {TypeId} dropped {amount}x {itemId}");
+            }
         }
 
         QueueFree();

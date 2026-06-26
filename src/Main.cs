@@ -6,6 +6,7 @@ using System;
 using System.Text.Json.Serialization;
 using System.Linq;
 using System.Threading.Tasks;
+using Terraria3D.ui.main_game_ui;
 
 namespace Terraria3D;
 
@@ -71,7 +72,7 @@ public partial class Main : Node3D
     static string _worldPath = "Test";
     public string WorldName { get; set; }
     [Export]
-    public Control MainGameUi { get; set; }
+    public MainGameUi MainGameUi { get; set; }
     public RandomNumberGenerator WorldRandom;
     [Export]
     public Player Player { get; set; }
@@ -110,6 +111,7 @@ public partial class Main : Node3D
 
         MouseInGame();
         WorldFile.LoadOrCreate(_worldPath, this);
+        MainGameUi.InventoryUI.Player = Player;
     }
 
     public override void _Process(double delta)

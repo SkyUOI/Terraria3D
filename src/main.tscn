@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dhd22yrddqrh5" path="res://src/entities/spawning/SpawnManager.cs" id="6_5mrjc"]
 [ext_resource type="VoxelBlockyLibrary" uid="uid://ce2a0g58mq1hy" path="res://src/blocks_library.tres" id="6_kmhfv"]
 [ext_resource type="VoxelGeneratorScript" uid="uid://bh5830o64osrc" path="res://src/generator.tres" id="6_rlaii"]
+[ext_resource type="PackedScene" uid="uid://oep2w05ea2cs" path="res://src/items/dropped_item.tscn" id="7_rlaii"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fyndt"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -57,11 +58,14 @@ mesh_block_size = 32
 
 [node name="Entities" type="Node3D" parent="." unique_id=1374651486]
 
-[node name="SpawnManager" type="Node3D" parent="." unique_id=1982228250 node_paths=PackedStringArray("SpawnTimer", "Target", "Main")]
+[node name="SpawnManager" type="Node3D" parent="." unique_id=1982228250 node_paths=PackedStringArray("SpawnTimer", "Target", "Main", "Terrain", "Player")]
 script = ExtResource("6_5mrjc")
 SpawnTimer = NodePath("SpawnTimer")
 Target = NodePath("../Player")
 Main = NodePath("..")
+Terrain = NodePath("../Terrarin")
+DroppedItemScene = ExtResource("7_rlaii")
+Player = NodePath("../Player")
 
 [node name="SpawnTimer" type="Timer" parent="SpawnManager" unique_id=1116078522]
 wait_time = 2.0

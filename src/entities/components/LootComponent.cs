@@ -21,6 +21,18 @@ public partial class LootComponent : Node
     public LootEntry[] LootTable { get; set; } = [];
 
     /// <summary>
+    /// Default loot table for known entity types. Called by SpawnManager
+    /// to populate the loot table when an entity is spawned.
+    /// </summary>
+    public static LootEntry[] GetDefaultTable(string entityId) => entityId switch
+    {
+        "GreenSlime" => [new LootEntry("Gel", 1.0f, 1, 3)],
+        "BlueSlime"  => [new LootEntry("Gel", 1.0f, 2, 5)],
+        "DemonEye"   => [new LootEntry("Gel", 0.5f, 1, 2)],
+        _ => []
+    };
+
+    /// <summary>
     /// Roll the drop table and return the IDs of items that dropped.
     /// Each entry is rolled independently.
     /// </summary>

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://oep2w05ea2cs"]
+
+[ext_resource type="Script" path="res://src/items/DroppedItem.cs" id="1_yk23q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vdtep"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b40o6"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ky84t"]
+radius = 2.0
+
+[node name="DroppedItem" type="RigidBody3D" unique_id=2007682631]
+gravity_scale = 1.5
+lock_rotation = true
+script = ExtResource("1_yk23q")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=978902737]
+shape = SubResource("BoxShape3D_vdtep")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1701636914]
+mesh = SubResource("BoxMesh_b40o6")
+
+[node name="PickupArea" type="Area3D" parent="." unique_id=1242607782]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupArea" unique_id=875310621]
+shape = SubResource("SphereShape3D_ky84t")
+
+[node name="DespawnTimer" type="Timer" parent="." unique_id=1070589969]
+wait_time = 300.0
+one_shot = true

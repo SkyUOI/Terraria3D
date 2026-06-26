@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using Terraria3D.entities.components;
 
 namespace Terraria3D.entities.spawning;
 
@@ -57,6 +58,14 @@ public partial class SpawnManager : Node3D
     /// <summary>Reference to the VoxelTerrain for biome block counting.</summary>
     [Export]
     public VoxelTerrain Terrain { get; set; }
+
+    /// <summary>Scene template for dropped items assigned to spawned entities.</summary>
+    [Export]
+    public PackedScene DroppedItemScene { get; set; }
+
+    /// <summary>Reference to the Player (not just Node3D) for item pickup wiring.</summary>
+    [Export]
+    public Player Player { get; set; }
 
     /// <summary>Parent node under which entities are spawned.</summary>
     [Export]
@@ -198,6 +207,14 @@ public partial class SpawnManager : Node3D
         instance.TypeId = typeId;
         instance.GlobalPosition = position;
         instance.GlobalRotation = new Vector3(0, (float)GD.RandRange(0, Mathf.Pi * 2), 0);
+
+        // Wire drop system
+        instance.DroppedItemScene = DroppedItemScene;
+        instance.Player = Player;
+
+        // Configure default loot table
+        if (instance.Loot != null)
+            instance.Loot.LootTable = LootComponent.GetDefaultTable(typeId);
 
         EntitiesContainer.AddChild(instance);
         _activeEntities.Add(instance);

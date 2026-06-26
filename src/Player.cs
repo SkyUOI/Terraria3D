@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Godot;
+using Terraria3D.items;
 
 namespace Terraria3D;
 
@@ -40,6 +41,14 @@ public partial class Player : CharacterBody3D
 
     [Export]
     public bool Enable;
+
+    // ── Inventory & Equipment ─────────────────────────────────────────
+
+    /// <summary>Player inventory (50 main + coins + ammo).</summary>
+    public Inventory Inventory { get; private set; } = new();
+
+    /// <summary>Player equipment (armor, accessories, vanity, etc.).</summary>
+    public Equipment Equipment { get; private set; } = new();
 
     public override void _Ready()
     {
@@ -88,6 +97,32 @@ public partial class Player : CharacterBody3D
             {
                 _main.MouseInGame();
             }
+            // Scroll wheel → cycle hotbar
+            else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.WheelUp)
+            {
+                Inventory.SelectedIndex = (Inventory.SelectedIndex + 9) % Inventory.HotbarSize;
+            }
+            else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.WheelDown)
+            {
+                Inventory.SelectedIndex = (Inventory.SelectedIndex + 1) % Inventory.HotbarSize;
+            }
+        }
+        // Number keys 1-9,0 → select hotbar slot
+        else if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+        {
+            switch (keyEvent.Keycode)
+            {
+                case Key.Key1: Inventory.SelectedIndex = 0; break;
+                case Key.Key2: Inventory.SelectedIndex = 1; break;
+                case Key.Key3: Inventory.SelectedIndex = 2; break;
+                case Key.Key4: Inventory.SelectedIndex = 3; break;
+                case Key.Key5: Inventory.SelectedIndex = 4; break;
+                case Key.Key6: Inventory.SelectedIndex = 5; break;
+                case Key.Key7: Inventory.SelectedIndex = 6; break;
+                case Key.Key8: Inventory.SelectedIndex = 7; break;
+                case Key.Key9: Inventory.SelectedIndex = 8; break;
+                case Key.Key0: Inventory.SelectedIndex = 9; break;
+            }
         }
     }
 
@@ -127,6 +162,14 @@ public partial class Player : CharacterBody3D
     }
 }
 
+/// <summary>Lightweight serializable item representation for save files.</summary>
+[Serializable]
+public class PlrItemData
+{
+    public string Id { get; set; } = "";
+    public int Amount { get; set; }
+}
+
 [Serializable]
 public class PlrData(string name)
 {
@@ -139,19 +182,67 @@ public class PlrData(string name)
     public string Difficulty { get; set; } = "Classic";
     public long PlayTimeSeconds { get; set; } = 0;
     public string CreatedAt { get; set; } = DateTime.Now.ToString("o");
+
+    // ── Inventory persistence ─────────────────────────────────────
+    public PlrItemData[] MainInventory { get; set; } = [];
+    public PlrItemData[] CoinSlots { get; set; } = [];
+    public PlrItemData[] AmmoSlots { get; set; } = [];
+    public int SelectedIndex { get; set; }
+
+    // ── Equipment persistence ─────────────────────────────────────
+    public PlrItemData? HeadArmor { get; set; }
+    public PlrItemData? BodyArmor { get; set; }
+    public PlrItemData? LegsArmor { get; set; }
+    public PlrItemData[] Accessories { get; set; } = [];
+    public PlrItemData[] VanityArmor { get; set; } = [];
+    public PlrItemData[] VanityAccessories { get; set; } = [];
+    public PlrItemData? Pet { get; set; }
+    public PlrItemData? LightPet { get; set; }
+    public PlrItemData? Minecart { get; set; }
+    public PlrItemData? Mount { get; set; }
+    public PlrItemData? Hook { get; set; }
 }
 
 public class PlrFile
 {
     public const string PlrDir = "user://Players";
 
+    /// <summary>Create a new player save file.</summary>
     public void CreatePlayer(string name)
     {
         var plrDir = ProjectSettings.GlobalizePath(PlrDir);
         Directory.CreateDirectory(plrDir);
-        using var f = File.Create(plrDir.PathJoin(name + ".plr"));
         var data = new PlrData(name);
-        f.Write(JsonSerializer.SerializeToUtf8Bytes(data));
+        WriteFile(name, data);
+    }
+
+    /// <summary>Save the player's current state (including inventory + equipment).</summary>
+    public void Save(string name, Player player)
+    {
+        var data = new PlrData(name)
+        {
+            Position = player.Position,
+            Health = player.Health,
+            HealthMax = player.HealthMax,
+            Mana = player.Mana,
+            ManaMax = player.ManaMax,
+            SelectedIndex = player.Inventory.SelectedIndex,
+            MainInventory = SerializeSlots(player.Inventory.Main),
+            CoinSlots = SerializeSlots(player.Inventory.Coins),
+            AmmoSlots = SerializeSlots(player.Inventory.Ammo),
+            HeadArmor = SerializeSlot(player.Equipment.HeadArmor),
+            BodyArmor = SerializeSlot(player.Equipment.BodyArmor),
+            LegsArmor = SerializeSlot(player.Equipment.LegsArmor),
+            Accessories = SerializeSlots(player.Equipment.Accessories),
+            VanityArmor = SerializeSlots(player.Equipment.VanityArmor),
+            VanityAccessories = SerializeSlots(player.Equipment.VanityAccessories),
+            Pet = SerializeSlot(player.Equipment.Pet),
+            LightPet = SerializeSlot(player.Equipment.LightPet),
+            Minecart = SerializeSlot(player.Equipment.Minecart),
+            Mount = SerializeSlot(player.Equipment.Mount),
+            Hook = SerializeSlot(player.Equipment.Hook),
+        };
+        WriteFile(name, data);
     }
 
     public void OpenPlayer(string name, Player player)
@@ -159,12 +250,35 @@ public class PlrFile
         Load(name, player);
     }
 
+    /// <summary>Load player data including inventory and equipment.</summary>
     public void Load(string name, Player player)
     {
-        using var f = File.OpenRead(PlrDir.PathJoin(name + ".plr"));
+        var filePath = GetFilePath(name);
+        using var f = File.OpenRead(filePath);
         var data = JsonSerializer.Deserialize<PlrData>(f);
+        if (data == null) return;
+
         player.Position = data.Position;
         player.PlayerName = data.Name;
+
+        // Restore inventory
+        DeserializeInto(data.MainInventory, player.Inventory.Main);
+        DeserializeInto(data.CoinSlots, player.Inventory.Coins);
+        DeserializeInto(data.AmmoSlots, player.Inventory.Ammo);
+        player.Inventory.SelectedIndex = data.SelectedIndex;
+
+        // Restore equipment
+        DeserializeInto(data.HeadArmor, player.Equipment.HeadArmor);
+        DeserializeInto(data.BodyArmor, player.Equipment.BodyArmor);
+        DeserializeInto(data.LegsArmor, player.Equipment.LegsArmor);
+        DeserializeInto(data.Accessories, player.Equipment.Accessories);
+        DeserializeInto(data.VanityArmor, player.Equipment.VanityArmor);
+        DeserializeInto(data.VanityAccessories, player.Equipment.VanityAccessories);
+        DeserializeInto(data.Pet, player.Equipment.Pet);
+        DeserializeInto(data.LightPet, player.Equipment.LightPet);
+        DeserializeInto(data.Minecart, player.Equipment.Minecart);
+        DeserializeInto(data.Mount, player.Equipment.Mount);
+        DeserializeInto(data.Hook, player.Equipment.Hook);
     }
 
     /// <summary>List all player save files in user://Players/.</summary>
@@ -195,8 +309,7 @@ public class PlrFile
     /// <summary>Delete a player save file by name.</summary>
     public static void DeletePlayer(string name)
     {
-        var dir = ProjectSettings.GlobalizePath(PlrDir);
-        var filePath = Path.Join(dir, name + ".plr");
+        var filePath = GetFilePath(name);
         if (File.Exists(filePath))
             File.Delete(filePath);
     }
@@ -204,7 +317,64 @@ public class PlrFile
     /// <summary>Check if a player save file exists.</summary>
     public static bool PlayerExists(string name)
     {
-        var dir = ProjectSettings.GlobalizePath(PlrDir);
-        return File.Exists(Path.Join(dir, name + ".plr"));
+        return File.Exists(GetFilePath(name));
+    }
+
+    // ── Serialization helpers ─────────────────────────────────────
+
+    private static string GetFilePath(string name)
+    {
+        return ProjectSettings.GlobalizePath(PlrDir).PathJoin(name + ".plr");
+    }
+
+    private static void WriteFile(string name, PlrData data)
+    {
+        var filePath = GetFilePath(name);
+        var json = JsonSerializer.SerializeToUtf8Bytes(data);
+        File.WriteAllBytes(filePath, json);
+    }
+
+    private static PlrItemData? SerializeSlot(ItemStack? stack)
+    {
+        if (stack == null || stack.IsEmpty) return null;
+        return new PlrItemData { Id = stack.ItemId!, Amount = stack.Amount };
+    }
+
+    private static PlrItemData[] SerializeSlots(ItemStack[] slots)
+    {
+        var result = new List<PlrItemData>();
+        foreach (var slot in slots)
+        {
+            if (!slot.IsEmpty)
+                result.Add(new PlrItemData { Id = slot.ItemId!, Amount = slot.Amount });
+        }
+        return result.ToArray();
+    }
+
+    private static void DeserializeInto(PlrItemData[]? source, ItemStack[] target)
+    {
+        // Clear all target slots
+        foreach (var slot in target) slot.Clear();
+
+        if (source == null) return;
+
+        for (int i = 0; i < Math.Min(source.Length, target.Length); i++)
+        {
+            if (source[i] != null && !string.IsNullOrEmpty(source[i].Id))
+            {
+                target[i].ItemId = source[i].Id;
+                target[i].Amount = source[i].Amount;
+            }
+        }
+    }
+
+    private static void DeserializeInto(PlrItemData? source, ItemStack target)
+    {
+        target.Clear();
+        if (source != null && !string.IsNullOrEmpty(source.Id))
+        {
+            target.ItemId = source.Id;
+            target.Amount = source.Amount;
+        }
     }
 }

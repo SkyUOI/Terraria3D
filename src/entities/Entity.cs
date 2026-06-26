@@ -36,6 +36,10 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
     [Export]
     public PackedScene DroppedItemScene { get; set; }
 
+    /// <summary>Parent node under which dropped items are spawned.</summary>
+    [Export]
+    public Node3D DropParent { get; set; }
+
     /// <summary>Reference to the player (set by SpawnManager) for item pickup.</summary>
     [Export]
     public Player Player { get; set; }
@@ -89,6 +93,9 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
         {
             Health.Died += OnDied;
         }
+
+        // Setup contact damage Area3D
+        SetupContactDamage();
 
         GD.Print($"[Entity] {TypeId} spawned at {GlobalPosition}");
     }
@@ -159,6 +166,9 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
 
     public virtual void PerformAttack(IDamageable target, double delta)
     {
+        if (target == null || IsDead) return;
+        Vector3 knockbackDir = (target.GlobalPosition - GlobalPosition).Normalized();
+        target.TakeDamage(ContactDamage, knockbackDir, 4f, DamageType.Contact);
     }
 
     public virtual void OnDamage(int amount, Vector3 knockbackDir, float knockbackForce)
@@ -182,7 +192,7 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
                 item.Amount = amount;
                 item.Target = Player;
                 item.GlobalPosition = GlobalPosition;
-                GetParent().AddChild(item);
+                (DropParent ?? GetParent()).AddChild(item);
                 GD.Print($"[Entity] {TypeId} dropped {amount}x {itemId}");
             }
         }
@@ -193,5 +203,27 @@ public abstract partial class Entity : CharacterBody3D, IDamageable
     private void OnDied()
     {
         OnDeath();
+    }
+
+    /// <summary>Create Area3D child for contact damage detection.</summary>
+    private void SetupContactDamage()
+    {
+        var contactArea = new Area3D { Name = "ContactArea" };
+        var contactShape = new CollisionShape3D();
+        contactShape.Shape = new SphereShape3D { Radius = 1.2f };
+        contactArea.AddChild(contactShape);
+        AddChild(contactArea);
+        contactArea.BodyEntered += OnContactBodyEntered;
+    }
+
+    /// <summary>Deal contact damage when a body enters the contact area.</summary>
+    private void OnContactBodyEntered(Node3D body)
+    {
+        if (IsDead || body is not IDamageable target) return;
+        if (target.IsDead) return;
+        // Don't damage other entities
+        if (body is Entity) return;
+        Vector3 knockbackDir = (body.GlobalPosition - GlobalPosition).Normalized();
+        target.TakeDamage(ContactDamage, knockbackDir, 3f, DamageType.Contact);
     }
 }

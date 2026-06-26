@@ -210,6 +210,7 @@ public partial class SpawnManager : Node3D
 
         // Wire drop system
         instance.DroppedItemScene = DroppedItemScene;
+        instance.DropParent = (Node3D)EntitiesContainer;
         instance.Player = Player;
 
         // Configure default loot table

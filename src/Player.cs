@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Godot;
 using Terraria3D.buffs;
+using Terraria3D.entities;
 using Terraria3D.items;
 
 namespace Terraria3D;
 
-public partial class Player : CharacterBody3D
+public partial class Player : CharacterBody3D, IDamageable
 {
     [Export]
     public int Speed = 3;
@@ -42,6 +44,80 @@ public partial class Player : CharacterBody3D
 
     [Export]
     public bool Enable;
+
+    // ── Combat ──────────────────────────────────────────────────────────
+
+    [Export]
+    public float InvincibilityTime { get; set; } = 0.66f;
+
+    private float _invincibilityTimer;
+
+    public bool IsDead => Health <= 0;
+
+    public void TakeDamage(int amount, Vector3 knockbackDir, float knockbackForce, DamageType type)
+    {
+        if (_invincibilityTimer > 0 || IsDead) return;
+
+        int defense = Equipment.TotalDefense + Buffs.GetCombinedEffects().DefenseBonus;
+        int netDamage = Math.Max(1, amount - (int)(defense * 0.5f));
+        Health -= netDamage;
+        _invincibilityTimer = InvincibilityTime;
+        Velocity += knockbackDir * knockbackForce;
+
+        if (Health <= 0)
+            OnPlayerDeath();
+    }
+
+    private void OnPlayerDeath()
+    {
+        GD.Print($"[Player] {PlayerName} died");
+        // TODO: respawn logic — drop coins, reset position
+    }
+
+    /// <summary>Use the selected hotbar item — weapon swing, tool, or consumable.</summary>
+    private void PerformAttack()
+    {
+        var selected = Inventory.SelectedItem;
+        if (selected == null || selected.IsEmpty) return;
+        var type = selected.Type;
+        if (type == null) return;
+
+        if (type.Category == ItemCategory.Weapon || type.Category == ItemCategory.Tool)
+        {
+            // Melee: sphere cast in front of the camera
+            var spaceState = GetWorld3D().DirectSpaceState;
+            var origin = _camera3D.GlobalPosition;
+            float range = 2.5f;
+
+            var sphere = new SphereShape3D { Radius = 1.0f };
+            var query = new PhysicsShapeQueryParameters3D
+            {
+                Shape = sphere,
+                Transform = new Transform3D(Basis.Identity, origin - _camera3D.GlobalBasis.Z * range),
+                CollisionMask = 1,
+            };
+            var results = spaceState.IntersectShape(query);
+
+            foreach (var result in results)
+            {
+                var collider = result["collider"].As<Node>();
+                if (collider is IDamageable target && target != this && !target.IsDead)
+                {
+                    int damage = 5 + Equipment.TotalDefense; // simple formula
+                    Vector3 knockbackDir = (target.GlobalPosition - GlobalPosition).Normalized();
+                    target.TakeDamage(damage, knockbackDir, 5f, DamageType.Melee);
+                    GD.Print($"[Player] Hit {collider.Name} for {damage} damage");
+                    break;
+                }
+            }
+        }
+        else if (type.Category == ItemCategory.Consumable)
+        {
+            if (type.BuffOnUse != null)
+                Buffs.ApplyBuff(type.BuffOnUse, type.BuffDuration);
+            Inventory.RemoveItem(Inventory.SelectedIndex, 1);
+        }
+    }
 
     // ── Inventory & Equipment ─────────────────────────────────────────
 
@@ -88,6 +164,8 @@ public partial class Player : CharacterBody3D
     {
         base._Process(delta);
         Buffs.Process(delta, this);
+        if (_invincibilityTimer > 0)
+            _invincibilityTimer -= (float)delta;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -117,6 +195,7 @@ public partial class Player : CharacterBody3D
             if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed && !_mainGameUi.PointInUi(mouseButton.GlobalPosition))
             {
                 _main.MouseInGame();
+                PerformAttack();
             }
             // Scroll wheel → cycle hotbar
             else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.WheelUp)

@@ -17,6 +17,12 @@ public enum BlockType
     Air,
     Dirt,
     Grass,
+    Stone,
+    Sand,
+    Sandstone,
+    Snow,
+    Ice,
+    Mud,
 }
 
 /// <summary>Per-block gameplay properties, independent of the voxel model.</summary>
@@ -24,7 +30,8 @@ public record BlockInfo(
     string Name,
     float Hardness = 1f,
     bool IsSolid = true,
-    bool CanPlace = true
+    bool CanPlace = true,
+    BiomeType? BiomeAffiliation = null
 );
 
 /// <summary>
@@ -40,9 +47,15 @@ public static class Blocks
     /// <summary>Per-block gameplay metadata. One line per block type.</summary>
     public static readonly Dictionary<BlockType, BlockInfo> Registry = new()
     {
-        [BlockType.Air]   = new("Air",   Hardness: 0f,   IsSolid: false, CanPlace: false),
-        [BlockType.Dirt]  = new("Dirt",  Hardness: 0.5f),
-        [BlockType.Grass] = new("Grass", Hardness: 0.6f),
+        [BlockType.Air]       = new("Air",       Hardness: 0f,   IsSolid: false, CanPlace: false),
+        [BlockType.Dirt]      = new("Dirt",      Hardness: 0.5f, BiomeAffiliation: BiomeType.Forest),
+        [BlockType.Grass]     = new("Grass",     Hardness: 0.6f, BiomeAffiliation: BiomeType.Forest),
+        [BlockType.Stone]     = new("Stone",     Hardness: 2.0f),
+        [BlockType.Sand]      = new("Sand",      Hardness: 0.3f, BiomeAffiliation: BiomeType.Desert),
+        [BlockType.Sandstone] = new("Sandstone", Hardness: 1.5f, BiomeAffiliation: BiomeType.Desert),
+        [BlockType.Snow]      = new("Snow",      Hardness: 0.2f, BiomeAffiliation: BiomeType.Snow),
+        [BlockType.Ice]       = new("Ice",       Hardness: 1.0f, BiomeAffiliation: BiomeType.Snow),
+        [BlockType.Mud]       = new("Mud",       Hardness: 0.5f, BiomeAffiliation: BiomeType.Jungle),
     };
 
     static Blocks()

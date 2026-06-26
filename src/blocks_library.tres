@@ -20,5 +20,29 @@ mesh_ortho_rotation_index = 10
 resource_name = "grass"
 material_override_0 = SubResource("StandardMaterial3D_ywob0")
 
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_stone"]
+resource_name = "stone"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_sand"]
+resource_name = "sand"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_sandstone"]
+resource_name = "sandstone"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_snow"]
+resource_name = "snow"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_ice"]
+resource_name = "ice"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_mud"]
+resource_name = "mud"
+material_override_0 = SubResource("StandardMaterial3D_ywob0")
+
 [resource]
-models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8uh7m"), SubResource("VoxelBlockyModelCube_6uqi0"), SubResource("VoxelBlockyModelCube_8441h")])
+models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8uh7m"), SubResource("VoxelBlockyModelCube_6uqi0"), SubResource("VoxelBlockyModelCube_8441h"), SubResource("VoxelBlockyModelCube_stone"), SubResource("VoxelBlockyModelCube_sand"), SubResource("VoxelBlockyModelCube_sandstone"), SubResource("VoxelBlockyModelCube_snow"), SubResource("VoxelBlockyModelCube_ice"), SubResource("VoxelBlockyModelCube_mud")])

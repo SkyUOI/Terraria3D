@@ -50,6 +50,14 @@ public partial class SpawnManager : Node3D
     [Export]
     public Node3D Target { get; set; }
 
+    /// <summary>Reference to Main for world state (time, day/night).</summary>
+    [Export]
+    public Main Main { get; set; }
+
+    /// <summary>Reference to the VoxelTerrain for biome block counting.</summary>
+    [Export]
+    public VoxelTerrain Terrain { get; set; }
+
     /// <summary>Parent node under which entities are spawned.</summary>
     [Export]
     public Node EntitiesContainer { get; set; }
@@ -96,7 +104,27 @@ public partial class SpawnManager : Node3D
             Vector3 spawnPos = PickSpawnPosition();
             if (!IsValidSpawnPosition(spawnPos)) continue;
 
-            var pool = SpawnTables.GetPool("Forest", false, 0);
+            // Convert world position to voxel coordinates
+            // VoxelTerrain scale = 0.1, BlockSize = 0.5 → voxel = world / 0.05
+            float scale = Constants.BlockSize * 0.1f;
+            var voxelCenter = new Vector3I(
+                (int)(Target.GlobalPosition.X / scale),
+                (int)(Target.GlobalPosition.Y / scale),
+                (int)(Target.GlobalPosition.Z / scale)
+            );
+
+            // Block-counting biome detection (Terraria-style)
+            var voxelTool = Terrain.GetVoxelTool();
+            voxelTool.Channel = (int)VoxelBuffer.ChannelId.ChannelType;
+            var biome = BiomeDetector.GetBiome(voxelCenter, voxelTool);
+
+            // Depth layer from noise-based surface height (cheap approximation)
+            int surfaceHeight = BiomeDetector.GetSurfaceHeight(
+                Target.GlobalPosition.X, Target.GlobalPosition.Z);
+            var depthLayer = BiomeDetector.GetDepthLayer(voxelCenter.Y, surfaceHeight);
+
+            var pool = SpawnTables.GetPool(
+                biome.ToString(), Main.IsNight, (int)depthLayer);
             string typeId = SpawnTables.PickRandom(pool);
 
             if (!CanSpawnType(typeId)) continue;

@@ -57,10 +57,11 @@ mesh_block_size = 32
 
 [node name="Entities" type="Node3D" parent="." unique_id=1374651486]
 
-[node name="SpawnManager" type="Node3D" parent="." unique_id=1982228250 node_paths=PackedStringArray("SpawnTimer", "Target")]
+[node name="SpawnManager" type="Node3D" parent="." unique_id=1982228250 node_paths=PackedStringArray("SpawnTimer", "Target", "Main")]
 script = ExtResource("6_5mrjc")
 SpawnTimer = NodePath("SpawnTimer")
 Target = NodePath("../Player")
+Main = NodePath("..")
 
 [node name="SpawnTimer" type="Timer" parent="SpawnManager" unique_id=1116078522]
 wait_time = 2.0

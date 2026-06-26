@@ -39,10 +39,8 @@ public class WorldFile
         };
         main.WorldRandom = rand;
 
-        // WorldGeneration.Noise = new FastNoiseLite
-        // {
-        //     Seed = (int)data.Seed
-        // };
+        // Propagate the world seed to all noise generators (terrain + biomes)
+        BiomeDetector.SeedAll((int)data.Seed);
     }
 
     static public void CreateWorld(string wldName)

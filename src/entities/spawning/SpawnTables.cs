@@ -37,6 +37,38 @@ public static class SpawnTables
             ("BlueSlime", 0.3f)
         ),
 
+        ["DesertDay"] = new SpawnPool(
+            ("GreenSlime", 0.5f),
+            ("BlueSlime", 0.3f)
+        ),
+
+        ["DesertNight"] = new SpawnPool(
+            ("DemonEye", 0.4f),
+            ("GreenSlime", 0.3f),
+            ("BlueSlime", 0.3f)
+        ),
+
+        ["SnowDay"] = new SpawnPool(
+            ("BlueSlime", 0.5f),
+            ("GreenSlime", 0.3f)
+        ),
+
+        ["SnowNight"] = new SpawnPool(
+            ("DemonEye", 0.4f),
+            ("BlueSlime", 0.4f)
+        ),
+
+        ["JungleDay"] = new SpawnPool(
+            ("GreenSlime", 0.6f),
+            ("BlueSlime", 0.2f)
+        ),
+
+        ["JungleNight"] = new SpawnPool(
+            ("DemonEye", 0.3f),
+            ("GreenSlime", 0.4f),
+            ("BlueSlime", 0.3f)
+        ),
+
         // Default fallback used when no specific pool matches
         ["Default"] = new SpawnPool(
             ("GreenSlime", 1.0f)

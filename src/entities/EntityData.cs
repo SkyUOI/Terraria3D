@@ -51,7 +51,7 @@ public static class EntityRegistry
             IsFlying: false,
             ContactDamage: 7,
             AggroRange: 12.0f,
-            SpawnBiomes: ["Forest"],
+            SpawnBiomes: ["Forest", "Desert", "Snow", "Jungle"],
             MinSpawnDepth: 0,
             MaxSpawnDepth: 200,
             MaxSpawnCount: 5
@@ -67,7 +67,7 @@ public static class EntityRegistry
             IsFlying: false,
             ContactDamage: 10,
             AggroRange: 14.0f,
-            SpawnBiomes: ["Forest"],
+            SpawnBiomes: ["Forest", "Desert", "Snow", "Jungle"],
             MinSpawnDepth: 0,
             MaxSpawnDepth: 200,
             MaxSpawnCount: 3
@@ -83,7 +83,7 @@ public static class EntityRegistry
             IsFlying: true,
             ContactDamage: 8,
             AggroRange: 20.0f,
-            SpawnBiomes: ["Forest"],
+            SpawnBiomes: ["Forest", "Desert", "Snow", "Jungle"],
             MinSpawnDepth: 0,
             MaxSpawnDepth: 200,
             MaxSpawnCount: 3

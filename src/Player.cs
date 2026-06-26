@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Godot;
+using Terraria3D.buffs;
 using Terraria3D.items;
 
 namespace Terraria3D;
@@ -50,6 +51,27 @@ public partial class Player : CharacterBody3D
     /// <summary>Player equipment (armor, accessories, vanity, etc.).</summary>
     public Equipment Equipment { get; private set; } = new();
 
+    // ── Buff system ────────────────────────────────────────────────────
+
+    /// <summary>Active buffs and debuffs on this player.</summary>
+    public BuffManager Buffs { get; private set; } = new();
+
+    /// <summary>Effective max HP (base + equipment + buffs).</summary>
+    public int EffectiveMaxHealth =>
+        HealthMax + Equipment.TotalHealthBonus + Buffs.GetCombinedEffects().MaxHealthBonus;
+
+    /// <summary>Effective max MP (base + equipment + buffs).</summary>
+    public int EffectiveMaxMana =>
+        ManaMax + Equipment.TotalManaBonus + Buffs.GetCombinedEffects().MaxManaBonus;
+
+    /// <summary>Effective defense (base + equipment + buffs).</summary>
+    public int EffectiveDefense =>
+        Equipment.TotalDefense + Buffs.GetCombinedEffects().DefenseBonus;
+
+    /// <summary>Effective movement speed (base × (1 + equipment% + buffs%)).</summary>
+    public float EffectiveSpeed =>
+        Speed * (1f + Equipment.TotalSpeedBonus + Buffs.GetCombinedEffects().SpeedMultiplier);
+
     public override void _Ready()
     {
         base._Ready();
@@ -65,8 +87,7 @@ public partial class Player : CharacterBody3D
     public override void _Process(double delta)
     {
         base._Process(delta);
-        // _main.CheckAndLoadChunk(Position);
-        // GD.Print($"player position: {Position}");
+        Buffs.Process(delta, this);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -145,15 +166,16 @@ public partial class Player : CharacterBody3D
 
         Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
         Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        float speed = EffectiveSpeed;
         if (direction != Vector3.Zero)
         {
-            velocity.X = direction.X * Speed;
-            velocity.Z = direction.Z * Speed;
+            velocity.X = direction.X * speed;
+            velocity.Z = direction.Z * speed;
         }
         else
         {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, speed);
         }
 
         Velocity = velocity;
@@ -168,6 +190,14 @@ public class PlrItemData
 {
     public string Id { get; set; } = "";
     public int Amount { get; set; }
+}
+
+/// <summary>Lightweight serializable buff representation for save files.</summary>
+[Serializable]
+public class PlrBuffData
+{
+    public string Id { get; set; } = "";
+    public float RemainingTime { get; set; }
 }
 
 [Serializable]
@@ -201,6 +231,9 @@ public class PlrData(string name)
     public PlrItemData? Minecart { get; set; }
     public PlrItemData? Mount { get; set; }
     public PlrItemData? Hook { get; set; }
+
+    // ── Buff persistence ──────────────────────────────────────────
+    public PlrBuffData[] ActiveBuffs { get; set; } = [];
 }
 
 public class PlrFile
@@ -241,6 +274,7 @@ public class PlrFile
             Minecart = SerializeSlot(player.Equipment.Minecart),
             Mount = SerializeSlot(player.Equipment.Mount),
             Hook = SerializeSlot(player.Equipment.Hook),
+            ActiveBuffs = SerializeBuffs(player.Buffs),
         };
         WriteFile(name, data);
     }
@@ -279,6 +313,9 @@ public class PlrFile
         DeserializeInto(data.Minecart, player.Equipment.Minecart);
         DeserializeInto(data.Mount, player.Equipment.Mount);
         DeserializeInto(data.Hook, player.Equipment.Hook);
+
+        // Restore buffs
+        DeserializeBuffs(data.ActiveBuffs, player.Buffs);
     }
 
     /// <summary>List all player save files in user://Players/.</summary>
@@ -376,5 +413,30 @@ public class PlrFile
             target.ItemId = source.Id;
             target.Amount = source.Amount;
         }
+    }
+
+    private static PlrBuffData[] SerializeBuffs(BuffManager buffs)
+    {
+        var state = buffs.GetSerializableState();
+        var result = new PlrBuffData[state.Count];
+        for (int i = 0; i < state.Count; i++)
+        {
+            result[i] = new PlrBuffData { Id = state[i].Id, RemainingTime = state[i].Time };
+        }
+        return result;
+    }
+
+    private static void DeserializeBuffs(PlrBuffData[]? source, BuffManager buffs)
+    {
+        buffs.ClearAll();
+        if (source == null) return;
+
+        var state = new List<(string, float)>();
+        foreach (var b in source)
+        {
+            if (!string.IsNullOrEmpty(b.Id))
+                state.Add((b.Id, b.RemainingTime));
+        }
+        buffs.RestoreFromState(state);
     }
 }

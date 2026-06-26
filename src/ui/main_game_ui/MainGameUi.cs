@@ -24,9 +24,9 @@ public partial class MainGameUi : Control
         if (Player != null)
         {
             Hearts.SetHp(Player.Health);
-            Hearts.SetHpMax(Player.HealthMax);
+            Hearts.SetHpMax(Player.EffectiveMaxHealth);
             Stars.SetMp(Player.Mana);
-            Stars.SetMpMax(Player.ManaMax);
+            Stars.SetMpMax(Player.EffectiveMaxMana);
         }
         else
         {

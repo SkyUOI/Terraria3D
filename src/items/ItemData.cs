@@ -30,7 +30,9 @@ public record ItemType(
     float DamageBonus = 0f,
     float SpeedBonus = 0f,
     int ManaBonus = 0,
-    int HealthBonus = 0
+    int HealthBonus = 0,
+    string? BuffOnUse = null,
+    float? BuffDuration = null
 );
 
 /// <summary>
@@ -158,7 +160,9 @@ public static class ItemRegistry
             Category: ItemCategory.Consumable,
             MaxStack: 30,
             IsConsumable: true,
-            Tooltip: "Restores 50 health"
+            Tooltip: "Restores 50 health",
+            BuffOnUse: "PotionSickness",
+            BuffDuration: 60f
         ),
 
         ["LesserManaPotion"] = new(
@@ -166,7 +170,9 @@ public static class ItemRegistry
             Category: ItemCategory.Consumable,
             MaxStack: 30,
             IsConsumable: true,
-            Tooltip: "Restores 50 mana"
+            Tooltip: "Restores 50 mana",
+            BuffOnUse: "PotionSickness",
+            BuffDuration: 60f
         ),
 
         // ── Ammo ─────────────────────────────────────────────────
